@@ -39,24 +39,39 @@
   border-color: var(--brand-red);
 }
 
-.fab--active {
-  outline: 3px solid color-mix(in srgb, var(--accent) 50%, transparent);
+/* Fondo semitransparente bajo el panel lateral */
+.dock-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--overlay);
 }
 
+/* Panel lateral derecho de alto completo (IA / chats) */
 .dock {
   position: fixed;
-  right: var(--space-6);
-  bottom: calc(var(--space-6) + 4.25rem);
-  z-index: 60;
-  width: min(22rem, 92vw);
-  height: min(28rem, 70vh);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 61;
+  width: min(24rem, 100vw);
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-left: 1px solid var(--border);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
+  animation: dock-in var(--transition-base) ease;
+}
+
+@keyframes dock-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .dock__header {

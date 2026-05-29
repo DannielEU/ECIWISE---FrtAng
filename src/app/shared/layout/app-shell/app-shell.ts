@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { TopBarComponent } from '../top-bar/top-bar';
@@ -26,8 +35,20 @@ import { FloatingActionsComponent } from '../floating-actions/floating-actions';
 })
 export class AppShellComponent {
   private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
   protected readonly role = computed(() => this.auth.role());
   protected readonly navOpen = signal(false);
+
+  constructor() {
+    // Cierra el menú lateral cada vez que se completa una navegación,
+    // para que en móvil no quede abierto sobre el contenido.
+    this.router.events
+      .pipe(
+        filter((e) => e instanceof NavigationEnd),
+        takeUntilDestroyed(inject(DestroyRef)),
+      )
+      .subscribe(() => this.closeNav());
+  }
 
   toggleNav(): void {
     this.navOpen.update((v) => !v);

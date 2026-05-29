@@ -1,9 +1,15 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
 .side-nav {
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: var(--space-4);
   gap: var(--space-1);
+  overflow-y: auto;
 }
 
 .side-nav__list {

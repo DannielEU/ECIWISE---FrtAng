@@ -4,6 +4,21 @@ export const en = {
     name: 'ECIWISE+',
     tagline: 'Student platform of Escuela Colombiana de Ingeniería',
   },
+  landing: {
+    eci: 'A project of Escuela Colombiana de Ingeniería Julio Garavito',
+    about: {
+      title: 'What is ECIWISE+?',
+      body: 'ECIWISE+ is the student platform that connects students and tutors at the School. It brings tutoring, study materials, a game and study center, pending tasks, messaging and an AI assistant together in one place, making learning simpler, more collaborative and more human.',
+    },
+    mission: {
+      title: 'Mission',
+      body: 'To empower collaborative learning across the ECI community by offering accessible digital tools that connect students effort with tutors guidance, always upholding academic integrity.',
+    },
+    vision: {
+      title: 'Vision',
+      body: 'To be the flagship student platform of Escuela Colombiana de Ingeniería Julio Garavito, recognized for driving excellence, ethics and the growth of every student.',
+    },
+  },
   common: {
     enter: 'Enter',
     register: 'Sign up',

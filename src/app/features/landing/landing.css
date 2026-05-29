@@ -16,6 +16,8 @@
   width: 100%;
   height: 100%;
   display: block;
+  /* Fondo decorativo: nunca debe interceptar clics de los botones. */
+  pointer-events: none;
 }
 
 .landing__bar {

@@ -4,6 +4,21 @@ export const es = {
     name: 'ECIWISE+',
     tagline: 'Plataforma estudiantil de la Escuela Colombiana de Ingeniería',
   },
+  landing: {
+    eci: 'Un proyecto de la Escuela Colombiana de Ingeniería Julio Garavito',
+    about: {
+      title: '¿Qué es ECIWISE+?',
+      body: 'ECIWISE+ es la plataforma estudiantil que conecta a estudiantes y tutores de la Escuela. Reúne en un solo lugar monitorías, materiales de estudio, centro de juegos y de estudio, tareas pendientes, mensajería y un asistente de IA, para que aprender sea más simple, colaborativo y humano.',
+    },
+    mission: {
+      title: 'Misión',
+      body: 'Potenciar el aprendizaje colaborativo de la comunidad ECI, ofreciendo herramientas digitales accesibles que conecten el esfuerzo de los estudiantes con el acompañamiento de tutores, siempre con integridad académica.',
+    },
+    vision: {
+      title: 'Visión',
+      body: 'Ser la plataforma estudiantil de referencia de la Escuela Colombiana de Ingeniería Julio Garavito, reconocida por impulsar la excelencia, la ética y el crecimiento de cada estudiante.',
+    },
+  },
   common: {
     enter: 'Ingresar',
     register: 'Registrarse',
