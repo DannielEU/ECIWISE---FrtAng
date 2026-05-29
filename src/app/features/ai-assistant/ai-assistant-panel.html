@@ -1,0 +1,35 @@
+<div class="conv">
+  <ul class="conv__list">
+    @for (msg of messages(); track msg.id) {
+      <li class="conv__msg" [class.conv__msg--user]="msg.author === 'user'">
+        <span class="conv__bubble">{{ msg.text }}</span>
+      </li>
+    }
+    @if (sending()) {
+      <li class="conv__msg">
+        <span class="conv__bubble conv__bubble--typing">{{ 'common.loading' | translate }}</span>
+      </li>
+    }
+  </ul>
+
+  <form class="conv__form" (ngSubmit)="send()">
+    <input
+      class="conv__input"
+      type="text"
+      [ngModel]="draft()"
+      (ngModelChange)="draft.set($event)"
+      name="draft"
+      [placeholder]="'floating.assistant' | translate"
+      [attr.aria-label]="'floating.assistant' | translate"
+      autocomplete="off"
+    />
+    <button
+      type="submit"
+      class="icon-button conv__send"
+      [disabled]="!draft().trim() || sending()"
+      [attr.aria-label]="'common.confirm' | translate"
+    >
+      <svg lucideSend [size]="18" aria-hidden="true"></svg>
+    </button>
+  </form>
+</div>

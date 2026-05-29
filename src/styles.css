@@ -180,6 +180,75 @@ body {
   transform: scale(0.95);
 }
 
+/* Conversaciones (asistente IA y chats) */
+.conv {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.conv__list {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-4);
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.conv__msg {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.conv__msg--user {
+  justify-content: flex-end;
+}
+
+.conv__bubble {
+  max-width: 80%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--surface-3);
+  color: var(--text);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.conv__msg--user .conv__bubble {
+  background: var(--brand-red);
+  color: #ffffff;
+}
+
+.conv__bubble--typing {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.conv__form {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.conv__input {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+}
+
+.conv__send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Insignia de conteo (notificaciones) */
 .icon-button__badge {
   position: absolute;
