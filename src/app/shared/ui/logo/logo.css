@@ -1,0 +1,38 @@
+.eci-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  text-decoration: none;
+  color: var(--text);
+  transition: transform var(--transition-fast);
+}
+
+.eci-logo:hover {
+  transform: scale(1.04);
+}
+
+.eci-logo__mark {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+}
+
+.eci-logo__astroid {
+  fill: var(--brand-red);
+}
+
+.eci-logo__plus {
+  stroke: #ffffff;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.eci-logo__word {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 1.125rem;
+}
+
+.eci-logo__plus-word {
+  color: var(--brand-red);
+}

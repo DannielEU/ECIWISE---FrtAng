@@ -1,0 +1,60 @@
+.eci-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast),
+    background var(--transition-base),
+    box-shadow var(--transition-base);
+  will-change: transform;
+}
+
+/* Efecto zoom sutil al seleccionar/presionar */
+.eci-button:hover:not(:disabled) {
+  transform: scale(1.03);
+}
+
+.eci-button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.eci-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.eci-button--primary {
+  background: var(--brand-red);
+  color: #ffffff;
+}
+
+.eci-button--primary:hover:not(:disabled) {
+  background: var(--brand-red-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.eci-button--secondary {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.eci-button--ghost {
+  background: transparent;
+  color: var(--text);
+}
+
+.eci-button--ghost:hover:not(:disabled) {
+  background: var(--surface-3);
+}
+
+.eci-button--block {
+  width: 100%;
+}
