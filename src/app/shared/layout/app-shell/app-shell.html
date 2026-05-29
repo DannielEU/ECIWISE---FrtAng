@@ -1,0 +1,19 @@
+<a class="skip-link" href="#main-content">{{ 'a11y.skipToContent' | translate }}</a>
+
+<eci-top-bar (menuToggle)="toggleNav()" />
+
+<div class="shell">
+  <aside class="shell__nav" [class.shell__nav--open]="navOpen()">
+    <eci-side-nav (click)="closeNav()" />
+  </aside>
+
+  @if (navOpen()) {
+    <div class="shell__overlay" (click)="closeNav()"></div>
+  }
+
+  <main id="main-content" class="shell__main" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>
+
+<eci-floating-actions />

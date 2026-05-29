@@ -1,0 +1,40 @@
+<main class="auth" id="main-content" tabindex="-1">
+  <section class="auth__card">
+    <div class="auth__brand">
+      <eci-logo home="/" />
+    </div>
+    <h1 class="auth__title">{{ 'auth.registerTitle' | translate }}</h1>
+
+    <form class="auth__form" [formGroup]="form" (ngSubmit)="submit()">
+      <label class="auth__field">
+        <span>{{ 'common.name' | translate }}</span>
+        <input type="text" formControlName="name" autocomplete="name" />
+      </label>
+      <label class="auth__field">
+        <span>{{ 'common.email' | translate }}</span>
+        <input type="email" formControlName="email" autocomplete="email" />
+      </label>
+      <label class="auth__field">
+        <span>{{ 'common.password' | translate }}</span>
+        <input type="password" formControlName="password" autocomplete="new-password" />
+      </label>
+      <label class="auth__field">
+        <span>{{ 'common.program' | translate }}</span>
+        <input type="text" formControlName="program" autocomplete="off" />
+      </label>
+
+      @if (errorKey(); as err) {
+        <p class="auth__error" role="alert">{{ err | translate }}</p>
+      }
+
+      <eci-button type="submit" [block]="true" [disabled]="loading()">
+        {{ 'common.register' | translate }}
+      </eci-button>
+    </form>
+
+    <p class="auth__switch">
+      {{ 'auth.hasAccount' | translate }}
+      <a routerLink="/auth/login">{{ 'common.login' | translate }}</a>
+    </p>
+  </section>
+</main>
