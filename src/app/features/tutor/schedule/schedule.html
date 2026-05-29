@@ -1,0 +1,44 @@
+<eci-page-header titleKey="tutor.schedule.title" icon="schedule" />
+
+<eci-card>
+  <form class="sched-form" [formGroup]="form" (ngSubmit)="create()">
+    <label class="sched-form__field">
+      <span>{{ 'fields.subject' | translate }}</span>
+      <input type="text" formControlName="subject" />
+    </label>
+    <label class="sched-form__field">
+      <span>{{ 'fields.datetime' | translate }}</span>
+      <input type="datetime-local" formControlName="datetime" />
+    </label>
+    <label class="sched-form__field sched-form__field--seats">
+      <span>{{ 'tutor.schedule.seats' | translate }}</span>
+      <input type="number" formControlName="seats" min="1" />
+    </label>
+    <eci-button type="submit">{{ 'tutor.schedule.create' | translate }}</eci-button>
+  </form>
+</eci-card>
+
+@if (sessions().length === 0) {
+  <eci-card><p class="empty">{{ 'tutor.schedule.empty' | translate }}</p></eci-card>
+} @else {
+  <ul class="sched-list">
+    @for (session of sessions(); track session.id) {
+      <li>
+        <eci-card>
+          <div class="sched-item">
+            <div>
+              <h2 class="sched-item__subject">{{ session.subject }}</h2>
+              <p class="sched-item__meta">
+                <span>{{ session.datetime | date: 'short' }}</span>
+                <span>{{ 'monitorias.seats' | translate: { count: session.seats } }}</span>
+              </p>
+            </div>
+            <eci-button variant="ghost" (click)="cancel(session)">
+              {{ 'tutor.schedule.cancel' | translate }}
+            </eci-button>
+          </div>
+        </eci-card>
+      </li>
+    }
+  </ul>
+}

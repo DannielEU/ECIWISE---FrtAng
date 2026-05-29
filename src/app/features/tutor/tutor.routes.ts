@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
-import { SectionPlaceholderComponent } from '../../shared/ui/section-placeholder/section-placeholder';
 
-/** Rutas del área de tutor. Las secciones se completan en la Fase 3. */
+/** Rutas del área de tutor. */
 export const TUTOR_ROUTES: Routes = [
   {
     path: '',
@@ -9,22 +8,19 @@ export const TUTOR_ROUTES: Routes = [
   },
   {
     path: 'schedule',
-    component: SectionPlaceholderComponent,
-    data: { titleKey: 'nav.schedule', icon: 'schedule' },
+    loadComponent: () => import('./schedule/schedule').then((m) => m.TutorScheduleComponent),
   },
   {
     path: 'availability',
-    component: SectionPlaceholderComponent,
-    data: { titleKey: 'nav.availability', icon: 'availability' },
+    loadComponent: () =>
+      import('./availability/availability').then((m) => m.TutorAvailabilityComponent),
   },
   {
     path: 'requests',
-    component: SectionPlaceholderComponent,
-    data: { titleKey: 'nav.requests', icon: 'requests' },
+    loadComponent: () => import('./requests/requests').then((m) => m.TutorRequestsComponent),
   },
   {
     path: 'history',
-    component: SectionPlaceholderComponent,
-    data: { titleKey: 'nav.history', icon: 'history' },
+    loadComponent: () => import('./history/history').then((m) => m.TutorHistoryComponent),
   },
 ];

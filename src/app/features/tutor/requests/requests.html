@@ -1,0 +1,37 @@
+<eci-page-header titleKey="tutor.requests.title" icon="requests" />
+
+@if (requests().length === 0) {
+  <eci-card><p class="empty">{{ 'tutor.requests.empty' | translate }}</p></eci-card>
+} @else {
+  <ul class="req-list">
+    @for (req of requests(); track req.id) {
+      <li>
+        <eci-card>
+          <div class="req">
+            <div class="req__info">
+              <h2 class="req__subject">{{ req.subject }}</h2>
+              <p class="req__meta">
+                <span>{{ 'tutor.requests.student' | translate }}: {{ req.student }}</span>
+                <span>{{ req.datetime | date: 'short' }}</span>
+              </p>
+            </div>
+            <div class="req__action">
+              @if (req.status === 'pending') {
+                <eci-button variant="ghost" (click)="reject(req)">
+                  {{ 'tutor.requests.reject' | translate }}
+                </eci-button>
+                <eci-button (click)="accept(req)">
+                  {{ 'tutor.requests.accept' | translate }}
+                </eci-button>
+              } @else {
+                <span class="req__status" [attr.data-status]="req.status">
+                  {{ 'tutor.requests.' + req.status | translate }}
+                </span>
+              }
+            </div>
+          </div>
+        </eci-card>
+      </li>
+    }
+  </ul>
+}

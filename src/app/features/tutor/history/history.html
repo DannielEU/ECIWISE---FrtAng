@@ -1,0 +1,26 @@
+<eci-page-header titleKey="tutor.history.title" icon="history" />
+
+@if (entries().length === 0) {
+  <eci-card><p class="empty">{{ 'tutor.history.empty' | translate }}</p></eci-card>
+} @else {
+  <ul class="hist-list">
+    @for (entry of entries(); track entry.id) {
+      <li>
+        <eci-card>
+          <div class="hist">
+            <div>
+              <h2 class="hist__subject">{{ entry.subject }}</h2>
+              <p class="hist__meta">
+                <span>{{ entry.student }}</span>
+                <span>{{ entry.datetime | date: 'short' }}</span>
+              </p>
+            </div>
+            <span class="hist__status" [attr.data-status]="entry.status">
+              {{ 'tutor.history.' + entry.status | translate }}
+            </span>
+          </div>
+        </eci-card>
+      </li>
+    }
+  </ul>
+}

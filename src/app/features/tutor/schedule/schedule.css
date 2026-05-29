@@ -1,0 +1,65 @@
+.empty {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.sched-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-4);
+}
+
+.sched-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: 0.875rem;
+  font-weight: 600;
+  flex: 1;
+  min-width: 12rem;
+}
+
+.sched-form__field--seats {
+  flex: 0 0 6rem;
+  min-width: 6rem;
+}
+
+.sched-form__field input {
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-weight: 400;
+}
+
+.sched-list {
+  list-style: none;
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sched-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.sched-item__subject {
+  margin: 0 0 var(--space-1);
+  font-size: 1.0625rem;
+}
+
+.sched-item__meta {
+  display: flex;
+  gap: var(--space-4);
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}

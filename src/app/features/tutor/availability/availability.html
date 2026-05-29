@@ -1,0 +1,33 @@
+<eci-page-header titleKey="tutor.availability.title" icon="availability" />
+
+<eci-card>
+  <p class="avail__hint">{{ 'tutor.availability.hint' | translate }}</p>
+
+  <div class="avail__grid" role="group" [attr.aria-label]="'tutor.availability.title' | translate">
+    <div class="avail__corner" aria-hidden="true"></div>
+    @for (day of days; track day) {
+      <div class="avail__day">{{ 'days.' + day | translate }}</div>
+    }
+
+    @for (block of blocks; track block) {
+      <div class="avail__time">{{ block }}</div>
+      @for (day of days; track day) {
+        <button
+          type="button"
+          class="avail__cell"
+          [class.avail__cell--on]="isActive(day, block)"
+          [attr.aria-pressed]="isActive(day, block)"
+          [attr.aria-label]="('days.' + day | translate) + ' ' + block"
+          (click)="toggle(day, block)"
+        ></button>
+      }
+    }
+  </div>
+
+  <div class="avail__actions">
+    @if (saved()) {
+      <span class="avail__saved" role="status">{{ 'tutor.availability.saved' | translate }}</span>
+    }
+    <eci-button (click)="save()">{{ 'tutor.availability.save' | translate }}</eci-button>
+  </div>
+</eci-card>

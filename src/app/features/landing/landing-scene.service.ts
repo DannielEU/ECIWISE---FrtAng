@@ -24,6 +24,7 @@ export class LandingSceneService {
   private frameId = 0;
   private host?: HTMLElement;
   private pointer = { x: 0, y: 0 };
+  private initialized = false;
 
   /** Inicializa la escena dentro del canvas dado. */
   async init(canvas: HTMLCanvasElement, host: HTMLElement): Promise<void> {
@@ -56,11 +57,19 @@ export class LandingSceneService {
 
     window.addEventListener('resize', this.resize);
     window.addEventListener('pointermove', this.onPointerMove);
+    this.initialized = true;
     this.animate();
   }
 
-  /** Detiene la animación y libera los recursos de WebGL. */
+  /**
+   * Detiene la animación y libera los recursos de WebGL. No hace nada si la
+   * escena nunca se inicializó (p. ej. en SSR, donde solo corre en el cliente).
+   */
   dispose(): void {
+    if (!this.initialized) {
+      return;
+    }
+    this.initialized = false;
     cancelAnimationFrame(this.frameId);
     window.removeEventListener('resize', this.resize);
     window.removeEventListener('pointermove', this.onPointerMove);
