@@ -1,0 +1,39 @@
+<div class="bell">
+  <button
+    type="button"
+    class="icon-button"
+    (click)="toggle()"
+    [attr.aria-label]="'notifications.title' | translate"
+    [attr.aria-expanded]="open()"
+  >
+    <svg lucideBell [size]="20" aria-hidden="true"></svg>
+    @if (notifications.unreadCount() > 0) {
+      <span class="icon-button__badge" aria-hidden="true">{{ notifications.unreadCount() }}</span>
+    }
+  </button>
+
+  @if (open()) {
+    <div class="bell__backdrop" (click)="close()"></div>
+    <section class="bell__panel" role="dialog" [attr.aria-label]="'notifications.title' | translate">
+      <header class="bell__header">
+        <h2 class="bell__title">{{ 'notifications.title' | translate }}</h2>
+        <button type="button" class="bell__link" (click)="markAllRead()">
+          {{ 'notifications.markAllRead' | translate }}
+        </button>
+      </header>
+
+      @if (notifications.items().length === 0) {
+        <p class="bell__empty">{{ 'notifications.empty' | translate }}</p>
+      } @else {
+        <ul class="bell__list">
+          @for (item of notifications.items(); track item.id) {
+            <li class="bell__item" [class.bell__item--unread]="!item.read">
+              <span class="bell__dot" [attr.data-kind]="item.kind" aria-hidden="true"></span>
+              <p class="bell__body">{{ item.body }}</p>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  }
+</div>
