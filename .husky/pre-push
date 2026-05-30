@@ -1,0 +1,7 @@
+set -e
+
+echo "🔍 [pre-push] Verificando lint (no se permiten más problemas que el baseline)…"
+npm run lint:ci
+
+echo "🧪 [pre-push] Ejecutando tests…"
+npm run test:ci
