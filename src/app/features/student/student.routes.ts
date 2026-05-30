@@ -30,4 +30,8 @@ export const STUDENT_ROUTES: Routes = [
     path: 'profile',
     loadComponent: () => import('./profile/profile').then((m) => m.ProfileComponent),
   },
+  {
+    path: 'ia-perfil',
+    loadComponent: () => import('./ia-perfil/ia-perfil').then((m) => m.IaPerfilComponent),
+  },
 ];

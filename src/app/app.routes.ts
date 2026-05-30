@@ -18,6 +18,11 @@ export const routes: Routes = [
       import('./features/auth/register/register').then((m) => m.RegisterComponent),
   },
   {
+    path: 'auth/callback',
+    loadComponent: () =>
+      import('./features/auth/callback/callback').then((m) => m.CallbackComponent),
+  },
+  {
     path: 'student',
     component: AppShellComponent,
     canActivate: [roleGuard],

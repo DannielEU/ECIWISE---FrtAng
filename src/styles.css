@@ -99,6 +99,39 @@
   font-size: 1.0625rem;
 }
 
+/* ============================================================
+   Transiciones entre pantallas (View Transitions API)
+   Habilitadas en el router con withViewTransitions().
+   Crossfade + leve desplazamiento vertical: suave y estético.
+   ============================================================ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes eci-fade-slide-out {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes eci-fade-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+::view-transition-old(root) {
+  animation-name: eci-fade-slide-out;
+}
+
+::view-transition-new(root) {
+  animation-name: eci-fade-slide-in;
+}
+
 /* Reducción de movimiento: respeta preferencia del SO y el modo a11y */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -106,6 +139,12 @@
   *::after {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
+  }
+
+  /* Sin desplazamiento; el navegador hace un crossfade mínimo. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
   }
 }
 

@@ -4,9 +4,11 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-6);
+  /* Mismo fondo que la landing: nunca gris. */
   background:
-    radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--brand-red) 14%, transparent), transparent 40%),
-    var(--surface-2);
+    radial-gradient(circle at 25% 15%, color-mix(in srgb, var(--brand-red) 28%, transparent), transparent 45%),
+    radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--accent-student) 22%, transparent), transparent 50%),
+    var(--brand-black);
 }
 
 .auth__card {
@@ -16,6 +18,11 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   padding: var(--space-8);
+}
+
+/* Tarjeta del registro: más ancha para repartir los campos en dos columnas. */
+.auth__card--wide {
+  width: min(40rem, 100%);
 }
 
 .auth__brand {
@@ -52,6 +59,141 @@
   color: var(--text);
   font: inherit;
   font-weight: 400;
+}
+
+.auth__field input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+/* ---------------- Indicador de pasos (registro) ---------------- */
+.auth__steps {
+  display: flex;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0 0 var(--space-6);
+  padding: 0;
+}
+
+.auth__step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 3px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: color var(--transition-base), border-color var(--transition-base);
+}
+
+.auth__step--active,
+.auth__step--done {
+  color: var(--text);
+  border-top-color: var(--accent);
+}
+
+.auth__step-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: none;
+  border-radius: var(--radius-full);
+  background: var(--surface-3);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.auth__step--active .auth__step-dot,
+.auth__step--done .auth__step-dot {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* ---------------- Distribución en dos columnas ---------------- */
+.auth__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+.auth__field--full {
+  grid-column: 1 / -1;
+}
+
+.auth__hint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.auth__group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.auth__group-title {
+  padding: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.auth__checks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--space-2) var(--space-4);
+}
+
+.auth__check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.auth__check input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
+}
+
+.auth__check:has(input:checked) {
+  border-color: var(--accent);
+}
+
+/* ---------------- Acciones del paso 2 ---------------- */
+.auth__actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.auth__actions > :last-child {
+  flex: 1;
+}
+
+@media (max-width: 30rem) {
+  .auth__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auth__step-label {
+    display: none;
+  }
 }
 
 .auth__error {

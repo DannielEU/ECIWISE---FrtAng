@@ -1,0 +1,58 @@
+<section class="ia-form" id="main-content" tabindex="-1">
+  <header class="ia-form__header">
+    <h1 class="ia-form__title">{{ 'ia.profile.title' | translate }}</h1>
+    <p class="ia-form__subtitle">{{ 'ia.profile.subtitle' | translate }}</p>
+  </header>
+
+  @if (loading()) {
+    <p class="ia-form__status" role="status">{{ 'common.loading' | translate }}</p>
+  } @else {
+    <form class="ia-form__body" [formGroup]="form" (ngSubmit)="save()">
+      <fieldset class="ia-form__group">
+        <legend>{{ 'ia.profile.performance' | translate }}</legend>
+        @for (f of performanceFields; track f.key) {
+          <label class="ia-form__field">
+            <span>{{ 'ia.fields.' + f.key | translate }}</span>
+            <input type="number" [formControlName]="f.key" [min]="f.min" [max]="f.max" [step]="f.step" />
+          </label>
+        }
+      </fieldset>
+
+      <fieldset class="ia-form__group">
+        <legend>{{ 'ia.profile.dropout' | translate }}</legend>
+        @for (f of dropoutFields; track f.key) {
+          <label class="ia-form__field">
+            <span>{{ 'ia.fields.' + f.key | translate }}</span>
+            <input type="number" [formControlName]="f.key" [min]="f.min" [max]="f.max" [step]="f.step" />
+          </label>
+        }
+      </fieldset>
+
+      @if (errorKey(); as err) {
+        <p class="ia-form__error" role="alert">{{ err | translate }}</p>
+      }
+      @if (saved()) {
+        <p class="ia-form__status" role="status">{{ 'ia.profile.saved' | translate }}</p>
+      }
+
+      @if (result(); as r) {
+        <div class="ia-form__result" role="status">
+          <p>{{ 'ia.profile.resultPerformance' | translate: { value: r.prediccionRendimiento } }}</p>
+          <p>
+            {{
+              'ia.profile.resultDropout'
+                | translate: { value: r.prediccionDesercion, confidence: r.confianzaDesercion }
+            }}
+          </p>
+        </div>
+      }
+
+      <div class="ia-form__actions">
+        <eci-button type="submit" [disabled]="saving()">{{ 'ia.profile.save' | translate }}</eci-button>
+        <eci-button variant="secondary" type="button" [disabled]="predicting()" (click)="predict()">
+          {{ (predicting() ? 'ia.profile.predicting' : 'ia.profile.predict') | translate }}
+        </eci-button>
+      </div>
+    </form>
+  }
+</section>

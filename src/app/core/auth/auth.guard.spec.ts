@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { provideRouter } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { provideHttpClient } from '@angular/common/http';
 import { authGuard, roleGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { Role } from '../models/role.enum';
@@ -23,9 +23,20 @@ describe('auth guards', () => {
 
   beforeEach(() => {
     localStorage.clear();
-    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    TestBed.configureTestingModule({ providers: [provideRouter([]), provideHttpClient()] });
     auth = TestBed.inject(AuthService);
   });
+
+  /** Inicia sesión sin HTTP, sembrando la sesión directamente. */
+  function signInStudent(): void {
+    auth.completeSession('token', {
+      id: 'u1',
+      email: 'estudiante@escuelaing.edu.co',
+      nombre: 'Ana',
+      apellido: 'Díaz',
+      rol: 'estudiante',
+    });
+  }
 
   it('authGuard redirige al login cuando no hay sesión', () => {
     const result = runAuthGuard('/student');
@@ -34,17 +45,13 @@ describe('auth guards', () => {
     expect((result as UrlTree).toString()).toContain('redirect');
   });
 
-  it('authGuard permite el acceso con sesión activa', async () => {
-    await firstValueFrom(
-      auth.loginWithEmail({ email: 'estudiante@escuelaing.edu.co', password: 'eciwise' }),
-    );
+  it('authGuard permite el acceso con sesión activa', () => {
+    signInStudent();
     expect(runAuthGuard('/student')).toBe(true);
   });
 
-  it('roleGuard bloquea un rol distinto y redirige al inicio del rol propio', async () => {
-    await firstValueFrom(
-      auth.loginWithEmail({ email: 'estudiante@escuelaing.edu.co', password: 'eciwise' }),
-    );
+  it('roleGuard bloquea un rol distinto y redirige al inicio del rol propio', () => {
+    signInStudent();
     expect(runRoleGuard(Role.Student)).toBe(true);
 
     const denied = runRoleGuard(Role.Admin);

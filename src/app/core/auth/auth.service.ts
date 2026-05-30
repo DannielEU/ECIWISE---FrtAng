@@ -1,33 +1,30 @@
 import { Injectable, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Observable, delay, of, throwError } from 'rxjs';
-import { Role } from '../models/role.enum';
-import { EmailCredentials, RegisterPayload, User } from '../models/user.model';
-import { GoogleJwtClaims } from '../models/google-credential.model';
-import { MOCK_ACCOUNTS, MockAccount } from './mock-users';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
+import { AUTH_CONFIG } from './auth.config';
+import { Role, roleFromApi } from '../models/role.enum';
+import { ApiUser, AuthResponse, EmailCredentials, RegisterRequest, User } from '../models/user.model';
+
+// Reexportado para compatibilidad: los componentes capturan AppError vía su clave.
+export { AppError, AppError as AuthError } from '../errors/app-error';
 
 const SESSION_KEY = 'eciwise.session';
-const LATENCY = 350;
-
-/** Error de autenticación con clave de traducción para la UI. */
-export class AuthError extends Error {
-  constructor(readonly messageKey: string) {
-    super(messageKey);
-  }
-}
+const TOKEN_KEY = 'eciwise.token';
 
 /**
- * Servicio de autenticación mock. Mantiene la sesión en una signal y la
- * persiste en localStorage. Diseñado para sustituirse por una API REST real
- * cambiando únicamente las fuentes de datos.
+ * Servicio de autenticación real contra wise_auth. Mantiene la sesión en una
+ * signal y persiste usuario + JWT en localStorage. Los errores se normalizan en
+ * el `errorInterceptor` (clave de traducción), por lo que aquí no se capturan.
  */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly http = inject(HttpClient);
+  private readonly config = inject(AUTH_CONFIG);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
-  private readonly accounts = [...MOCK_ACCOUNTS];
 
-  private readonly _user = signal<User | null>(this.restore());
+  private readonly _user = signal<User | null>(this.restoreUser());
   readonly user = this._user.asReadonly();
   readonly isAuthenticated = computed(() => this._user() !== null);
   readonly role = computed(() => this._user()?.role ?? null);
@@ -36,53 +33,40 @@ export class AuthService {
     return this._user()?.role === role;
   }
 
-  loginWithEmail({ email, password }: EmailCredentials): Observable<User> {
-    const account = this.accounts.find((a) => a.email.toLowerCase() === email.toLowerCase());
-    if (!account || account.password !== password) {
-      return throwError(() => new AuthError('auth.invalid')).pipe(delay(LATENCY));
-    }
-    if (!account.active) {
-      return throwError(() => new AuthError('auth.disabled')).pipe(delay(LATENCY));
-    }
-    return this.persistAndEmit(account).pipe(delay(LATENCY));
+  /** JWT actual (para el interceptor / SSR-safe). */
+  get token(): string | null {
+    return this.isBrowser ? localStorage.getItem(TOKEN_KEY) : null;
   }
 
-  loginWithGoogle(claims: GoogleJwtClaims): Observable<User> {
-    const existing = this.accounts.find((a) => a.email.toLowerCase() === claims.email.toLowerCase());
-    const user: User = existing
-      ? this.toUser(existing)
-      : {
-          id: claims.sub,
-          name: claims.name,
-          email: claims.email,
-          role: Role.Student,
-          active: true,
-          avatarUrl: claims.picture,
-        };
-    return this.persistAndEmit(user).pipe(delay(LATENCY));
+  loginWithEmail(credentials: EmailCredentials): Observable<User> {
+    return this.http
+      .post<AuthResponse>(`${this.base}/auth/login`, credentials)
+      .pipe(map((res) => this.persist(res.access_token, res.user)));
   }
 
-  register(payload: RegisterPayload): Observable<User> {
-    if (this.accounts.some((a) => a.email.toLowerCase() === payload.email.toLowerCase())) {
-      return throwError(() => new AuthError('auth.invalid')).pipe(delay(LATENCY));
+  register(payload: RegisterRequest): Observable<User> {
+    return this.http
+      .post<AuthResponse>(`${this.base}/auth/register`, payload)
+      .pipe(map((res) => this.persist(res.access_token, res.user)));
+  }
+
+  /** Inicia Google OAuth mediante redirección de página completa al backend. */
+  startGoogleLogin(): void {
+    if (this.isBrowser) {
+      window.location.href = `${this.base}/auth/google`;
     }
-    const account: MockAccount = {
-      id: `u-${Date.now()}`,
-      name: payload.name,
-      email: payload.email,
-      role: Role.Student,
-      active: true,
-      program: payload.program,
-      password: payload.password,
-    };
-    this.accounts.push(account);
-    return this.persistAndEmit(account).pipe(delay(LATENCY));
+  }
+
+  /** Completa la sesión con los datos recibidos en el callback de Google. */
+  completeSession(token: string, apiUser: ApiUser): User {
+    return this.persist(token, apiUser);
   }
 
   logout(): void {
     this._user.set(null);
     if (this.isBrowser) {
       localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(TOKEN_KEY);
     }
   }
 
@@ -99,21 +83,32 @@ export class AuthService {
     }
   }
 
-  private persistAndEmit(source: User | MockAccount): Observable<User> {
-    const user = this.toUser(source);
+  private get base(): string {
+    return this.config.apiBaseUrl.replace(/\/+$/, '');
+  }
+
+  private persist(token: string, apiUser: ApiUser): User {
+    const user = this.toUser(apiUser);
     this._user.set(user);
     if (this.isBrowser) {
+      localStorage.setItem(TOKEN_KEY, token);
       localStorage.setItem(SESSION_KEY, JSON.stringify(user));
     }
-    return of(user);
+    return user;
   }
 
-  private toUser(source: User | MockAccount): User {
-    const { id, name, email, role, active, avatarUrl, program } = source;
-    return { id, name, email, role, active, avatarUrl, program };
+  private toUser(api: ApiUser): User {
+    return {
+      id: api.id,
+      name: `${api.nombre} ${api.apellido}`.trim(),
+      email: api.email,
+      role: roleFromApi(api.rol),
+      active: true,
+      avatarUrl: api.avatarUrl ?? undefined,
+    };
   }
 
-  private restore(): User | null {
+  private restoreUser(): User | null {
     if (!this.isBrowser) {
       return null;
     }

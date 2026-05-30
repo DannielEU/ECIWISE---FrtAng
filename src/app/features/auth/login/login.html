@@ -26,13 +26,9 @@
 
     <div class="auth__divider"><span>{{ 'auth.or' | translate }}</span></div>
 
-    @if (googleConfigured) {
-      <div #googleBtn class="auth__google"></div>
-    } @else {
-      <eci-button variant="secondary" [block]="true" (click)="simulatedGoogle()">
-        {{ 'auth.withGoogle' | translate }}
-      </eci-button>
-    }
+    <eci-button variant="secondary" [block]="true" (click)="loginWithGoogle()">
+      {{ 'auth.withGoogle' | translate }}
+    </eci-button>
 
     <p class="auth__switch">
       {{ 'auth.noAccount' | translate }}
