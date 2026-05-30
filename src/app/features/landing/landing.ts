@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../../shared/ui/button/button';
 import { LogoComponent } from '../../shared/ui/logo/logo';
+import { IconComponent } from '../../shared/ui/icon/icon';
 import { ThemeToggleComponent } from '../../core/theme/theme-toggle';
 import { LanguageSwitchComponent } from '../../core/i18n/language-switch';
 import { A11yToggleComponent } from '../../core/a11y/a11y-toggle';
@@ -34,6 +35,7 @@ import { LandingSceneService } from './landing-scene.service';
     ThemeToggleComponent,
     LanguageSwitchComponent,
     A11yToggleComponent,
+    IconComponent,
   ],
   templateUrl: './landing.html',
   styleUrl: './landing.css',
@@ -44,7 +46,6 @@ export class LandingComponent {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   private readonly canvas = viewChild<ElementRef<HTMLCanvasElement>>('canvas');
-  private readonly stage = viewChild<ElementRef<HTMLElement>>('stage');
 
   constructor() {
     afterNextRender(() => {
@@ -52,9 +53,8 @@ export class LandingComponent {
         return;
       }
       const canvas = this.canvas()?.nativeElement;
-      const stage = this.stage()?.nativeElement;
-      if (canvas && stage) {
-        void this.scene.init(canvas, stage);
+      if (canvas) {
+        void this.scene.init(canvas);
       }
     });
     inject(DestroyRef).onDestroy(() => this.scene.dispose());

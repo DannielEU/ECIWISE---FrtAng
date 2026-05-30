@@ -1,17 +1,33 @@
 import { Injectable } from '@angular/core';
 import type {
   BufferGeometry,
+  Group,
   Points,
   PointsMaterial,
   PerspectiveCamera,
   Scene,
+  Sprite,
+  SpriteMaterial,
+  Texture,
   WebGLRenderer,
 } from 'three';
 
+/** Símbolos académicos que flotan en el fondo de la landing. */
+const STUDY_SYMBOLS = ['π', '∑', '∫', '√', 'ƒ', '∞', 'Δ', 'θ', 'λ', '×', '÷', 'Ω'];
+const SYMBOL_COLORS = [0xffffff, 0xc8102e, 0xd6007a];
+
+interface FloatingSprite {
+  readonly sprite: Sprite;
+  readonly speed: number;
+  readonly phase: number;
+  readonly baseY: number;
+  readonly drift: number;
+}
+
 /**
- * Encapsula la escena espacial 3D de la landing (campo de estrellas con
- * parallax). Carga three.js de forma diferida y solo debe usarse en el
- * navegador. Limpia los recursos de WebGL al destruir.
+ * Escena espacial 3D de la landing: un campo de estrellas con profundidad y
+ * símbolos académicos flotando, para un fondo impactante y referente al
+ * estudio. Carga three.js de forma diferida; solo debe usarse en el navegador.
  */
 @Injectable()
 export class LandingSceneService {
@@ -21,39 +37,29 @@ export class LandingSceneService {
   private stars?: Points;
   private geometry?: BufferGeometry;
   private material?: PointsMaterial;
+  private group?: Group;
+  private readonly floating: FloatingSprite[] = [];
+  private readonly textures: Texture[] = [];
+  private readonly spriteMaterials: SpriteMaterial[] = [];
   private frameId = 0;
-  private host?: HTMLElement;
   private pointer = { x: 0, y: 0 };
+  private clock = 0;
   private initialized = false;
 
-  /** Inicializa la escena dentro del canvas dado. */
-  async init(canvas: HTMLCanvasElement, host: HTMLElement): Promise<void> {
+  /** Inicializa la escena dentro del canvas dado (a tamaño de ventana). */
+  async init(canvas: HTMLCanvasElement): Promise<void> {
     const THREE = await import('three');
-    this.host = host;
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(70, this.aspect(host), 0.1, 1000);
-    this.camera.position.z = 1;
+    this.camera = new THREE.PerspectiveCamera(70, this.aspect(), 0.1, 1000);
+    this.camera.position.z = 3;
 
     this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.resize();
 
-    const count = 1800;
-    const positions = new Float32Array(count * 3);
-    for (let i = 0; i < positions.length; i++) {
-      positions[i] = (Math.random() - 0.5) * 8;
-    }
-    this.geometry = new THREE.BufferGeometry();
-    this.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    this.material = new THREE.PointsMaterial({
-      color: 0xc8102e,
-      size: 0.015,
-      transparent: true,
-      opacity: 0.9,
-    });
-    this.stars = new THREE.Points(this.geometry, this.material);
-    this.scene.add(this.stars);
+    this.buildStars(THREE);
+    this.buildSymbols(THREE);
+    this.resize();
 
     window.addEventListener('resize', this.resize);
     window.addEventListener('pointermove', this.onPointerMove);
@@ -75,19 +81,106 @@ export class LandingSceneService {
     window.removeEventListener('pointermove', this.onPointerMove);
     this.geometry?.dispose();
     this.material?.dispose();
+    for (const texture of this.textures) {
+      texture.dispose();
+    }
+    for (const material of this.spriteMaterials) {
+      material.dispose();
+    }
     this.renderer?.dispose();
     this.renderer = undefined;
   }
 
+  private buildStars(THREE: typeof import('three')): void {
+    const count = 2600;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < positions.length; i++) {
+      positions[i] = (Math.random() - 0.5) * 12;
+    }
+    this.geometry = new THREE.BufferGeometry();
+    this.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    this.material = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.018,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    this.stars = new THREE.Points(this.geometry, this.material);
+    this.scene!.add(this.stars);
+  }
+
+  private buildSymbols(THREE: typeof import('three')): void {
+    this.group = new THREE.Group();
+    for (let i = 0; i < 22; i++) {
+      const symbol = STUDY_SYMBOLS[i % STUDY_SYMBOLS.length];
+      const texture = new THREE.CanvasTexture(this.makeSymbolCanvas(symbol));
+      const sprMaterial = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        opacity: 0.7,
+        color: SYMBOL_COLORS[i % SYMBOL_COLORS.length],
+        depthWrite: false,
+      });
+      const sprite = new THREE.Sprite(sprMaterial);
+      const baseY = this.rand(-3.5, 3.5);
+      sprite.position.set(this.rand(-5, 5), baseY, this.rand(-3.5, 1.5));
+      const scale = this.rand(0.3, 0.7);
+      sprite.scale.set(scale, scale, scale);
+
+      this.textures.push(texture);
+      this.spriteMaterials.push(sprMaterial);
+      this.floating.push({
+        sprite,
+        speed: this.rand(0.2, 0.7),
+        phase: this.rand(0, Math.PI * 2),
+        baseY,
+        drift: this.rand(0.1, 0.3),
+      });
+      this.group.add(sprite);
+    }
+    this.scene!.add(this.group);
+  }
+
+  /** Dibuja un símbolo académico en un canvas para usarlo como textura. */
+  private makeSymbolCanvas(symbol: string): HTMLCanvasElement {
+    const size = 128;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 86px Georgia, "Times New Roman", serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(symbol, size / 2, size / 2 + 4);
+    }
+    return canvas;
+  }
+
   private animate = (): void => {
     this.frameId = requestAnimationFrame(this.animate);
-    if (!this.stars || !this.camera || !this.renderer || !this.scene) {
+    if (!this.camera || !this.renderer || !this.scene) {
       return;
     }
-    this.stars.rotation.y += 0.0006;
-    this.stars.rotation.x += 0.0002;
-    this.camera.position.x += (this.pointer.x * 0.4 - this.camera.position.x) * 0.04;
-    this.camera.position.y += (-this.pointer.y * 0.4 - this.camera.position.y) * 0.04;
+    this.clock += 0.016;
+
+    if (this.stars) {
+      this.stars.rotation.y += 0.0006;
+      this.stars.rotation.x += 0.0002;
+    }
+    if (this.group) {
+      this.group.rotation.y += 0.0009;
+      for (const item of this.floating) {
+        item.sprite.position.y =
+          item.baseY + Math.sin(this.clock * item.speed + item.phase) * item.drift;
+      }
+    }
+
+    this.camera.position.x += (this.pointer.x * 0.6 - this.camera.position.x) * 0.04;
+    this.camera.position.y += (-this.pointer.y * 0.6 - this.camera.position.y) * 0.04;
     this.camera.lookAt(0, 0, 0);
     this.renderer.render(this.scene, this.camera);
   };
@@ -98,16 +191,21 @@ export class LandingSceneService {
   };
 
   private resize = (): void => {
-    if (!this.renderer || !this.camera || !this.host) {
+    if (!this.renderer || !this.camera) {
       return;
     }
-    const { clientWidth, clientHeight } = this.host;
-    this.renderer.setSize(clientWidth, clientHeight, false);
-    this.camera.aspect = clientWidth / clientHeight;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    this.renderer.setSize(width, height, false);
+    this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
   };
 
-  private aspect(host: HTMLElement): number {
-    return host.clientWidth / Math.max(host.clientHeight, 1);
+  private aspect(): number {
+    return window.innerWidth / Math.max(window.innerHeight, 1);
+  }
+
+  private rand(min: number, max: number): number {
+    return Math.random() * (max - min) + min;
   }
 }
