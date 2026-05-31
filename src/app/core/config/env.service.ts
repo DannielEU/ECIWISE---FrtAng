@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 export interface AppEnv {
   apiBaseUrl?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -15,13 +15,14 @@ export class EnvService {
       if (res.ok) {
         this.env = await res.json();
       }
-    } catch (e) {
+    } catch {
       // ignore, keep defaults
     }
   }
 
   get(key: string, fallback?: string): string | undefined {
-    const v = (this.env as any)[key] ?? (window as any)['__APP_ENV__']?.[key];
-    return v ?? fallback;
+    const globalEnv = (globalThis as { __APP_ENV__?: Record<string, unknown> }).__APP_ENV__;
+    const value = this.env[key] ?? globalEnv?.[key];
+    return typeof value === 'string' ? value : fallback;
   }
 }
