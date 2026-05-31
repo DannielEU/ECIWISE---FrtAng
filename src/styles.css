@@ -9,13 +9,13 @@
    ============================================================ */
 :root {
   /* Marca */
-  --brand-black: #111114;
+  --brand-black: #08080a;
   --brand-red: #c8102e;
   --brand-red-dark: #99000d;
   --brand-red-soft: #e23a52;
 
   /* Acentos por comunidad / rol */
-  --accent-student: #0b00d6; /* fucsia */
+  --accent-student: #9a0d0d; /* fucsia */
   --accent-tutor: #c8102e; /* rojo institucional */
   --accent-admin: #5a2a82; /* púrpura administrativo */
 
