@@ -98,6 +98,16 @@ export const en = {
     invalidData: 'Please check the form data.',
     passwordHint: 'At least 8 characters, with letters and numbers.',
     completing: 'Completing sign in…',
+    changePassword: {
+      title: 'Change your password',
+      description:
+        'Your account was created with a temporary password. You must set a new one to continue.',
+      newPassword: 'New password',
+      confirm: 'Confirm password',
+      mismatch: 'Passwords do not match.',
+      studentNote: 'Complete your student details to personalize your experience.',
+      submit: 'Save and continue',
+    },
   },
   errors: {
     network: 'No connection to the server. Please check your network.',
@@ -108,7 +118,7 @@ export const en = {
   register: {
     iaSectionTitle: 'Student details',
     iaSectionHint:
-      'Optional. It helps us get to know you and personalize your experience. You can complete it later in your profile.',
+      'Required. It helps us get to know you and personalize your experience.',
     stepsLabel: 'Registration steps',
     step1: 'Personal details',
     step2: 'Student details',

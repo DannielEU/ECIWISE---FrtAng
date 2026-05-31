@@ -76,6 +76,18 @@
 
             <div class="auth__grid">
               <label class="auth__field">
+                <span>{{ 'ia.fields.gender' | translate }}</span>
+                <input type="number" formControlName="gender" min="0" max="1" />
+              </label>
+              <label class="auth__field">
+                <span>{{ 'ia.fields.ethnicity' | translate }}</span>
+                <input type="number" formControlName="ethnicity" min="0" max="3" />
+              </label>
+              <label class="auth__field">
+                <span>{{ 'ia.fields.parentalEducation' | translate }}</span>
+                <input type="number" formControlName="parentalEducation" min="0" max="4" />
+              </label>
+              <label class="auth__field">
                 <span>{{ 'ia.fields.studyTimeWeekly' | translate }}</span>
                 <input
                   type="number"

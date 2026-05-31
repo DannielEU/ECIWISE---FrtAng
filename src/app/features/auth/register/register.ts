@@ -4,7 +4,8 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthError, AuthService } from '../../../core/auth/auth.service';
 import { ROLE_HOME } from '../../../core/models/role.enum';
-import { DatosIaRegistro, RegisterRequest, User } from '../../../core/models/user.model';
+import { RegisterRequest, User } from '../../../core/models/user.model';
+import { buildDatosIaGroup, buildDatosIaPayload } from '../datos-ia-form';
 import { ButtonComponent } from '../../../shared/ui/button/button';
 import { LogoComponent } from '../../../shared/ui/logo/logo';
 import { SpaceBackgroundComponent } from '../../../shared/ui/space-background/space-background';
@@ -56,16 +57,7 @@ export class RegisterComponent {
         Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),
       ],
     ],
-    datosIa: this.fb.nonNullable.group({
-      studyTimeWeekly: [null as number | null, [Validators.min(0), Validators.max(20)]],
-      absences: [null as number | null, [Validators.min(0), Validators.max(30)]],
-      parentalSupport: [null as number | null, [Validators.min(0), Validators.max(4)]],
-      tutoring: [false],
-      extracurricular: [false],
-      sports: [false],
-      music: [false],
-      volunteering: [false],
-    }),
+    datosIa: buildDatosIaGroup(this.fb),
   });
 
   /** Avanza al paso de datos de IA si los datos personales son válidos. */
@@ -115,27 +107,7 @@ export class RegisterComponent {
       nombre: value.nombre,
       apellido: value.apellido,
       telefono: value.telefono.trim() || undefined,
-      datosIa: this.buildDatosIa(value.datosIa),
+      datosIa: buildDatosIaPayload(value.datosIa),
     };
-  }
-
-  private buildDatosIa(d: ReturnType<typeof this.form.getRawValue>['datosIa']): DatosIaRegistro {
-    const datos: DatosIaRegistro = {
-      tutoring: d.tutoring ? 1 : 0,
-      extracurricular: d.extracurricular ? 1 : 0,
-      sports: d.sports ? 1 : 0,
-      music: d.music ? 1 : 0,
-      volunteering: d.volunteering ? 1 : 0,
-    };
-    if (d.studyTimeWeekly !== null) {
-      datos.studyTimeWeekly = d.studyTimeWeekly;
-    }
-    if (d.absences !== null) {
-      datos.absences = d.absences;
-    }
-    if (d.parentalSupport !== null) {
-      datos.parentalSupport = d.parentalSupport;
-    }
-    return datos;
   }
 }

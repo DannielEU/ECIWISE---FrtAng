@@ -10,6 +10,8 @@ export interface User {
   readonly avatarUrl?: string;
   /** Programa académico o dependencia. */
   readonly program?: string;
+  /** Cuenta creada por CSV: debe cambiar la contraseña temporal al ingresar. */
+  readonly mustChangePassword?: boolean;
 }
 
 /** Credenciales para el login integrado por correo. */
@@ -20,17 +22,22 @@ export interface EmailCredentials {
 
 /**
  * Subconjunto del modelo de rendimiento que se captura en el registro.
- * Todos los campos son opcionales; el resto se completa en el perfil de IA.
+ * Obligatorios: el estudiante debe completarlos al registrarse (o en el cambio
+ * de contraseña forzado si su cuenta se creó por CSV). El resto de variables se
+ * completa en el perfil de IA.
  */
 export interface DatosIaRegistro {
-  studyTimeWeekly?: number;
-  absences?: number;
-  tutoring?: number;
-  parentalSupport?: number;
-  extracurricular?: number;
-  sports?: number;
-  music?: number;
-  volunteering?: number;
+  gender: number;
+  ethnicity: number;
+  parentalEducation: number;
+  studyTimeWeekly: number;
+  absences: number;
+  parentalSupport: number;
+  tutoring: number;
+  extracurricular: number;
+  sports: number;
+  music: number;
+  volunteering: number;
 }
 
 /** Cuerpo de la petición de registro integrado (debe coincidir con el DTO del backend). */
@@ -51,6 +58,7 @@ export interface ApiUser {
   readonly apellido: string;
   readonly rol: string;
   readonly avatarUrl?: string | null;
+  readonly mustChangePassword?: boolean;
 }
 
 /** Respuesta de autenticación del backend (login, registro y callback de Google). */

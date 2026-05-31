@@ -14,6 +14,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { TopBarComponent } from '../top-bar/top-bar';
 import { SideNavComponent } from '../side-nav/side-nav';
 import { FloatingActionsComponent } from '../floating-actions/floating-actions';
+import { ForcePasswordChangeComponent } from '../../../features/auth/force-password-change/force-password-change';
 
 /**
  * Estructura principal de las áreas autenticadas: barra superior, navegación
@@ -28,6 +29,7 @@ import { FloatingActionsComponent } from '../floating-actions/floating-actions';
     TopBarComponent,
     SideNavComponent,
     FloatingActionsComponent,
+    ForcePasswordChangeComponent,
   ],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.css',
@@ -37,6 +39,10 @@ export class AppShellComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   protected readonly role = computed(() => this.auth.role());
+  /** Cuentas creadas por CSV: fuerzan el cambio de contraseña al ingresar. */
+  protected readonly mustChangePassword = computed(
+    () => this.auth.user()?.mustChangePassword === true,
+  );
   protected readonly navOpen = signal(false);
 
   constructor() {

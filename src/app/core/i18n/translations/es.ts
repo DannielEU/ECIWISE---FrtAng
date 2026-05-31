@@ -98,6 +98,16 @@ export const es = {
     invalidData: 'Revisa los datos del formulario.',
     passwordHint: 'Mínimo 8 caracteres, con letras y números.',
     completing: 'Completando inicio de sesión…',
+    changePassword: {
+      title: 'Cambia tu contraseña',
+      description:
+        'Tu cuenta fue creada con una contraseña temporal. Debes establecer una nueva para continuar.',
+      newPassword: 'Nueva contraseña',
+      confirm: 'Confirmar contraseña',
+      mismatch: 'Las contraseñas no coinciden.',
+      studentNote: 'Completa tus datos de estudiante para personalizar tu experiencia.',
+      submit: 'Guardar y continuar',
+    },
   },
   errors: {
     network: 'No hay conexión con el servidor. Revisa tu red.',
@@ -108,7 +118,7 @@ export const es = {
   register: {
     iaSectionTitle: 'Datos del estudiante',
     iaSectionHint:
-      'Opcional. Nos ayuda a conocerte mejor y personalizar tu experiencia. Puedes completarlos luego en tu perfil.',
+      'Obligatorio. Nos ayuda a conocerte mejor y personalizar tu experiencia.',
     stepsLabel: 'Pasos del registro',
     step1: 'Datos personales',
     step2: 'Datos del estudiante',

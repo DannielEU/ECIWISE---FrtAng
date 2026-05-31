@@ -4,7 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { AUTH_CONFIG } from './auth.config';
 import { Role, roleFromApi } from '../models/role.enum';
-import { ApiUser, AuthResponse, EmailCredentials, RegisterRequest, User } from '../models/user.model';
+import {
+  ApiUser,
+  AuthResponse,
+  DatosIaRegistro,
+  EmailCredentials,
+  RegisterRequest,
+  User,
+} from '../models/user.model';
 
 // Reexportado para compatibilidad: los componentes capturan AppError vía su clave.
 export { AppError, AppError as AuthError } from '../errors/app-error';
@@ -48,6 +55,28 @@ export class AuthService {
     return this.http
       .post<AuthResponse>(`${this.base}/auth/register`, payload)
       .pipe(map((res) => this.persist(res.access_token, res.user)));
+  }
+
+  /**
+   * Cambia la contraseña del usuario autenticado (flujo forzado de cuentas CSV).
+   * Si llega `datosIa` (estudiantes), se persiste en el backend. Al completarse,
+   * limpia el flag `mustChangePassword` en el estado local.
+   */
+  changePassword(newPassword: string, datosIa?: DatosIaRegistro): Observable<void> {
+    return this.http
+      .post<ApiUser>(`${this.base}/auth/cambiar-contrasena`, { newPassword, datosIa })
+      .pipe(
+        map(() => {
+          const current = this._user();
+          if (current) {
+            const updated: User = { ...current, mustChangePassword: false };
+            this._user.set(updated);
+            if (this.isBrowser) {
+              localStorage.setItem(SESSION_KEY, JSON.stringify(updated));
+            }
+          }
+        }),
+      );
   }
 
   /** Inicia Google OAuth mediante redirección de página completa al backend. */
@@ -105,6 +134,7 @@ export class AuthService {
       role: roleFromApi(api.rol),
       active: true,
       avatarUrl: api.avatarUrl ?? undefined,
+      mustChangePassword: api.mustChangePassword ?? false,
     };
   }
 
