@@ -28,12 +28,29 @@ export interface EstudianteDetalle extends Omit<EstudianteIa, 'datosIa'> {
   datosIa: DatosIa | null;
 }
 
+/** Media, mediana y moda de una serie de predicciones. */
+export interface SerieEstadistica {
+  media: number;
+  mediana: number;
+  moda: number;
+  n: number;
+}
+
 export interface PlatformStats {
   totalEstudiantes: number;
   conDatos: number;
   conPrediccion: number;
   enRiesgo: number;
   distribucionRendimiento: { grado: string; conteo: number }[];
+  // Registro / ingreso de la plataforma
+  distribucionRoles: { rol: string; conteo: number }[];
+  registrosPorMes: { mes: string; conteo: number }[];
+  accesosPorMes: { mes: string; conteo: number }[];
+  accesoEstado: { hanIngresado: number; nuncaIngresado: number };
+  // Predicciones de IA
+  distribucionDesercion: { etiqueta: string; conteo: number }[];
+  estadisticasProbabilidadExito: SerieEstadistica;
+  estadisticasConfianzaDesercion: SerieEstadistica;
 }
 
 export interface UsuarioBasico {

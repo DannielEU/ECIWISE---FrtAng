@@ -1,0 +1,54 @@
+.pie {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.pie__svg {
+  width: 9rem;
+  height: 9rem;
+  flex-shrink: 0;
+  /* Lleva el inicio del trazo (3 en punto) a las 12 en punto. */
+  transform: rotate(-90deg);
+}
+
+.pie__arc {
+  fill: transparent;
+  stroke-width: 8;
+  transition: stroke-dasharray 0.3s ease;
+}
+
+.pie__legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 12rem;
+}
+
+.pie__legend-item {
+  display: grid;
+  grid-template-columns: 0.75rem 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 0.85rem;
+}
+
+.pie__swatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--radius-sm);
+}
+
+.pie__legend-value {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.pie__empty {
+  color: var(--text-muted);
+  margin: 0;
+}
