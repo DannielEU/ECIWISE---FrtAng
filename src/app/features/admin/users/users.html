@@ -31,7 +31,7 @@
 </div>
 
 @if (uploadResult(); as res) {
-  <eci-bulk-result-dialog [result]="res" (close)="closeResult()" />
+  <eci-bulk-result-dialog [result]="res" (closed)="closeResult()" />
 }
 
 <p class="admin__count">{{ 'admin.users.count' | translate: { count: users().length } }}</p>

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormGroup } from '@angular/forms';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { ForcePasswordChangeComponent } from './force-password-change';
@@ -53,7 +54,7 @@ describe('ForcePasswordChangeComponent', () => {
 
   // Acceso a la signal `form` protegida para preparar valores en las pruebas.
   const formOf = (fixture: ComponentFixture<ForcePasswordChangeComponent>) =>
-    (fixture.componentInstance as unknown as { form: any }).form;
+    (fixture.componentInstance as unknown as { form: FormGroup }).form;
 
   it('muestra los datos de estudiante solo para el rol estudiante', async () => {
     const studentFixture = await create(Role.Student);

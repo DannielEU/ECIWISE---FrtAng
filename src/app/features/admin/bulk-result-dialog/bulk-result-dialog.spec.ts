@@ -92,7 +92,7 @@ describe('BulkResultDialogComponent', () => {
   it('emite close al invocar onClose()', () => {
     const fixture = setup(makeResult(1));
     let closed = false;
-    fixture.componentInstance.close.subscribe(() => (closed = true));
+    fixture.componentInstance.closed.subscribe(() => (closed = true));
 
     fixture.componentInstance.onClose();
     expect(closed).toBe(true);

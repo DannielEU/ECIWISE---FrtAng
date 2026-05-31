@@ -31,7 +31,7 @@ const PAGE_SIZE = 5;
 })
 export class BulkResultDialogComponent {
   readonly result = input.required<BulkUploadResult>();
-  readonly close = output<void>();
+  readonly closed = output<void>();
 
   protected readonly pageSize = PAGE_SIZE;
   /** Página actual (0-based). Se reinicia a 0 cuando cambia el resultado. */
@@ -70,7 +70,7 @@ export class BulkResultDialogComponent {
   }
 
   onClose(): void {
-    this.close.emit();
+    this.closed.emit();
   }
 
   async copyPassword(password: string, index: number): Promise<void> {

@@ -23,7 +23,7 @@ export default tseslint.config(
       ],
       '@angular-eslint/component-selector': [
         'error',
-        { type: 'element', prefix: 'app', style: 'kebab-case' },
+        { type: 'element', prefix: ['app', 'eci'], style: 'kebab-case' },
       ],
     },
   },
