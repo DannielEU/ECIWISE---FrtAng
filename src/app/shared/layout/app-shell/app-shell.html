@@ -20,4 +20,6 @@
 
 @if (mustChangePassword()) {
   <eci-force-password-change />
+} @else if (needsPerformanceProfile()) {
+  <eci-complete-profile-dialog />
 }

@@ -1,0 +1,43 @@
+<eci-page-header titleKey="admin.statistics.title" icon="trophy" />
+
+@if (loading()) {
+  <p>{{ 'common.loading' | translate }}</p>
+} @else if (stats(); as s) {
+  <div class="stats__cards">
+    <eci-card>
+      <span class="stats__num">{{ s.totalEstudiantes }}</span>
+      <span class="stats__label">{{ 'admin.statistics.totalStudents' | translate }}</span>
+    </eci-card>
+    <eci-card>
+      <span class="stats__num">{{ s.conDatos }}</span>
+      <span class="stats__label">{{ 'admin.statistics.withData' | translate }}</span>
+    </eci-card>
+    <eci-card>
+      <span class="stats__num">{{ s.conPrediccion }}</span>
+      <span class="stats__label">{{ 'admin.statistics.withPrediction' | translate }}</span>
+    </eci-card>
+    <eci-card>
+      <span class="stats__num stats__num--risk">{{ s.enRiesgo }}</span>
+      <span class="stats__label">{{ 'admin.statistics.atRisk' | translate }}</span>
+    </eci-card>
+  </div>
+
+  <eci-card>
+    <h2 class="stats__heading">{{ 'admin.statistics.gradeDistribution' | translate }}</h2>
+    @if (s.distribucionRendimiento.length === 0) {
+      <p class="stats__muted">{{ 'admin.statistics.noPredictions' | translate }}</p>
+    } @else {
+      <ul class="stats__bars">
+        @for (g of s.distribucionRendimiento; track g.grado) {
+          <li class="stats__bar-row">
+            <span class="stats__bar-label">{{ g.grado }}</span>
+            <span class="stats__bar-track">
+              <span class="stats__bar-fill" [style.width.%]="(g.conteo / maxGrade(s)) * 100"></span>
+            </span>
+            <span class="stats__bar-count">{{ g.conteo }}</span>
+          </li>
+        }
+      </ul>
+    }
+  </eci-card>
+}

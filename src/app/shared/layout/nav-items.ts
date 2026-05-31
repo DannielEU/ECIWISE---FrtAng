@@ -22,6 +22,7 @@ const STUDENT_NAV: readonly NavItem[] = [
 
 const TUTOR_NAV: readonly NavItem[] = [
   { labelKey: 'nav.controlCenter', route: '/tutor', icon: 'dashboard', exact: true },
+  { labelKey: 'nav.students', route: '/tutor/estudiantes', icon: 'users' },
   { labelKey: 'nav.schedule', route: '/tutor/schedule', icon: 'schedule' },
   { labelKey: 'nav.availability', route: '/tutor/availability', icon: 'availability' },
   { labelKey: 'nav.requests', route: '/tutor/requests', icon: 'requests' },
@@ -31,6 +32,9 @@ const TUTOR_NAV: readonly NavItem[] = [
 const ADMIN_NAV: readonly NavItem[] = [
   { labelKey: 'nav.dashboard', route: '/admin', icon: 'dashboard', exact: true },
   { labelKey: 'nav.users', route: '/admin/users', icon: 'users' },
+  { labelKey: 'nav.statistics', route: '/admin/estadisticas', icon: 'trophy' },
+  { labelKey: 'nav.predictions', route: '/admin/predicciones', icon: 'assistant' },
+  { labelKey: 'nav.assignments', route: '/admin/asignaciones', icon: 'add-user' },
 ];
 
 const NAV_BY_ROLE: Record<Role, readonly NavItem[]> = {

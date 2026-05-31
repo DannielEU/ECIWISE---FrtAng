@@ -10,4 +10,21 @@ export const ADMIN_ROUTES: Routes = [
     path: 'users',
     loadComponent: () => import('./users/users').then((m) => m.AdminUsersComponent),
   },
+  {
+    path: 'estadisticas',
+    loadComponent: () =>
+      import('./statistics/statistics').then((m) => m.AdminStatisticsComponent),
+  },
+  {
+    path: 'predicciones',
+    loadComponent: () =>
+      import('../ia/students-predictions/students-predictions').then(
+        (m) => m.StudentsPredictionsComponent,
+      ),
+  },
+  {
+    path: 'asignaciones',
+    loadComponent: () =>
+      import('./assignments/assignments').then((m) => m.AdminAssignmentsComponent),
+  },
 ];

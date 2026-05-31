@@ -1,0 +1,23 @@
+<div class="fpc__backdrop">
+  <div
+    class="fpc"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="'completeProfile.popupTitle' | translate"
+  >
+    <h2 class="fpc__title">{{ 'completeProfile.popupTitle' | translate }}</h2>
+    <p class="fpc__desc">{{ 'completeProfile.popupDesc' | translate }}</p>
+
+    <form class="fpc__form" [formGroup]="form" (ngSubmit)="submit()">
+      <eci-datos-ia-fields [group]="datosIaGroup" />
+
+      @if (errorKey(); as err) {
+        <p class="fpc__error" role="alert">{{ err | translate }}</p>
+      }
+
+      <eci-button type="submit" [block]="true" [disabled]="loading()">
+        {{ 'completeProfile.save' | translate }}
+      </eci-button>
+    </form>
+  </div>
+</div>

@@ -7,6 +7,13 @@ export const TUTOR_ROUTES: Routes = [
     loadComponent: () => import('./tutor-dashboard').then((m) => m.TutorDashboardComponent),
   },
   {
+    path: 'estudiantes',
+    loadComponent: () =>
+      import('../ia/students-predictions/students-predictions').then(
+        (m) => m.StudentsPredictionsComponent,
+      ),
+  },
+  {
     path: 'schedule',
     loadComponent: () => import('./schedule/schedule').then((m) => m.TutorScheduleComponent),
   },

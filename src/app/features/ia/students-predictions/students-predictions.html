@@ -1,0 +1,44 @@
+<eci-page-header titleKey="ia.predictions.title" icon="assistant" />
+
+@if (loading()) {
+  <p>{{ 'common.loading' | translate }}</p>
+} @else if (students().length === 0) {
+  <eci-card><p>{{ 'ia.predictions.empty' | translate }}</p></eci-card>
+} @else {
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>{{ 'common.name' | translate }}</th>
+          <th>{{ 'common.email' | translate }}</th>
+          <th>{{ 'ia.predictions.performance' | translate }}</th>
+          <th>{{ 'ia.predictions.dropout' | translate }}</th>
+          <th>{{ 'ia.predictions.confidence' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of students(); track s.id) {
+          <tr>
+            <td>{{ s.nombre }} {{ s.apellido }}</td>
+            <td class="admin-table__email">{{ s.email }}</td>
+            <td>{{ s.datosIa?.prediccionRendimiento || '—' }}</td>
+            <td>
+              @if (s.datosIa?.prediccionDesercion; as dp) {
+                <span
+                  class="risk"
+                  [class.risk--high]="dp === 'Dropout'"
+                  [class.risk--low]="dp !== 'Dropout'"
+                >{{ dp }}</span>
+              } @else {
+                —
+              }
+            </td>
+            <td>
+              {{ s.datosIa?.confianzaDesercion !== null && s.datosIa?.confianzaDesercion !== undefined ? s.datosIa?.confianzaDesercion + '%' : '—' }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

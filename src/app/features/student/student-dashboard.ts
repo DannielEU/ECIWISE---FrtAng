@@ -3,14 +3,16 @@ import { Role } from '../../core/models/role.enum';
 import { PageHeaderComponent } from '../../shared/ui/page-header/page-header';
 import { DashboardGridComponent } from '../../shared/layout/dashboard-grid/dashboard-grid';
 import { navItemsFor } from '../../shared/layout/nav-items';
+import { CompleteProfileSectionComponent } from './complete-profile-section/complete-profile-section';
 
 /** Panel principal del estudiante con acceso a sus secciones. */
 @Component({
   selector: 'eci-student-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeaderComponent, DashboardGridComponent],
+  imports: [PageHeaderComponent, DashboardGridComponent, CompleteProfileSectionComponent],
   template: `
     <eci-page-header titleKey="nav.dashboard" icon="dashboard" />
+    <eci-complete-profile-section />
     <eci-dashboard-grid [items]="items" />
   `,
 })
