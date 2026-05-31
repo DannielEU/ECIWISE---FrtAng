@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
   FormBuilder,
+  FormGroup,
   ReactiveFormsModule,
   ValidatorFn,
   Validators,
@@ -9,6 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { AuthError, AuthService } from '../../../core/auth/auth.service';
 import { Role } from '../../../core/models/role.enum';
 import { ButtonComponent } from '../../../shared/ui/button/button';
+import { DatosIaFieldsComponent } from '../datos-ia-fields/datos-ia-fields';
 import { buildDatosIaGroup, buildDatosIaPayload } from '../datos-ia-form';
 
 /** Valida que `newPassword` y `confirm` coincidan. */
@@ -27,7 +29,7 @@ const passwordsMatch: ValidatorFn = (group) => {
 @Component({
   selector: 'eci-force-password-change',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, TranslatePipe, ButtonComponent],
+  imports: [ReactiveFormsModule, TranslatePipe, ButtonComponent, DatosIaFieldsComponent],
   templateUrl: './force-password-change.html',
   styleUrl: './force-password-change.css',
 })
@@ -61,6 +63,11 @@ export class ForcePasswordChangeComponent {
     if (!this.isStudent) {
       this.form.controls.datosIa.disable();
     }
+  }
+
+  /** Grupo de datos de IA para el componente compartido de campos. */
+  protected get datosIaGroup(): FormGroup {
+    return this.form.controls.datosIa;
   }
 
   submit(): void {

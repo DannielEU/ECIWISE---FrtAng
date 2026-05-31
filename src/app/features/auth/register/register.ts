@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthError, AuthService } from '../../../core/auth/auth.service';
@@ -7,6 +7,7 @@ import { ROLE_HOME } from '../../../core/models/role.enum';
 import { RegisterRequest, User } from '../../../core/models/user.model';
 import { buildDatosIaGroup, buildDatosIaPayload } from '../datos-ia-form';
 import { ButtonComponent } from '../../../shared/ui/button/button';
+import { DatosIaFieldsComponent } from '../datos-ia-fields/datos-ia-fields';
 import { LogoComponent } from '../../../shared/ui/logo/logo';
 import { SpaceBackgroundComponent } from '../../../shared/ui/space-background/space-background';
 import { ThemeToggleComponent } from '../../../core/theme/theme-toggle';
@@ -22,6 +23,7 @@ import { A11yToggleComponent } from '../../../core/a11y/a11y-toggle';
     RouterLink,
     TranslatePipe,
     ButtonComponent,
+    DatosIaFieldsComponent,
     LogoComponent,
     SpaceBackgroundComponent,
     ThemeToggleComponent,
@@ -59,6 +61,11 @@ export class RegisterComponent {
     ],
     datosIa: buildDatosIaGroup(this.fb),
   });
+
+  /** Grupo de datos de IA para el componente compartido de campos. */
+  protected get datosIaGroup(): FormGroup {
+    return this.form.controls.datosIa;
+  }
 
   /** Avanza al paso de datos de IA si los datos personales son válidos. */
   next(): void {

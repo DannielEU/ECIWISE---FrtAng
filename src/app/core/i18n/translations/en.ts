@@ -124,6 +124,52 @@ export const en = {
     step2: 'Student details',
     next: 'Continue',
   },
+  datosIa: {
+    selectPlaceholder: 'Select an option',
+    labels: {
+      gender: 'Gender',
+      ethnicity: 'Ethnic group',
+      parentalEducation: "Your parents' education level",
+      parentalSupport: 'Family support with your studies',
+      studyTimeWeekly: 'Study hours per week',
+      absences: 'Absences this academic year',
+      activitiesTitle: 'Tell us about your activities',
+      tutoring: 'Do you receive tutoring?',
+      extracurricular: 'Do you take part in extracurricular activities?',
+      sports: 'Do you play any sport?',
+      music: 'Do you practice music?',
+      volunteering: 'Do you do volunteering?',
+    },
+    hints: {
+      parentalEducation: 'The highest education level reached by either of your parents.',
+      parentalSupport: 'How much your family supports your academic life.',
+      studyTimeWeekly: 'On average, how many hours you study per week (0 to 20).',
+      absences: 'How many classes you have missed so far this year (0 to 30).',
+    },
+    options: {
+      gender: { male: 'Male', female: 'Female' },
+      ethnicity: {
+        caucasian: 'Caucasian',
+        african: 'African descent',
+        asian: 'Asian',
+        other: 'Other',
+      },
+      parentalEducation: {
+        none: 'No formal education',
+        highschool: 'High school',
+        somecollege: 'Technical / Associate',
+        bachelor: "Bachelor's degree",
+        higher: 'Postgraduate',
+      },
+      parentalSupport: {
+        none: 'None',
+        low: 'Low',
+        moderate: 'Moderate',
+        high: 'High',
+        veryhigh: 'Very high',
+      },
+    },
+  },
   ia: {
     profile: {
       title: 'AI profile',

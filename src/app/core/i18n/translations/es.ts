@@ -124,6 +124,52 @@ export const es = {
     step2: 'Datos del estudiante',
     next: 'Continuar',
   },
+  datosIa: {
+    selectPlaceholder: 'Selecciona una opción',
+    labels: {
+      gender: 'Género',
+      ethnicity: 'Grupo étnico',
+      parentalEducation: 'Nivel educativo de tus padres',
+      parentalSupport: 'Apoyo familiar en tus estudios',
+      studyTimeWeekly: 'Horas de estudio por semana',
+      absences: 'Inasistencias este año académico',
+      activitiesTitle: 'Cuéntanos sobre tus actividades',
+      tutoring: '¿Recibes tutorías?',
+      extracurricular: '¿Participas en actividades extracurriculares?',
+      sports: '¿Practicas algún deporte?',
+      music: '¿Practicas música?',
+      volunteering: '¿Haces voluntariado?',
+    },
+    hints: {
+      parentalEducation: 'El nivel de estudios más alto que alcanzó alguno de tus padres.',
+      parentalSupport: 'Qué tanto te apoya tu familia en tu vida académica.',
+      studyTimeWeekly: 'En promedio, cuántas horas estudias por semana (0 a 20).',
+      absences: 'A cuántas clases has faltado en lo que va del año académico (0 a 30).',
+    },
+    options: {
+      gender: { male: 'Masculino', female: 'Femenino' },
+      ethnicity: {
+        caucasian: 'Caucásico',
+        african: 'Afrodescendiente',
+        asian: 'Asiático',
+        other: 'Otro',
+      },
+      parentalEducation: {
+        none: 'Sin estudios',
+        highschool: 'Bachillerato',
+        somecollege: 'Técnico / Tecnólogo',
+        bachelor: 'Universitario (pregrado)',
+        higher: 'Posgrado',
+      },
+      parentalSupport: {
+        none: 'Ninguno',
+        low: 'Bajo',
+        moderate: 'Moderado',
+        high: 'Alto',
+        veryhigh: 'Muy alto',
+      },
+    },
+  },
   ia: {
     profile: {
       title: 'Perfil de IA',
