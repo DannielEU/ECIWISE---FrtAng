@@ -59,6 +59,17 @@
   color: var(--danger);
 }
 
+.admin__import-link {
+  margin-left: var(--space-2);
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .admin__count {
   margin: 0 0 var(--space-3);
   color: var(--text-muted);

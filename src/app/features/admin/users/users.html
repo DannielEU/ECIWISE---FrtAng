@@ -18,10 +18,21 @@
     @if (importMessage(); as msg) {
       <p class="admin__import" [class.admin__import--error]="importError()" role="status">
         {{ msg | translate: { creados: importCreated(), errores: importErrors() } }}
+        @if (uploadResult(); as res) {
+          @if (res.usuarios.length > 0) {
+            <button type="button" class="admin__import-link" (click)="uploadResult.set(res)">
+              {{ 'admin.csv.dialog.view' | translate }}
+            </button>
+          }
+        }
       </p>
     }
   </eci-card>
 </div>
+
+@if (uploadResult(); as res) {
+  <eci-bulk-result-dialog [result]="res" (close)="closeResult()" />
+}
 
 <p class="admin__count">{{ 'admin.users.count' | translate: { count: users().length } }}</p>
 

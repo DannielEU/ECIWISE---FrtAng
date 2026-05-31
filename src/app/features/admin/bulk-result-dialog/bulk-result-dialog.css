@@ -1,0 +1,350 @@
+.dialog__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: color-mix(in srgb, #000 55%, transparent);
+  backdrop-filter: blur(3px);
+  animation: dialog-fade 0.15s ease-out;
+}
+
+.dialog {
+  width: min(54rem, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+  animation: dialog-pop 0.18s ease-out;
+}
+
+@keyframes dialog-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog__backdrop,
+  .dialog {
+    animation: none;
+  }
+}
+
+/* ---- Header ---- */
+.dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.dialog__title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.dialog__title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+}
+
+.dialog__close {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.125rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-base), color var(--transition-base);
+}
+
+.dialog__close:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+/* ---- Stat chips ---- */
+.dialog__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.dialog__chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.dialog__chip--ok {
+  background: color-mix(in srgb, var(--success) 18%, transparent);
+  color: var(--success);
+}
+
+.dialog__chip--err {
+  background: color-mix(in srgb, var(--danger) 16%, transparent);
+  color: var(--danger);
+}
+
+.dialog__empty {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* ---- Table ---- */
+.dialog__table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.dialog__table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.dialog__table th,
+.dialog__table td {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.dialog__table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  background: var(--surface-2);
+}
+
+.dialog__table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--surface-2) 45%, transparent);
+}
+
+.dialog__table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.dialog__col-num {
+  width: 2.5rem;
+  text-align: center;
+}
+
+.dialog__muted {
+  color: var(--text-muted);
+}
+
+/* El correo se trunca con elipsis para no desbordar el diálogo. */
+.dialog__email {
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+/* ---- Role badge ---- */
+.dialog__role {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.dialog__role--estudiante {
+  background: color-mix(in srgb, var(--accent-student) 18%, transparent);
+  color: var(--accent-student);
+}
+
+.dialog__role--tutor {
+  background: color-mix(in srgb, var(--accent-tutor) 18%, transparent);
+  color: var(--accent-tutor);
+}
+
+.dialog__role--admin {
+  background: color-mix(in srgb, var(--accent-admin) 18%, transparent);
+  color: var(--accent-admin);
+}
+
+/* ---- Password pill + copy ---- */
+.dialog__pass {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dialog__pass code {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.18rem 0.45rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+}
+
+.dialog__copy {
+  flex: none;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color var(--transition-base), color var(--transition-base);
+}
+
+.dialog__copy:hover {
+  border-color: var(--accent);
+}
+
+.dialog__copy--done {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+/* ---- Toolbar (copy-all + pager) ---- */
+.dialog__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.dialog__copy-all {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.dialog__copy-all:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.dialog__pager {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+}
+
+.dialog__nav {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dialog__nav:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dialog__nav:not(:disabled):hover {
+  border-color: var(--accent);
+}
+
+.dialog__page {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  min-width: 7rem;
+  text-align: center;
+}
+
+/* ---- Errors ---- */
+.dialog__errors {
+  border: 1px solid color-mix(in srgb, var(--danger) 40%, var(--border));
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  font-size: 0.85rem;
+}
+
+.dialog__errors summary {
+  cursor: pointer;
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.dialog__errors ul {
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dialog__errors li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: baseline;
+}
+
+.dialog__err-email {
+  color: var(--text);
+}
+
+.dialog__motivo {
+  color: var(--danger);
+}
+
+/* ---- Footer ---- */
+.dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+}

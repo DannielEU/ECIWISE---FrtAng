@@ -6,13 +6,21 @@ import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header'
 import { CardComponent } from '../../../shared/ui/card/card';
 import { ButtonComponent } from '../../../shared/ui/button/button';
 import { IconComponent } from '../../../shared/ui/icon/icon';
-import { UserAdminService } from '../user-admin.service';
+import { BulkResultDialogComponent } from '../bulk-result-dialog/bulk-result-dialog';
+import { BulkUploadResult, UserAdminService } from '../user-admin.service';
 
 /** Administración de usuarios: tabla con datos reales y carga masiva por CSV. */
 @Component({
   selector: 'eci-admin-users',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslatePipe, PageHeaderComponent, CardComponent, ButtonComponent, IconComponent],
+  imports: [
+    TranslatePipe,
+    PageHeaderComponent,
+    CardComponent,
+    ButtonComponent,
+    IconComponent,
+    BulkResultDialogComponent,
+  ],
   templateUrl: './users.html',
   styleUrl: './users.css',
 })
@@ -28,6 +36,8 @@ export class AdminUsersComponent implements OnInit {
   protected readonly importError = signal(false);
   protected readonly importCreated = signal(0);
   protected readonly importErrors = signal(0);
+  /** Resultado de la última carga; al estar presente, abre el pop-up. */
+  protected readonly uploadResult = signal<BulkUploadResult | null>(null);
 
   ngOnInit(): void {
     this.service.load();
@@ -57,6 +67,7 @@ export class AdminUsersComponent implements OnInit {
         this.importErrors.set(res.errores.length);
         this.importError.set(res.creados === 0);
         this.importMessage.set('admin.csv.result');
+        this.uploadResult.set(res);
       },
       error: () => {
         this.uploading.set(false);
@@ -65,5 +76,9 @@ export class AdminUsersComponent implements OnInit {
       },
     });
     input.value = '';
+  }
+
+  closeResult(): void {
+    this.uploadResult.set(null);
   }
 }
