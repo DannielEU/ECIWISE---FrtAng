@@ -42,7 +42,7 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => inject(EnvService).load()),
     {
       provide: AUTH_CONFIG,
-      useFactory: (env: EnvService) => ({ apiBaseUrl: env.get('API_BASE_URL', 'http://localhost:3001') }),
+      useFactory: (env: EnvService) => ({ apiBaseUrl: env.get('apiBaseUrl', 'http://localhost:3001') }),
       deps: [EnvService],
     },
   ],

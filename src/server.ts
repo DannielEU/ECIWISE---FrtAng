@@ -16,8 +16,7 @@ const angularApp = new AngularNodeAppEngine();
 
 // Expose runtime env for the browser to consume.
 app.get('/assets/env.json', (req, res) => {
-  const apiBaseUrl = process.env['API_BASE_URL'] || process.env['API_BASEURL'] || 'http://localhost:3001';
-  res.json({ apiBaseUrl });
+  res.json({ apiBaseUrl: process.env['AUTH_SERVICE'] });
 });
 
 /**
