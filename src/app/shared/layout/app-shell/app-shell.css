@@ -30,6 +30,9 @@
   padding: var(--space-8);
   outline: none;
   min-width: 0;
+  /* Único elemento que participa en la View Transition al navegar:
+     el header y el menú lateral quedan fuera y permanecen fijos. */
+  view-transition-name: eci-main;
 }
 
 .shell__overlay {

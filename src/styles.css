@@ -102,10 +102,22 @@
 /* ============================================================
    Transiciones entre pantallas (View Transitions API)
    Habilitadas en el router con withViewTransitions().
-   Crossfade + leve desplazamiento vertical: suave y estético.
+
+   Solo anima el contenido enrutado (`.shell__main`, nombrado
+   como `eci-main`). La barra superior y el menú lateral viven
+   en el grupo `root`, que dejamos SIN animación para que
+   permanezcan fijos y no parpadeen al cambiar de sección.
    ============================================================ */
+
+/* Header + menú + chrome: estáticos, no participan en la transición. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
+  animation: none;
+}
+
+/* Crossfade + leve desplazamiento vertical: suave y estético. */
+::view-transition-old(eci-main),
+::view-transition-new(eci-main) {
   animation-duration: 320ms;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -124,11 +136,11 @@
   }
 }
 
-::view-transition-old(root) {
+::view-transition-old(eci-main) {
   animation-name: eci-fade-slide-out;
 }
 
-::view-transition-new(root) {
+::view-transition-new(eci-main) {
   animation-name: eci-fade-slide-in;
 }
 
@@ -142,8 +154,8 @@
   }
 
   /* Sin desplazamiento; el navegador hace un crossfade mínimo. */
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
+  ::view-transition-old(eci-main),
+  ::view-transition-new(eci-main) {
     animation: none !important;
   }
 }
