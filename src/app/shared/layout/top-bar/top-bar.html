@@ -19,6 +19,7 @@
 
     @if (user(); as currentUser) {
       <div class="top-bar__profile">
+        <eci-avatar [name]="currentUser.name" [src]="currentUser.avatarUrl" [size]="34" />
         <span class="top-bar__name">{{ currentUser.name }}</span>
         <button
           type="button"

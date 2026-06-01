@@ -4,6 +4,14 @@
   <div class="eci-fit__body">
 @if (user(); as currentUser) {
   <eci-card>
+    <div class="profile__head">
+      <eci-avatar [name]="currentUser.name" [src]="currentUser.avatarUrl" [size]="72" />
+      <div class="profile__head-info">
+        <span class="profile__head-name">{{ currentUser.name }}</span>
+        <span class="profile__head-email">{{ currentUser.email }}</span>
+      </div>
+    </div>
+
     <form class="profile" [formGroup]="form" (ngSubmit)="save()">
       <label class="profile__field">
         <span>{{ 'common.name' | translate }}</span>

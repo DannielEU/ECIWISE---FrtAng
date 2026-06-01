@@ -35,10 +35,26 @@
 }
 
 @media (max-width: 900px) {
+  .top-bar {
+    /* Menos padding lateral para dejar espacio a los controles. */
+    padding: 0 var(--space-3);
+  }
   .top-bar__menu {
     display: inline-flex;
   }
   .top-bar__name {
     display: none;
+  }
+}
+
+/* En celular, controles más juntos y separador del perfil más compacto. */
+@media (max-width: 30rem) {
+  .top-bar__left,
+  .top-bar__right {
+    gap: var(--space-1);
+  }
+  .top-bar__profile {
+    margin-left: var(--space-1);
+    padding-left: var(--space-1);
   }
 }

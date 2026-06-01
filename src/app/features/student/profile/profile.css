@@ -1,3 +1,29 @@
+.profile__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--border);
+}
+
+.profile__head-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.profile__head-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.profile__head-email {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
 .profile {
   display: flex;
   flex-direction: column;

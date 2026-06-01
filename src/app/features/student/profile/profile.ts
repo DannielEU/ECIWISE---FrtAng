@@ -5,6 +5,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header';
 import { CardComponent } from '../../../shared/ui/card/card';
 import { ButtonComponent } from '../../../shared/ui/button/button';
+import { AvatarComponent } from '../../../shared/ui/avatar/avatar';
 
 /** Edición de los datos de perfil del usuario en sesión. */
 @Component({
@@ -16,6 +17,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button';
     PageHeaderComponent,
     CardComponent,
     ButtonComponent,
+    AvatarComponent,
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',

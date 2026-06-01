@@ -106,7 +106,7 @@ html[data-theme='light'] .landing .eci-logo__plus {
   stroke: #7a0f20;
 }
 html[data-theme='light'] .landing .eci-logo__plus-word {
-  color: #ffffff;
+  color: var(--brand-red);
 }
 
 html[data-theme='light'] .landing .landing__eci {
@@ -184,7 +184,7 @@ html[data-theme='light'] .auth .eci-logo__plus {
   stroke: #7a0f20;
 }
 html[data-theme='light'] .auth .eci-logo__plus-word {
-  color: #ffffff;
+  color: var(--brand-red);
 }
 
 /* La tarjeta del formulario es blanca, con texto oscuro (como en la landing).
@@ -409,6 +409,28 @@ input[type='radio'] {
 @media (prefers-reduced-motion: reduce) {
   .eci-section-enter {
     animation: none;
+  }
+}
+
+/* Las barras dejan solo el isotipo (sin el texto "ECIWISE+") cuando el espacio
+   se reduce, para que no se desborden con el resto de controles. Reglas globales
+   porque el texto vive dentro del componente <eci-logo> (CSS encapsulado).
+
+   La barra de la app tiene muchos controles (menú, idioma, tema, accesibilidad,
+   notificaciones, avatar, salir): el texto se mantiene mientras hay espacio y
+   solo se oculta cuando empieza a faltar (~640px), no en tablets/ventanas medianas. */
+@media (max-width: 40rem) {
+  .top-bar .eci-logo__word {
+    display: none;
+  }
+}
+
+/* Las barras públicas (landing y login/registro) tienen pocos controles:
+   basta ocultar el texto en celular. */
+@media (max-width: 30rem) {
+  .landing__bar .eci-logo__word,
+  .auth__bar .eci-logo__word {
+    display: none;
   }
 }
 

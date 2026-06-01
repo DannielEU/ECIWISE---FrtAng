@@ -1,0 +1,32 @@
+:host {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  /* Anillo sutil acorde a la plataforma. */
+  border: 1px solid var(--border);
+  background: var(--surface-3);
+  user-select: none;
+}
+
+.avatar__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar__initials {
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--avatar-bg, var(--accent));
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}

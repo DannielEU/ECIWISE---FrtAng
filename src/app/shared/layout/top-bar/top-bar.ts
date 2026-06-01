@@ -9,6 +9,7 @@ import { ThemeToggleComponent } from '../../../core/theme/theme-toggle';
 import { LanguageSwitchComponent } from '../../../core/i18n/language-switch';
 import { A11yToggleComponent } from '../../../core/a11y/a11y-toggle';
 import { NotificationsBellComponent } from '../notifications-bell/notifications-bell';
+import { AvatarComponent } from '../../ui/avatar/avatar';
 
 /** Barra superior: logo (vuelve al inicio), controles globales y perfil. */
 @Component({
@@ -23,6 +24,7 @@ import { NotificationsBellComponent } from '../notifications-bell/notifications-
     LanguageSwitchComponent,
     A11yToggleComponent,
     NotificationsBellComponent,
+    AvatarComponent,
   ],
   templateUrl: './top-bar.html',
   styleUrl: './top-bar.css',
