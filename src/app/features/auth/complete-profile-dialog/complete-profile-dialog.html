@@ -5,7 +5,10 @@
     aria-modal="true"
     [attr.aria-label]="'completeProfile.popupTitle' | translate"
   >
-    <h2 class="fpc__title">{{ 'completeProfile.popupTitle' | translate }}</h2>
+    <div class="fpc__head">
+      <span class="fpc__head-icon"><eci-icon name="profile" [size]="20" /></span>
+      <h2 class="fpc__title">{{ 'completeProfile.popupTitle' | translate }}</h2>
+    </div>
     <p class="fpc__desc">{{ 'completeProfile.popupDesc' | translate }}</p>
 
     <div class="fpc__form">

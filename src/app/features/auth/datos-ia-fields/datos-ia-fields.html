@@ -1,5 +1,5 @@
 <div class="dia" [formGroup]="group()">
-  @if (paginated()) {
+  @if (chrome()) {
     <ol class="dia__steps" [attr.aria-label]="'register.stepsLabel' | translate">
       @for (p of pages; track p.titleKey; let i = $index) {
         <li
@@ -15,12 +15,12 @@
     </ol>
   }
 
-  @for (s of [step()]; track s) {
+  @for (s of [activePage()]; track s) {
     <div
-      [class.dia__page]="paginated()"
+      [class.dia__page]="chrome()"
       [class.dia__page--back]="direction() === 'back'"
     >
-      @if (!paginated() || s === 0) {
+      @if (singleView() || s === 0) {
         <div class="dia__grid">
           <div class="dia__field">
             <label class="dia__field-label">
@@ -35,10 +35,9 @@
             @if (errorKeyFor('gender'); as ek) {
               <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
             }
-            <details class="dia__explain">
-              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
-              <p>{{ 'datosIa.desc.gender' | translate }}</p>
-            </details>
+            <eci-collapse [summary]="'datosIa.whatIsThis' | translate">
+              <p class="dia__explain-text">{{ 'datosIa.desc.gender' | translate }}</p>
+            </eci-collapse>
           </div>
 
           <div class="dia__field">
@@ -54,10 +53,9 @@
             @if (errorKeyFor('ethnicity'); as ek) {
               <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
             }
-            <details class="dia__explain">
-              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
-              <p>{{ 'datosIa.desc.ethnicity' | translate }}</p>
-            </details>
+            <eci-collapse [summary]="'datosIa.whatIsThis' | translate">
+              <p class="dia__explain-text">{{ 'datosIa.desc.ethnicity' | translate }}</p>
+            </eci-collapse>
           </div>
 
           <div class="dia__field">
@@ -75,10 +73,9 @@
             @if (errorKeyFor('parentalEducation'); as ek) {
               <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
             }
-            <details class="dia__explain">
-              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
-              <p>{{ 'datosIa.desc.parentalEducation' | translate }}</p>
-            </details>
+            <eci-collapse [summary]="'datosIa.whatIsThis' | translate">
+              <p class="dia__explain-text">{{ 'datosIa.desc.parentalEducation' | translate }}</p>
+            </eci-collapse>
           </div>
 
           <div class="dia__field">
@@ -96,15 +93,14 @@
             @if (errorKeyFor('parentalSupport'); as ek) {
               <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
             }
-            <details class="dia__explain">
-              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
-              <p>{{ 'datosIa.desc.parentalSupport' | translate }}</p>
-            </details>
+            <eci-collapse [summary]="'datosIa.whatIsThis' | translate">
+              <p class="dia__explain-text">{{ 'datosIa.desc.parentalSupport' | translate }}</p>
+            </eci-collapse>
           </div>
         </div>
       }
 
-      @if (!paginated() || s === 1) {
+      @if (singleView() || s === 1) {
         <div class="dia__grid">
           <div class="dia__field">
             <label class="dia__field-label">
@@ -114,10 +110,9 @@
             @if (errorKeyFor('studyTimeWeekly'); as ek) {
               <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
             }
-            <details class="dia__explain">
-              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
-              <p>{{ 'datosIa.desc.studyTimeWeekly' | translate }}</p>
-            </details>
+            <eci-collapse [summary]="'datosIa.whatIsThis' | translate">
+              <p class="dia__explain-text">{{ 'datosIa.desc.studyTimeWeekly' | translate }}</p>
+            </eci-collapse>
           </div>
 
           <div class="dia__field">
@@ -128,10 +123,9 @@
             @if (errorKeyFor('absences'); as ek) {
               <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
             }
-            <details class="dia__explain">
-              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
-              <p>{{ 'datosIa.desc.absences' | translate }}</p>
-            </details>
+            <eci-collapse [summary]="'datosIa.whatIsThis' | translate">
+              <p class="dia__explain-text">{{ 'datosIa.desc.absences' | translate }}</p>
+            </eci-collapse>
           </div>
         </div>
 
@@ -144,10 +138,9 @@
                   <input type="checkbox" [formControlName]="c" />
                   <span>{{ 'datosIa.labels.' + c | translate }}</span>
                 </label>
-                <details class="dia__explain">
-                  <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
-                  <p>{{ 'datosIa.desc.' + c | translate }}</p>
-                </details>
+                <eci-collapse [summary]="'datosIa.whatIsThis' | translate">
+                  <p class="dia__explain-text">{{ 'datosIa.desc.' + c | translate }}</p>
+                </eci-collapse>
               </div>
             }
           </div>
@@ -156,7 +149,7 @@
     </div>
   }
 
-  @if (paginated()) {
+  @if (chrome()) {
     @if (error(); as err) {
       <p class="dia__error" role="alert">{{ err | translate }}</p>
     }

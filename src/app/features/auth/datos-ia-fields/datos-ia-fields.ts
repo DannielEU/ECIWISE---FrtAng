@@ -10,17 +10,13 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../../../shared/ui/button/button';
 import { IconComponent } from '../../../shared/ui/icon/icon';
+import { CollapseComponent } from '../../../shared/ui/collapse/collapse';
+import { DATOS_IA_PAGES, markPageTouchedAndValidate } from '../datos-ia-form';
 
 /** Opción de un select codificado (valor numérico que espera el backend + clave i18n). */
 interface SelectOption {
   readonly value: number;
   readonly key: string;
-}
-
-/** Una página del asistente: título i18n y los controles que valida. */
-interface Page {
-  readonly titleKey: string;
-  readonly controls: readonly string[];
 }
 
 /**
@@ -33,14 +29,26 @@ interface Page {
 @Component({
   selector: 'eci-datos-ia-fields',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, TranslatePipe, ButtonComponent, IconComponent],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    ButtonComponent,
+    IconComponent,
+    CollapseComponent,
+  ],
   templateUrl: './datos-ia-fields.html',
   styleUrl: './datos-ia-fields.css',
 })
 export class DatosIaFieldsComponent {
   readonly group = input.required<FormGroup>();
-  /** Activa la navegación por pasos (Anterior/Siguiente + botón final). */
+  /** Activa la navegación por pasos interna (Anterior/Siguiente + botón final). */
   readonly paginated = input(false);
+  /**
+   * Modo "controlado": si se indica un índice de página, el componente solo
+   * renderiza esa página y oculta su indicador y su barra de navegación (las
+   * provee el contenedor, p. ej. el registro en 3 pasos). `null` = automático.
+   */
+  readonly page = input<number | null>(null);
   /** Deshabilita el botón final mientras el contenedor guarda. */
   readonly pending = input(false);
   /** Clave i18n de error a mostrar sobre los botones de navegación. */
@@ -82,22 +90,23 @@ export class DatosIaFieldsComponent {
     'volunteering',
   ] as const;
 
-  /** Agrupación de las preguntas en pasos cortos y temáticos. */
-  protected readonly pages: readonly Page[] = [
-    {
-      titleKey: 'datosIa.pages.about',
-      controls: ['gender', 'ethnicity', 'parentalEducation', 'parentalSupport'],
-    },
-    {
-      titleKey: 'datosIa.pages.study',
-      controls: ['studyTimeWeekly', 'absences'],
-    },
-  ];
+  /** Agrupación de las preguntas en pasos cortos y temáticos (compartida). */
+  protected readonly pages = DATOS_IA_PAGES;
 
-  /** Paso actual (0-based). */
+  /** Paso interno actual (0-based), solo en modo paginado autónomo. */
   protected readonly step = signal(0);
   /** Dirección del último cambio de paso (para la animación de slide). */
   protected readonly direction = signal<'forward' | 'back'>('forward');
+
+  /** Muestra el indicador de pasos y la navegación propios del componente. */
+  protected readonly chrome = computed(() => this.paginated() && this.page() === null);
+  /** Modo de vista única (sin paginar ni controlar): todas las preguntas juntas. */
+  protected readonly singleView = computed(
+    () => !this.paginated() && this.page() === null,
+  );
+  /** Índice de página a renderizar: el controlado por el padre o el interno. */
+  protected readonly activePage = computed(() => this.page() ?? this.step());
+
   protected readonly isFirst = computed(() => this.step() === 0);
   protected readonly isLast = computed(() => this.step() === this.pages.length - 1);
 
@@ -137,15 +146,6 @@ export class DatosIaFieldsComponent {
 
   /** Marca como tocados los controles del paso actual y reporta si son válidos. */
   private validateCurrentPage(): boolean {
-    const formGroup = this.group();
-    let valid = true;
-    for (const name of this.pages[this.step()].controls) {
-      const control = formGroup.get(name);
-      if (control) {
-        control.markAsTouched();
-        valid = valid && control.valid;
-      }
-    }
-    return valid;
+    return markPageTouchedAndValidate(this.group(), this.pages[this.step()].controls);
   }
 }

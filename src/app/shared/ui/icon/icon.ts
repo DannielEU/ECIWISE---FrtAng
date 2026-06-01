@@ -25,6 +25,7 @@ import {
   LucideUser,
   LucideUserPlus,
   LucideUsers,
+  LucideX,
 } from '@lucide/angular';
 
 /** Nombres de icono soportados por la plataforma (iconos de línea, sin emojis). */
@@ -54,7 +55,8 @@ export type IconName =
   | 'notifications'
   | 'arrow-left'
   | 'arrow-right'
-  | 'check';
+  | 'check'
+  | 'close';
 
 /**
  * Envoltorio de iconos. Mapea un nombre semántico a su icono lucide.
@@ -89,6 +91,7 @@ export type IconName =
     LucideArrowLeft,
     LucideArrowRight,
     LucideCheck,
+    LucideX,
   ],
   template: `
     @switch (name()) {
@@ -169,6 +172,9 @@ export type IconName =
       }
       @case ('check') {
         <svg lucideCheck [size]="size()" aria-hidden="true"></svg>
+      }
+      @case ('close') {
+        <svg lucideX [size]="size()" aria-hidden="true"></svg>
       }
     }
   `,

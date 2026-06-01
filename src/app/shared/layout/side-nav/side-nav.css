@@ -16,7 +16,6 @@
 .side-nav__list {
   list-style: none;
   margin: 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -24,6 +23,11 @@
   /* Permite que la lista se encoja y aparezca scroll solo cuando no quepa. */
   min-height: 0;
   overflow-y: auto;
+  /* `overflow-y: auto` también recorta en horizontal: el padding (compensado con
+     un margen negativo para no mover los enlaces) deja sitio al anillo de foco
+     de los enlaces y evita que se vea cortado. */
+  padding: 0 var(--space-2);
+  margin-inline: calc(-1 * var(--space-2));
 }
 
 .side-nav__link {

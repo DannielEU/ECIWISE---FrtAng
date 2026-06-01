@@ -2,8 +2,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  /* Evita scroll horizontal mientras la página entra deslizándose. */
+  /* Contiene el deslizamiento horizontal del paso, pero deja un margen de
+     recorte para que el anillo de foco (outline) de los controles del borde
+     nunca quede cortado. */
   overflow-x: clip;
+  overflow-clip-margin: var(--space-2);
 }
 
 /* Grilla alineada: dos columnas en pantallas amplias, una en móvil. */
@@ -35,33 +38,9 @@
   font-weight: 600;
 }
 
-/* Comentario expandible que explica a qué refiere cada pregunta. */
-.dia__explain {
-  font-size: 0.78rem;
-}
-
-.dia__explain > summary {
-  cursor: pointer;
-  color: var(--accent);
-  font-weight: 600;
-  width: fit-content;
-  list-style: none;
-}
-
-.dia__explain > summary::-webkit-details-marker {
-  display: none;
-}
-
-.dia__explain > summary::before {
-  content: '＋ ';
-}
-
-.dia__explain[open] > summary::before {
-  content: '－ ';
-}
-
-.dia__explain > p {
-  margin: var(--space-1) 0 0;
+/* Texto del comentario expandible (dentro de eci-collapse). */
+.dia__explain-text {
+  margin: 0;
   color: var(--text-muted);
   line-height: 1.4;
 }

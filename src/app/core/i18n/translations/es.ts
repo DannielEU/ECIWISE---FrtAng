@@ -130,7 +130,8 @@ export const es = {
       'Obligatorio. Nos ayuda a conocerte mejor y personalizar tu experiencia.',
     stepsLabel: 'Pasos del registro',
     step1: 'Datos personales',
-    step2: 'Datos del estudiante',
+    step2: 'Sobre ti',
+    step3: 'Tus estudios',
     next: 'Continuar',
     errors: {
       required: 'Este campo es obligatorio.',
@@ -593,6 +594,8 @@ export const es = {
         view: 'Ver detalle',
         createdChip: '{{creados}} de {{total}} creados',
         errorChip: '{{errores}} con error',
+        tabCreated: 'Creados',
+        tabErrors: 'Con error',
         copyAll: 'Copiar todas',
         copiedAll: '¡Copiadas!',
         colName: 'Nombre',

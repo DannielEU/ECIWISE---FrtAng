@@ -92,6 +92,38 @@
   gap: var(--space-4);
 }
 
+/* ---------------- Animación de transición entre pasos ---------------- */
+.auth__view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  animation: auth-slide-in-right 280ms ease;
+}
+
+.auth__view--back {
+  animation-name: auth-slide-in-left;
+}
+
+@keyframes auth-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(26px);
+  }
+}
+
+@keyframes auth-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-26px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth__view {
+    animation: none;
+  }
+}
+
 .auth__field {
   display: flex;
   flex-direction: column;

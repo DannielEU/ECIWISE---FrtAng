@@ -12,8 +12,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { AuthError, AuthService } from '../../../core/auth/auth.service';
 import { ROLE_HOME } from '../../../core/models/role.enum';
 import { RegisterRequest, User } from '../../../core/models/user.model';
-import { buildDatosIaGroup, buildDatosIaPayload } from '../datos-ia-form';
+import {
+  DATOS_IA_PAGES,
+  buildDatosIaGroup,
+  buildDatosIaPayload,
+  markPageTouchedAndValidate,
+} from '../datos-ia-form';
 import { ButtonComponent } from '../../../shared/ui/button/button';
+import { IconComponent } from '../../../shared/ui/icon/icon';
 import { DatosIaFieldsComponent } from '../datos-ia-fields/datos-ia-fields';
 import { LogoComponent } from '../../../shared/ui/logo/logo';
 import { SpaceBackgroundComponent } from '../../../shared/ui/space-background/space-background';
@@ -43,6 +49,7 @@ function allowedEmailDomainValidator(control: AbstractControl): ValidationErrors
     RouterLink,
     TranslatePipe,
     ButtonComponent,
+    IconComponent,
     DatosIaFieldsComponent,
     LogoComponent,
     SpaceBackgroundComponent,
@@ -60,8 +67,13 @@ export class RegisterComponent {
 
   protected readonly loading = signal(false);
   protected readonly errorKey = signal<string | null>(null);
-  /** Paso actual del asistente (1: datos personales, 2: datos para la IA). */
-  protected readonly step = signal<1 | 2>(1);
+  /**
+   * Paso actual del asistente: 1 datos personales, 2 y 3 las dos páginas de
+   * "Cuéntanos sobre ti" (datos del modelo de IA).
+   */
+  protected readonly step = signal<1 | 2 | 3>(1);
+  /** Dirección del último cambio de paso (para la animación de slide). */
+  protected readonly direction = signal<'forward' | 'back'>('forward');
 
   /** Campos que se validan antes de avanzar al segundo paso. */
   private readonly step1Controls = ['nombre', 'apellido', 'email', 'telefono', 'password'] as const;
@@ -105,20 +117,30 @@ export class RegisterComponent {
     return 'register.errors.required';
   }
 
-  /** Avanza al paso de datos de IA si los datos personales son válidos. */
+  /** Avanza al siguiente paso validando la página actual. */
   next(): void {
-    const ok = this.step1Controls.every((name) => this.form.controls[name].valid);
-    if (!ok) {
-      this.step1Controls.forEach((name) => this.form.controls[name].markAsTouched());
-      return;
+    const current = this.step();
+    if (current === 1) {
+      const ok = this.step1Controls.every((name) => this.form.controls[name].valid);
+      if (!ok) {
+        this.step1Controls.forEach((name) => this.form.controls[name].markAsTouched());
+        return;
+      }
+    } else if (current === 2) {
+      // La primera página de "Sobre ti" debe ser válida antes de avanzar.
+      if (!markPageTouchedAndValidate(this.datosIaGroup, DATOS_IA_PAGES[0].controls)) {
+        return;
+      }
     }
     this.errorKey.set(null);
-    this.step.set(2);
+    this.direction.set('forward');
+    this.step.update((s) => Math.min(3, s + 1) as 1 | 2 | 3);
   }
 
-  /** Regresa al paso de datos personales. */
+  /** Regresa al paso anterior. */
   back(): void {
-    this.step.set(1);
+    this.direction.set('back');
+    this.step.update((s) => Math.max(1, s - 1) as 1 | 2 | 3);
   }
 
   submit(): void {

@@ -7,23 +7,32 @@
   justify-content: center;
   /* Margen generoso para que el diálogo nunca toque los bordes de la pantalla. */
   padding: clamp(var(--space-4), 5vh, var(--space-8));
-  background: color-mix(in srgb, #000 55%, transparent);
-  backdrop-filter: blur(3px);
+  background: var(--overlay);
+  backdrop-filter: blur(4px);
   animation: dialog-fade 0.15s ease-out;
+  /* Se promueve al top layer como popover: anulamos los estilos por defecto del
+     agente de usuario (fit-content, margin auto, borde) para seguir cubriendo
+     toda la pantalla por encima de cualquier otro componente. */
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  overflow: visible;
 }
 
 .dialog {
-  width: min(54rem, 100%);
-  max-height: 88vh;
-  overflow-y: auto;
+  width: min(52rem, 100%);
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  padding: var(--space-5);
+  gap: var(--space-6);
+  padding: var(--space-8) var(--space-8) var(--space-6);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-lg);
   animation: dialog-pop 0.18s ease-out;
 }
 
@@ -36,14 +45,7 @@
 @keyframes dialog-pop {
   from {
     opacity: 0;
-    transform: translateY(8px) scale(0.98);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dialog__backdrop,
-  .dialog {
-    animation: none;
+    transform: translateY(10px) scale(0.98);
   }
 }
 
@@ -55,47 +57,66 @@
   gap: var(--space-3);
 }
 
-.dialog__title {
+.dialog__heading {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.dialog__title {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .dialog__title-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--accent) 16%, transparent);
   color: var(--accent);
 }
 
+/* Botón de cierre circular. */
 .dialog__close {
-  border: 0;
-  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
   color: var(--text-muted);
-  font-size: 1.125rem;
-  line-height: 1;
   cursor: pointer;
-  padding: var(--space-2);
-  border-radius: var(--radius-md);
-  transition: background var(--transition-base), color var(--transition-base);
+  transition:
+    background var(--transition-base),
+    color var(--transition-base),
+    transform var(--transition-fast);
 }
 
 .dialog__close:hover {
-  background: var(--surface-2);
+  background: var(--surface-3);
   color: var(--text);
+  transform: scale(1.06);
+}
+
+.dialog__close:active {
+  transform: scale(0.94);
 }
 
 /* ---- Stat chips ---- */
 .dialog__stats {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .dialog__chip {
@@ -117,18 +138,77 @@
   color: var(--danger);
 }
 
+/* ---- Tabs ---- */
+.dialog__tabs {
+  display: flex;
+  gap: var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.dialog__tab {
+  position: relative;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: var(--space-3) var(--space-1) var(--space-4);
+  cursor: pointer;
+  transition: color var(--transition-base);
+}
+
+.dialog__tab:hover {
+  color: var(--text);
+}
+
+/* Subrayado activo animado. */
+.dialog__tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--transition-base);
+}
+
+.dialog__tab--active {
+  color: var(--text);
+}
+
+.dialog__tab--active::after {
+  transform: scaleX(1);
+}
+
+/* ---- Panel (altura estable, sin scroll) ---- */
+.dialog__panel {
+  min-height: 17rem;
+}
+
+.dialog__view {
+  animation: dialog-view-in var(--transition-base) ease;
+}
+
+@keyframes dialog-view-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
 .dialog__empty {
   margin: 0;
+  padding: var(--space-6) 0;
+  text-align: center;
   color: var(--text-muted);
 }
 
-/* ---- Table ---- */
-.dialog__table-wrap {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
+/* ---- Tabla de creados ---- */
 .dialog__table {
   width: 100%;
   table-layout: fixed;
@@ -144,14 +224,10 @@
   vertical-align: middle;
 }
 
-.dialog__table th {
+.dialog__table thead th {
   color: var(--text-muted);
   font-weight: 600;
-  background: var(--surface-2);
-}
-
-.dialog__table tbody tr:nth-child(even) {
-  background: color-mix(in srgb, var(--surface-2) 45%, transparent);
+  border-bottom: 1px solid var(--border);
 }
 
 .dialog__table tbody tr:last-child td {
@@ -159,20 +235,27 @@
 }
 
 .dialog__col-num {
-  width: 2.5rem;
+  width: 2.25rem;
   text-align: center;
+}
+
+.dialog__col-role {
+  width: 7rem;
 }
 
 .dialog__muted {
   color: var(--text-muted);
 }
 
-/* El correo se trunca con elipsis para no desbordar el diálogo. */
+/* Texto que se trunca con elipsis para no desbordar el diálogo. */
+.dialog__name,
 .dialog__email {
-  max-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.dialog__email {
   color: var(--text-muted);
 }
 
@@ -233,7 +316,9 @@
   padding: 0.2rem 0.55rem;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: border-color var(--transition-base), color var(--transition-base);
+  transition:
+    border-color var(--transition-base),
+    color var(--transition-base);
 }
 
 .dialog__copy:hover {
@@ -245,12 +330,52 @@
   color: var(--success);
 }
 
-/* ---- Toolbar (copy-all + pager) ---- */
-.dialog__toolbar {
+/* ---- Lista de errores ---- */
+.dialog__errs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dialog__err {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, var(--border));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--danger) 6%, transparent);
+  font-size: 0.85rem;
+}
+
+.dialog__err-row {
+  flex: none;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.dialog__err-email {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.dialog__motivo {
+  flex: none;
+  text-align: right;
+  color: var(--danger);
+}
+
+/* ---- Footer (copy-all + pager + cerrar) ---- */
+.dialog__footer {
+  display: flex;
+  align-items: center;
   gap: var(--space-3);
 }
 
@@ -261,9 +386,12 @@
   font: inherit;
   font-size: 0.8rem;
   font-weight: 600;
-  padding: 0.3rem 0.7rem;
+  padding: 0.4rem 0.8rem;
   border-radius: var(--radius-md);
   cursor: pointer;
+  transition:
+    border-color var(--transition-base),
+    background var(--transition-base);
 }
 
 .dialog__copy-all:hover {
@@ -271,23 +399,37 @@
   background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
 
+/* El paginador queda centrado; el botón de cerrar se ancla a la derecha. */
 .dialog__pager {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  margin: 0 auto;
+}
+
+.dialog__copy-all ~ .dialog__pager {
+  margin-right: auto;
+  margin-left: var(--space-2);
+}
+
+.dialog__footer > eci-button {
   margin-left: auto;
 }
 
 .dialog__nav {
-  width: 2rem;
-  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-full);
   background: var(--surface-2);
   color: var(--text);
-  font-size: 1.1rem;
-  line-height: 1;
   cursor: pointer;
+  transition:
+    border-color var(--transition-base),
+    transform var(--transition-fast);
 }
 
 .dialog__nav:disabled {
@@ -297,55 +439,43 @@
 
 .dialog__nav:not(:disabled):hover {
   border-color: var(--accent);
+  transform: scale(1.06);
+}
+
+.dialog__nav:not(:disabled):active {
+  transform: scale(0.94);
 }
 
 .dialog__page {
   color: var(--text-muted);
   font-size: 0.85rem;
-  min-width: 7rem;
+  font-weight: 600;
+  min-width: 3rem;
   text-align: center;
 }
 
-/* ---- Errors ---- */
-.dialog__errors {
-  border: 1px solid color-mix(in srgb, var(--danger) 40%, var(--border));
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
-  font-size: 0.85rem;
+@media (prefers-reduced-motion: reduce) {
+  .dialog__backdrop,
+  .dialog,
+  .dialog__view {
+    animation: none;
+  }
+
+  .dialog__tab::after,
+  .dialog__close,
+  .dialog__nav {
+    transition: none;
+  }
 }
 
-.dialog__errors summary {
-  cursor: pointer;
-  color: var(--danger);
-  font-weight: 700;
-}
+@media (max-width: 36rem) {
+  .dialog__footer {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
-.dialog__errors ul {
-  margin: var(--space-3) 0 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.dialog__errors li {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  align-items: baseline;
-}
-
-.dialog__err-email {
-  color: var(--text);
-}
-
-.dialog__motivo {
-  color: var(--danger);
-}
-
-/* ---- Footer ---- */
-.dialog__footer {
-  display: flex;
-  justify-content: flex-end;
+  .dialog__footer > eci-button,
+  .dialog__copy-all ~ .dialog__pager {
+    margin: 0;
+  }
 }

@@ -1,5 +1,46 @@
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DatosIaRegistro } from '../../core/models/user.model';
+
+/** Una página del asistente de datos de IA: título i18n y controles que valida. */
+export interface DatosIaPage {
+  readonly titleKey: string;
+  readonly controls: readonly string[];
+}
+
+/**
+ * Agrupación de las preguntas en pasos cortos y temáticos. Compartido por el
+ * asistente paginado (`datos-ia-fields`) y por el registro en 3 pasos, para que
+ * el reparto de preguntas sea único.
+ */
+export const DATOS_IA_PAGES: readonly DatosIaPage[] = [
+  {
+    titleKey: 'datosIa.pages.about',
+    controls: ['gender', 'ethnicity', 'parentalEducation', 'parentalSupport'],
+  },
+  {
+    titleKey: 'datosIa.pages.study',
+    controls: ['studyTimeWeekly', 'absences'],
+  },
+];
+
+/**
+ * Marca como tocados los controles indicados y devuelve si todos son válidos.
+ * Se usa para validar una página del asistente antes de avanzar.
+ */
+export function markPageTouchedAndValidate(
+  group: FormGroup,
+  controls: readonly string[],
+): boolean {
+  let valid = true;
+  for (const name of controls) {
+    const control = group.get(name);
+    if (control) {
+      control.markAsTouched();
+      valid = valid && control.valid;
+    }
+  }
+  return valid;
+}
 
 /** Valores crudos del grupo de datos de IA del registro. */
 export interface DatosIaFormValue {

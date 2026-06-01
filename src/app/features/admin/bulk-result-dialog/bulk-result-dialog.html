@@ -1,4 +1,4 @@
-<div class="dialog__backdrop" (click)="onClose()">
+<div class="dialog__backdrop" #root popover="manual" (click)="onClose()">
   <div
     class="dialog"
     role="dialog"
@@ -7,17 +7,17 @@
     (click)="$event.stopPropagation()"
   >
     <header class="dialog__header">
-      <h2 class="dialog__title">
-        <span class="dialog__title-icon"><eci-icon name="add-user" [size]="18" /></span>
-        {{ 'admin.csv.dialog.title' | translate }}
-      </h2>
+      <div class="dialog__heading">
+        <span class="dialog__title-icon"><eci-icon name="add-user" [size]="20" /></span>
+        <h2 class="dialog__title">{{ 'admin.csv.dialog.title' | translate }}</h2>
+      </div>
       <button
         type="button"
         class="dialog__close"
         [attr.aria-label]="'admin.csv.dialog.close' | translate"
         (click)="onClose()"
       >
-        ✕
+        <eci-icon name="close" [size]="18" />
       </button>
     </header>
 
@@ -25,116 +25,138 @@
       <span class="dialog__chip dialog__chip--ok">
         {{ 'admin.csv.dialog.createdChip' | translate: { creados: result().creados, total: result().total } }}
       </span>
-      @if (result().errores.length > 0) {
+      @if (hasErrors()) {
         <span class="dialog__chip dialog__chip--err">
           {{ 'admin.csv.dialog.errorChip' | translate: { errores: result().errores.length } }}
         </span>
       }
     </div>
 
-    @if (users().length === 0) {
-      <p class="dialog__empty">{{ 'admin.csv.dialog.noUsers' | translate }}</p>
-    } @else {
-      <div class="dialog__table-wrap">
-        <table class="dialog__table">
-          <thead>
-            <tr>
-              <th class="dialog__col-num">#</th>
-              <th>{{ 'admin.csv.dialog.colName' | translate }}</th>
-              <th>{{ 'admin.csv.dialog.colLastname' | translate }}</th>
-              <th>{{ 'admin.csv.dialog.colEmail' | translate }}</th>
-              <th>{{ 'admin.csv.dialog.colRole' | translate }}</th>
-              <th>{{ 'admin.csv.dialog.colPassword' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (u of pagedUsers(); track u.email; let i = $index) {
-              <tr>
-                <td class="dialog__muted dialog__col-num">{{ pageOffset() + i + 1 }}</td>
-                <td>{{ u.nombre }}</td>
-                <td>{{ u.apellido }}</td>
-                <td class="dialog__email" [title]="u.email">{{ u.email }}</td>
-                <td>
-                  <span class="dialog__role" [class]="'dialog__role--' + roleClass(u.rol)">
-                    {{ u.rol }}
-                  </span>
-                </td>
-                <td>
-                  <div class="dialog__pass">
-                    <code>{{ u.passwordTemporal }}</code>
-                    <button
-                      type="button"
-                      class="dialog__copy"
-                      [class.dialog__copy--done]="copiedIndex() === pageOffset() + i"
-                      (click)="copyPassword(u.passwordTemporal, pageOffset() + i)"
-                      [attr.aria-label]="'admin.csv.dialog.copy' | translate"
-                    >
-                      {{
-                        (copiedIndex() === pageOffset() + i
-                          ? 'admin.csv.dialog.copied'
-                          : 'admin.csv.dialog.copy'
-                        ) | translate
-                      }}
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+    <div class="dialog__tabs" role="tablist">
+      <button
+        type="button"
+        class="dialog__tab"
+        role="tab"
+        [class.dialog__tab--active]="tab() === 'created'"
+        [attr.aria-selected]="tab() === 'created'"
+        (click)="setTab('created')"
+      >
+        {{ 'admin.csv.dialog.tabCreated' | translate }} ({{ users().length }})
+      </button>
+      @if (hasErrors()) {
+        <button
+          type="button"
+          class="dialog__tab"
+          role="tab"
+          [class.dialog__tab--active]="tab() === 'errors'"
+          [attr.aria-selected]="tab() === 'errors'"
+          (click)="setTab('errors')"
+        >
+          {{ 'admin.csv.dialog.tabErrors' | translate }} ({{ errors().length }})
+        </button>
+      }
+    </div>
 
-      <div class="dialog__toolbar">
+    <div class="dialog__panel">
+      @for (view of [tab() + ':' + page()]; track view) {
+        <div class="dialog__view">
+          @if (tab() === 'created') {
+            @if (users().length === 0) {
+              <p class="dialog__empty">{{ 'admin.csv.dialog.noUsers' | translate }}</p>
+            } @else {
+              <table class="dialog__table">
+                <thead>
+                  <tr>
+                    <th class="dialog__col-num">#</th>
+                    <th>{{ 'admin.csv.dialog.colName' | translate }}</th>
+                    <th>{{ 'admin.csv.dialog.colEmail' | translate }}</th>
+                    <th class="dialog__col-role">{{ 'admin.csv.dialog.colRole' | translate }}</th>
+                    <th>{{ 'admin.csv.dialog.colPassword' | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (u of pagedUsers(); track u.email; let i = $index) {
+                    <tr>
+                      <td class="dialog__muted dialog__col-num">{{ pageOffset() + i + 1 }}</td>
+                      <td class="dialog__name" [title]="u.nombre + ' ' + u.apellido">
+                        {{ u.nombre }} {{ u.apellido }}
+                      </td>
+                      <td class="dialog__email" [title]="u.email">{{ u.email }}</td>
+                      <td class="dialog__col-role">
+                        <span class="dialog__role" [class]="'dialog__role--' + roleClass(u.rol)">
+                          {{ u.rol }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="dialog__pass">
+                          <code>{{ u.passwordTemporal }}</code>
+                          <button
+                            type="button"
+                            class="dialog__copy"
+                            [class.dialog__copy--done]="copiedIndex() === pageOffset() + i"
+                            (click)="copyPassword(u.passwordTemporal, pageOffset() + i)"
+                            [attr.aria-label]="'admin.csv.dialog.copy' | translate"
+                          >
+                            {{
+                              (copiedIndex() === pageOffset() + i
+                                ? 'admin.csv.dialog.copied'
+                                : 'admin.csv.dialog.copy'
+                              ) | translate
+                            }}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
+          } @else {
+            <ul class="dialog__errs">
+              @for (e of pagedErrors(); track e.fila) {
+                <li class="dialog__err">
+                  <span class="dialog__err-row">{{ 'admin.csv.dialog.row' | translate }} {{ e.fila }}</span>
+                  <span class="dialog__err-email" [title]="e.email">{{ e.email || '—' }}</span>
+                  <span class="dialog__motivo">{{ 'admin.csv.motivos.' + e.motivo | translate }}</span>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      }
+    </div>
+
+    <footer class="dialog__footer">
+      @if (tab() === 'created' && users().length > 0) {
         <button type="button" class="dialog__copy-all" (click)="copyAll()">
           {{ (copiedAll() ? 'admin.csv.dialog.copiedAll' : 'admin.csv.dialog.copyAll') | translate }}
         </button>
+      }
 
-        @if (totalPages() > 1) {
-          <div class="dialog__pager">
-            <button
-              type="button"
-              class="dialog__nav"
-              (click)="prev()"
-              [disabled]="page() === 0"
-              [attr.aria-label]="'admin.csv.dialog.prev' | translate"
-            >
-              ‹
-            </button>
-            <span class="dialog__page">
-              {{ 'admin.csv.dialog.page' | translate: { current: page() + 1, total: totalPages() } }}
-            </span>
-            <button
-              type="button"
-              class="dialog__nav"
-              (click)="next()"
-              [disabled]="page() === totalPages() - 1"
-              [attr.aria-label]="'admin.csv.dialog.next' | translate"
-            >
-              ›
-            </button>
-          </div>
-        }
-      </div>
-    }
+      @if (totalPages() > 1) {
+        <div class="dialog__pager">
+          <button
+            type="button"
+            class="dialog__nav"
+            (click)="prev()"
+            [disabled]="page() === 0"
+            [attr.aria-label]="'admin.csv.dialog.prev' | translate"
+          >
+            <eci-icon name="arrow-left" [size]="18" />
+          </button>
+          <span class="dialog__page">{{ page() + 1 }} / {{ totalPages() }}</span>
+          <button
+            type="button"
+            class="dialog__nav"
+            (click)="next()"
+            [disabled]="page() === totalPages() - 1"
+            [attr.aria-label]="'admin.csv.dialog.next' | translate"
+          >
+            <eci-icon name="arrow-right" [size]="18" />
+          </button>
+        </div>
+      }
 
-    @if (result().errores.length > 0) {
-      <details class="dialog__errors">
-        <summary>
-          {{ 'admin.csv.dialog.errorsTitle' | translate: { count: result().errores.length } }}
-        </summary>
-        <ul>
-          @for (e of result().errores; track $index) {
-            <li>
-              <span class="dialog__muted">{{ 'admin.csv.dialog.row' | translate }} {{ e.fila }}</span>
-              <span class="dialog__err-email">{{ e.email || '—' }}</span>
-              <span class="dialog__motivo">{{ 'admin.csv.motivos.' + e.motivo | translate }}</span>
-            </li>
-          }
-        </ul>
-      </details>
-    }
-
-    <footer class="dialog__footer">
       <eci-button (click)="onClose()">{{ 'admin.csv.dialog.close' | translate }}</eci-button>
     </footer>
   </div>

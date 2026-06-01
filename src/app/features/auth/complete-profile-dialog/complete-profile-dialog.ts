@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IaDataService } from '../../../core/ia/ia-data.service';
 import { IaProfileStatusService } from '../../../core/ia/ia-profile-status.service';
+import { IconComponent } from '../../../shared/ui/icon/icon';
 import { DatosIaFieldsComponent } from '../datos-ia-fields/datos-ia-fields';
 import { buildDatosIaGroup, buildDatosIaPayload } from '../datos-ia-form';
 
@@ -14,7 +15,7 @@ import { buildDatosIaGroup, buildDatosIaPayload } from '../datos-ia-form';
 @Component({
   selector: 'eci-complete-profile-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslatePipe, DatosIaFieldsComponent],
+  imports: [TranslatePipe, IconComponent, DatosIaFieldsComponent],
   templateUrl: './complete-profile-dialog.html',
   styleUrl: '../force-password-change/force-password-change.css',
 })

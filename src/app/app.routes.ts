@@ -55,6 +55,11 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'dev-dialog',
+    loadComponent: () =>
+      import('./features/admin/bulk-result-dialog/_dev-harness').then((m) => m.DevDialogHarness),
+  },
+  {
     path: '**',
     loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFoundComponent),
   },

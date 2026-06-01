@@ -10,6 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { AuthError, AuthService } from '../../../core/auth/auth.service';
 import { Role } from '../../../core/models/role.enum';
 import { ButtonComponent } from '../../../shared/ui/button/button';
+import { IconComponent } from '../../../shared/ui/icon/icon';
 import { DatosIaFieldsComponent } from '../datos-ia-fields/datos-ia-fields';
 import { buildDatosIaGroup, buildDatosIaPayload } from '../datos-ia-form';
 
@@ -29,7 +30,13 @@ const passwordsMatch: ValidatorFn = (group) => {
 @Component({
   selector: 'eci-force-password-change',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, TranslatePipe, ButtonComponent, DatosIaFieldsComponent],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    ButtonComponent,
+    IconComponent,
+    DatosIaFieldsComponent,
+  ],
   templateUrl: './force-password-change.html',
   styleUrl: './force-password-change.css',
 })

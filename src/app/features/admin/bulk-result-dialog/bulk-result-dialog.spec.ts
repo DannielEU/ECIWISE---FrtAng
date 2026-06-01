@@ -63,29 +63,29 @@ describe('BulkResultDialogComponent', () => {
 
     expect(rows(fixture).length).toBe(2);
     expect(el.querySelector('.dialog__chip--ok')?.textContent).toContain('2');
-    // Sin errores, no se muestra el chip de error ni la sección de errores.
+    // Sin errores, no se muestra el chip de error ni la pestaña de errores.
     expect(el.querySelector('.dialog__chip--err')).toBeNull();
-    expect(el.querySelector('.dialog__errors')).toBeNull();
+    expect(el.querySelectorAll('.dialog__tab').length).toBe(1);
   });
 
-  it('pagina los usuarios (5 por página) y avanza con next()', () => {
+  it('pagina los usuarios (6 por página) y avanza con next()', () => {
     const fixture = setup(makeResult(7));
     const component = fixture.componentInstance;
 
-    expect(rows(fixture).length).toBe(5);
+    expect(rows(fixture).length).toBe(6);
     expect((fixture.nativeElement as HTMLElement).querySelector('.dialog__pager')).not.toBeNull();
 
     component.next();
     fixture.detectChanges();
-    expect(rows(fixture).length).toBe(2);
+    expect(rows(fixture).length).toBe(1);
 
     component.prev();
     fixture.detectChanges();
-    expect(rows(fixture).length).toBe(5);
+    expect(rows(fixture).length).toBe(6);
   });
 
   it('no muestra el paginador cuando cabe en una página', () => {
-    const fixture = setup(makeResult(3));
+    const fixture = setup(makeResult(6));
     expect((fixture.nativeElement as HTMLElement).querySelector('.dialog__pager')).toBeNull();
   });
 
@@ -111,16 +111,31 @@ describe('BulkResultDialogComponent', () => {
     expect(written[0]).toBe('user1@test.com,pass1\nuser2@test.com,pass2');
   });
 
-  it('muestra la sección de errores con su motivo', () => {
+  it('muestra la pestaña de errores con su motivo', () => {
     const fixture = setup(
       makeResult(1, [{ fila: 2, email: 'dup@test.com', motivo: 'email_ya_existe' }]),
     );
     const el = fixture.nativeElement as HTMLElement;
 
     expect(el.querySelector('.dialog__chip--err')).not.toBeNull();
-    const errors = el.querySelector('.dialog__errors');
+    // Hay creados, así que la pestaña activa es "Creados"; cambiamos a errores.
+    expect(el.querySelectorAll('.dialog__tab').length).toBe(2);
+    fixture.componentInstance.setTab('errors');
+    fixture.detectChanges();
+
+    const errors = el.querySelector('.dialog__errs');
     expect(errors).not.toBeNull();
     expect(errors?.textContent).toContain('dup@test.com');
     expect(errors?.textContent).toContain('El correo ya está registrado.');
+  });
+
+  it('arranca en la pestaña de errores cuando no se creó a nadie', () => {
+    const fixture = setup(
+      makeResult(0, [{ fila: 2, email: 'dup@test.com', motivo: 'email_ya_existe' }]),
+    );
+    const el = fixture.nativeElement as HTMLElement;
+
+    expect(el.querySelector('.dialog__errs')).not.toBeNull();
+    expect(el.querySelector('.dialog__errs')?.textContent).toContain('dup@test.com');
   });
 });

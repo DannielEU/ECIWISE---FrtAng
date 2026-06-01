@@ -130,7 +130,8 @@ export const en = {
       'Required. It helps us get to know you and personalize your experience.',
     stepsLabel: 'Registration steps',
     step1: 'Personal details',
-    step2: 'Student details',
+    step2: 'About you',
+    step3: 'Your studies',
     next: 'Continue',
     errors: {
       required: 'This field is required.',
@@ -593,6 +594,8 @@ export const en = {
         view: 'View details',
         createdChip: '{{creados}} of {{total}} created',
         errorChip: '{{errores}} with errors',
+        tabCreated: 'Created',
+        tabErrors: 'With errors',
         copyAll: 'Copy all',
         copiedAll: 'Copied!',
         colName: 'First name',
