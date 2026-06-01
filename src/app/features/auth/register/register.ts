@@ -1,5 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthError, AuthService } from '../../../core/auth/auth.service';
@@ -13,6 +20,19 @@ import { SpaceBackgroundComponent } from '../../../shared/ui/space-background/sp
 import { ThemeToggleComponent } from '../../../core/theme/theme-toggle';
 import { LanguageSwitchComponent } from '../../../core/i18n/language-switch';
 import { A11yToggleComponent } from '../../../core/a11y/a11y-toggle';
+
+/** Dominios de correo permitidos para el registro (deben coincidir con el backend). */
+const ALLOWED_EMAIL_DOMAINS = ['gmail.com', 'escuelaing.edu.co', 'mail.escuelaing.edu.co'];
+
+/** Validador que exige que el correo pertenezca a un dominio permitido. */
+function allowedEmailDomainValidator(control: AbstractControl): ValidationErrors | null {
+  const value = (control.value as string | null)?.trim().toLowerCase();
+  if (!value) {
+    return null;
+  }
+  const domain = value.slice(value.lastIndexOf('@') + 1);
+  return ALLOWED_EMAIL_DOMAINS.includes(domain) ? null : { emailDomain: true };
+}
 
 /** Registro de un nuevo estudiante (correo + datos básicos para la IA). */
 @Component({
@@ -49,7 +69,7 @@ export class RegisterComponent {
   protected readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required]],
     apellido: ['', [Validators.required]],
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.email, allowedEmailDomainValidator]],
     telefono: [''],
     password: [
       '',
@@ -65,6 +85,24 @@ export class RegisterComponent {
   /** Grupo de datos de IA para el componente compartido de campos. */
   protected get datosIaGroup(): FormGroup {
     return this.form.controls.datosIa;
+  }
+
+  /** Clave i18n del error a mostrar bajo un campo del paso 1 (o null si es válido). */
+  errorKeyFor(name: string): string | null {
+    const control = this.form.get(name);
+    if (!control || control.valid || !control.touched) {
+      return null;
+    }
+    if (control.hasError('email')) {
+      return 'register.errors.email';
+    }
+    if (control.hasError('emailDomain')) {
+      return 'register.errors.emailDomain';
+    }
+    if (name === 'password') {
+      return 'register.errors.password';
+    }
+    return 'register.errors.required';
   }
 
   /** Avanza al paso de datos de IA si los datos personales son válidos. */
@@ -100,8 +138,9 @@ export class RegisterComponent {
     this.loading.set(false);
     const key = err instanceof AuthError ? err.messageKey : 'errors.unknown';
     this.errorKey.set(key);
-    // El correo se edita en el primer paso: si está en uso, regresamos allí.
-    if (key === 'auth.emailTaken') {
+    // El correo se edita en el primer paso: si está en uso o su dominio no se
+    // permite, regresamos allí para que el usuario pueda corregirlo.
+    if (key === 'auth.emailTaken' || key === 'auth.emailDomainNotAllowed') {
       this.step.set(1);
     }
   }

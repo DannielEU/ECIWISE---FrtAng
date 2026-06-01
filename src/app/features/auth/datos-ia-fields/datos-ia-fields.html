@@ -1,73 +1,185 @@
 <div class="dia" [formGroup]="group()">
-  <div class="dia__grid">
-    <label class="dia__field">
-      <span class="dia__label">{{ 'datosIa.labels.gender' | translate }}</span>
-      <select formControlName="gender">
-        <option [ngValue]="null" disabled>{{ 'datosIa.selectPlaceholder' | translate }}</option>
-        @for (o of genderOptions; track o.value) {
-          <option [ngValue]="o.value">{{ 'datosIa.options.gender.' + o.key | translate }}</option>
-        }
-      </select>
-    </label>
+  @if (paginated()) {
+    <ol class="dia__steps" [attr.aria-label]="'register.stepsLabel' | translate">
+      @for (p of pages; track p.titleKey; let i = $index) {
+        <li
+          class="dia__step"
+          [class.dia__step--active]="step() === i"
+          [class.dia__step--done]="step() > i"
+          [attr.aria-current]="step() === i ? 'step' : null"
+        >
+          <span class="dia__step-dot">{{ i + 1 }}</span>
+          <span class="dia__step-label">{{ p.titleKey | translate }}</span>
+        </li>
+      }
+    </ol>
+  }
 
-    <label class="dia__field">
-      <span class="dia__label">{{ 'datosIa.labels.ethnicity' | translate }}</span>
-      <select formControlName="ethnicity">
-        <option [ngValue]="null" disabled>{{ 'datosIa.selectPlaceholder' | translate }}</option>
-        @for (o of ethnicityOptions; track o.value) {
-          <option [ngValue]="o.value">{{ 'datosIa.options.ethnicity.' + o.key | translate }}</option>
-        }
-      </select>
-    </label>
+  @for (s of [step()]; track s) {
+    <div
+      [class.dia__page]="paginated()"
+      [class.dia__page--back]="direction() === 'back'"
+    >
+      @if (!paginated() || s === 0) {
+        <div class="dia__grid">
+          <div class="dia__field">
+            <label class="dia__field-label">
+              <span class="dia__label">{{ 'datosIa.labels.gender' | translate }}</span>
+              <select formControlName="gender">
+                <option [ngValue]="null" disabled>{{ 'datosIa.selectPlaceholder' | translate }}</option>
+                @for (o of genderOptions; track o.value) {
+                  <option [ngValue]="o.value">{{ 'datosIa.options.gender.' + o.key | translate }}</option>
+                }
+              </select>
+            </label>
+            @if (errorKeyFor('gender'); as ek) {
+              <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
+            }
+            <details class="dia__explain">
+              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
+              <p>{{ 'datosIa.desc.gender' | translate }}</p>
+            </details>
+          </div>
 
-    <label class="dia__field">
-      <span class="dia__label">{{ 'datosIa.labels.parentalEducation' | translate }}</span>
-      <span class="dia__hint">{{ 'datosIa.hints.parentalEducation' | translate }}</span>
-      <select formControlName="parentalEducation">
-        <option [ngValue]="null" disabled>{{ 'datosIa.selectPlaceholder' | translate }}</option>
-        @for (o of parentalEducationOptions; track o.value) {
-          <option [ngValue]="o.value">
-            {{ 'datosIa.options.parentalEducation.' + o.key | translate }}
-          </option>
-        }
-      </select>
-    </label>
+          <div class="dia__field">
+            <label class="dia__field-label">
+              <span class="dia__label">{{ 'datosIa.labels.ethnicity' | translate }}</span>
+              <select formControlName="ethnicity">
+                <option [ngValue]="null" disabled>{{ 'datosIa.selectPlaceholder' | translate }}</option>
+                @for (o of ethnicityOptions; track o.value) {
+                  <option [ngValue]="o.value">{{ 'datosIa.options.ethnicity.' + o.key | translate }}</option>
+                }
+              </select>
+            </label>
+            @if (errorKeyFor('ethnicity'); as ek) {
+              <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
+            }
+            <details class="dia__explain">
+              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
+              <p>{{ 'datosIa.desc.ethnicity' | translate }}</p>
+            </details>
+          </div>
 
-    <label class="dia__field">
-      <span class="dia__label">{{ 'datosIa.labels.parentalSupport' | translate }}</span>
-      <span class="dia__hint">{{ 'datosIa.hints.parentalSupport' | translate }}</span>
-      <select formControlName="parentalSupport">
-        <option [ngValue]="null" disabled>{{ 'datosIa.selectPlaceholder' | translate }}</option>
-        @for (o of parentalSupportOptions; track o.value) {
-          <option [ngValue]="o.value">
-            {{ 'datosIa.options.parentalSupport.' + o.key | translate }}
-          </option>
-        }
-      </select>
-    </label>
+          <div class="dia__field">
+            <label class="dia__field-label">
+              <span class="dia__label">{{ 'datosIa.labels.parentalEducation' | translate }}</span>
+              <select formControlName="parentalEducation">
+                <option [ngValue]="null" disabled>{{ 'datosIa.selectPlaceholder' | translate }}</option>
+                @for (o of parentalEducationOptions; track o.value) {
+                  <option [ngValue]="o.value">
+                    {{ 'datosIa.options.parentalEducation.' + o.key | translate }}
+                  </option>
+                }
+              </select>
+            </label>
+            @if (errorKeyFor('parentalEducation'); as ek) {
+              <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
+            }
+            <details class="dia__explain">
+              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
+              <p>{{ 'datosIa.desc.parentalEducation' | translate }}</p>
+            </details>
+          </div>
 
-    <label class="dia__field">
-      <span class="dia__label">{{ 'datosIa.labels.studyTimeWeekly' | translate }}</span>
-      <span class="dia__hint">{{ 'datosIa.hints.studyTimeWeekly' | translate }}</span>
-      <input type="number" formControlName="studyTimeWeekly" min="0" max="20" step="0.5" />
-    </label>
+          <div class="dia__field">
+            <label class="dia__field-label">
+              <span class="dia__label">{{ 'datosIa.labels.parentalSupport' | translate }}</span>
+              <select formControlName="parentalSupport">
+                <option [ngValue]="null" disabled>{{ 'datosIa.selectPlaceholder' | translate }}</option>
+                @for (o of parentalSupportOptions; track o.value) {
+                  <option [ngValue]="o.value">
+                    {{ 'datosIa.options.parentalSupport.' + o.key | translate }}
+                  </option>
+                }
+              </select>
+            </label>
+            @if (errorKeyFor('parentalSupport'); as ek) {
+              <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
+            }
+            <details class="dia__explain">
+              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
+              <p>{{ 'datosIa.desc.parentalSupport' | translate }}</p>
+            </details>
+          </div>
+        </div>
+      }
 
-    <label class="dia__field">
-      <span class="dia__label">{{ 'datosIa.labels.absences' | translate }}</span>
-      <span class="dia__hint">{{ 'datosIa.hints.absences' | translate }}</span>
-      <input type="number" formControlName="absences" min="0" max="30" step="1" />
-    </label>
-  </div>
+      @if (!paginated() || s === 1) {
+        <div class="dia__grid">
+          <div class="dia__field">
+            <label class="dia__field-label">
+              <span class="dia__label">{{ 'datosIa.labels.studyTimeWeekly' | translate }}</span>
+              <input type="number" formControlName="studyTimeWeekly" min="0" max="20" step="0.5" />
+            </label>
+            @if (errorKeyFor('studyTimeWeekly'); as ek) {
+              <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
+            }
+            <details class="dia__explain">
+              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
+              <p>{{ 'datosIa.desc.studyTimeWeekly' | translate }}</p>
+            </details>
+          </div>
 
-  <fieldset class="dia__checks">
-    <legend class="dia__checks-title">{{ 'datosIa.labels.activitiesTitle' | translate }}</legend>
-    <div class="dia__checks-grid">
-      @for (c of checks; track c) {
-        <label class="dia__check">
-          <input type="checkbox" [formControlName]="c" />
-          <span>{{ 'datosIa.labels.' + c | translate }}</span>
-        </label>
+          <div class="dia__field">
+            <label class="dia__field-label">
+              <span class="dia__label">{{ 'datosIa.labels.absences' | translate }}</span>
+              <input type="number" formControlName="absences" min="0" max="30" step="1" />
+            </label>
+            @if (errorKeyFor('absences'); as ek) {
+              <span class="dia__field-error" role="alert">{{ ek | translate }}</span>
+            }
+            <details class="dia__explain">
+              <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
+              <p>{{ 'datosIa.desc.absences' | translate }}</p>
+            </details>
+          </div>
+        </div>
+
+        <fieldset class="dia__checks">
+          <legend class="dia__checks-title">{{ 'datosIa.labels.activitiesTitle' | translate }}</legend>
+          <div class="dia__checks-grid">
+            @for (c of checks; track c) {
+              <div class="dia__check-wrap">
+                <label class="dia__check">
+                  <input type="checkbox" [formControlName]="c" />
+                  <span>{{ 'datosIa.labels.' + c | translate }}</span>
+                </label>
+                <details class="dia__explain">
+                  <summary>{{ 'datosIa.whatIsThis' | translate }}</summary>
+                  <p>{{ 'datosIa.desc.' + c | translate }}</p>
+                </details>
+              </div>
+            }
+          </div>
+        </fieldset>
       }
     </div>
-  </fieldset>
+  }
+
+  @if (paginated()) {
+    @if (error(); as err) {
+      <p class="dia__error" role="alert">{{ err | translate }}</p>
+    }
+
+    <div class="dia__nav">
+      @if (!isFirst()) {
+        <eci-button variant="secondary" [ariaLabel]="'common.back' | translate" (click)="back()">
+          <eci-icon name="arrow-left" [size]="18" />
+        </eci-button>
+      }
+      @if (!isLast()) {
+        <eci-button [ariaLabel]="'common.next' | translate" (click)="next()">
+          <eci-icon name="arrow-right" [size]="18" />
+        </eci-button>
+      } @else {
+        <eci-button
+          [ariaLabel]="'completeProfile.save' | translate"
+          [disabled]="pending()"
+          (click)="finishStep()"
+        >
+          <eci-icon name="check" [size]="18" />
+        </eci-button>
+      }
+    </div>
+  }
 </div>

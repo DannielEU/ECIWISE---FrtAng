@@ -7,20 +7,20 @@
   flex-direction: column;
   overflow-x: hidden;
   outline: none;
-  /* Mismo fondo espacial que la landing: nunca gris. */
+  /* Mismo fondo espacial que la landing, adaptable al tema. */
   background:
     radial-gradient(
       circle at 25% 15%,
-      color-mix(in srgb, var(--brand-red) 28%, transparent),
+      color-mix(in srgb, var(--brand-red) 18%, transparent),
       transparent 45%
     ),
     radial-gradient(
       circle at 80% 70%,
-      color-mix(in srgb, var(--accent-student) 22%, transparent),
+      color-mix(in srgb, var(--accent-student) 14%, transparent),
       transparent 50%
     ),
-    var(--brand-black);
-  color: #ffffff;
+    var(--surface);
+  color: var(--text);
 }
 
 /* Barra superior con marca y controles, igual que la landing. */
@@ -33,18 +33,9 @@
   padding: var(--space-6) var(--space-8);
 }
 
-.auth__bar :where(.eci-logo) {
-  color: #ffffff;
-}
-
 .auth__controls {
   display: flex;
   gap: var(--space-2);
-}
-
-/* Sobre el fondo oscuro los iconos van siempre claros. */
-.auth__bar .icon-button {
-  color: rgba(255, 255, 255, 0.92);
 }
 
 /* Zona central que aloja la tarjeta. */
@@ -61,13 +52,13 @@
 .auth__card {
   width: min(26rem, 100%);
   padding: var(--space-8);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.07);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: var(--shadow-lg);
-  color: #ffffff;
+  color: var(--text);
 }
 
 /* Tarjeta del registro: más ancha para repartir los campos en dos columnas. */
@@ -111,16 +102,16 @@
 
 .auth__field input {
   padding: var(--space-3);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+  background: var(--surface-2);
+  color: var(--text);
   font: inherit;
   font-weight: 400;
 }
 
 .auth__field input:focus-visible {
-  outline: 2px solid var(--brand-red-soft);
+  outline: 2px solid var(--accent);
   border-color: transparent;
 }
 
@@ -139,8 +130,8 @@
   align-items: center;
   gap: var(--space-2);
   padding-top: var(--space-2);
-  border-top: 3px solid rgba(255, 255, 255, 0.22);
-  color: rgba(255, 255, 255, 0.6);
+  border-top: 3px solid var(--border);
+  color: var(--text-muted);
   font-size: 0.8rem;
   font-weight: 600;
   transition:
@@ -150,8 +141,8 @@
 
 .auth__step--active,
 .auth__step--done {
-  color: #ffffff;
-  border-top-color: var(--brand-red-soft);
+  color: var(--text);
+  border-top-color: var(--accent);
 }
 
 .auth__step-dot {
@@ -162,8 +153,8 @@
   height: 1.5rem;
   flex: none;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.7);
+  background: var(--surface-3);
+  color: var(--text-muted);
   font-size: 0.8rem;
 }
 
@@ -186,7 +177,7 @@
 
 .auth__hint {
   margin: 0;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--text-muted);
   font-size: 0.8rem;
   font-weight: 400;
   line-height: 1.5;
@@ -218,9 +209,9 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--surface-2);
   font-size: 0.875rem;
   cursor: pointer;
 }
@@ -228,11 +219,11 @@
 .auth__check input {
   width: 1rem;
   height: 1rem;
-  accent-color: var(--brand-red-soft);
+  accent-color: var(--accent);
 }
 
 .auth__check:has(input:checked) {
-  border-color: var(--brand-red-soft);
+  border-color: var(--accent);
 }
 
 /* ---------------- Acciones del paso 2 ---------------- */
@@ -257,7 +248,7 @@
 
 .auth__error {
   margin: 0;
-  color: #ff8a9b;
+  color: var(--danger);
   font-size: 0.875rem;
 }
 
@@ -265,7 +256,7 @@
   display: flex;
   align-items: center;
   text-align: center;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-muted);
   font-size: 0.8rem;
   margin: var(--space-6) 0;
 }
@@ -275,7 +266,7 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--border);
 }
 
 .auth__divider span {
@@ -286,11 +277,11 @@
   margin: var(--space-6) 0 0;
   text-align: center;
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-muted);
 }
 
 .auth__switch a {
-  color: var(--brand-red-soft);
+  color: var(--accent);
   font-weight: 600;
   text-decoration: none;
 }

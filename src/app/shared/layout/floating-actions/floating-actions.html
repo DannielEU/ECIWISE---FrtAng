@@ -27,10 +27,12 @@
     </div>
   </aside>
 } @else {
-  <div class="fab-group">
+  <div class="fab-group" [class.fab-group--expanded]="expanded()">
     <button
       type="button"
-      class="fab"
+      class="fab fab--reveal fab--chat"
+      [attr.tabindex]="expanded() ? 0 : -1"
+      [attr.aria-hidden]="!expanded()"
       (click)="open('chat')"
       [attr.aria-label]="'floating.chat' | translate"
     >
@@ -38,11 +40,23 @@
     </button>
     <button
       type="button"
-      class="fab fab--primary"
+      class="fab fab--reveal fab--assistant"
+      [attr.tabindex]="expanded() ? 0 : -1"
+      [attr.aria-hidden]="!expanded()"
       (click)="open('assistant')"
       [attr.aria-label]="'floating.assistant' | translate"
     >
       <svg lucideBot [size]="24" aria-hidden="true"></svg>
+    </button>
+    <button
+      type="button"
+      class="fab fab--primary fab--toggle"
+      [class.fab--toggle-open]="expanded()"
+      (click)="toggle()"
+      [attr.aria-expanded]="expanded()"
+      [attr.aria-label]="'floating.menu' | translate"
+    >
+      <svg lucidePlus [size]="24" aria-hidden="true"></svg>
     </button>
   </div>
 }

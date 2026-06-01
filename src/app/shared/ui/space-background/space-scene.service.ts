@@ -14,6 +14,7 @@ import type {
 
 /** Símbolos académicos que flotan en el fondo espacial. */
 const STUDY_SYMBOLS = ['π', '∑', '∫', '√', 'ƒ', '∞', 'Δ', 'θ', 'λ', '×', '÷', 'Ω'];
+/** Colores de los símbolos (mismos en ambos temas: blanco, rojo y fucsia). */
 const SYMBOL_COLORS = [0xffffff, 0xc8102e, 0xd6007a];
 
 interface FloatingSprite {

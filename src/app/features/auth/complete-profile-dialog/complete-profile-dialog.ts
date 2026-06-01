@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IaDataService } from '../../../core/ia/ia-data.service';
 import { IaProfileStatusService } from '../../../core/ia/ia-profile-status.service';
-import { ButtonComponent } from '../../../shared/ui/button/button';
 import { DatosIaFieldsComponent } from '../datos-ia-fields/datos-ia-fields';
 import { buildDatosIaGroup, buildDatosIaPayload } from '../datos-ia-form';
 
@@ -15,7 +14,7 @@ import { buildDatosIaGroup, buildDatosIaPayload } from '../datos-ia-form';
 @Component({
   selector: 'eci-complete-profile-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, TranslatePipe, ButtonComponent, DatosIaFieldsComponent],
+  imports: [TranslatePipe, DatosIaFieldsComponent],
   templateUrl: './complete-profile-dialog.html',
   styleUrl: '../force-password-change/force-password-change.css',
 })

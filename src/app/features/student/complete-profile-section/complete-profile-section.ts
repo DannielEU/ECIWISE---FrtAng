@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IaDataService } from '../../../core/ia/ia-data.service';
 import { IaProfileStatusService } from '../../../core/ia/ia-profile-status.service';
@@ -16,14 +16,9 @@ import { buildDropoutGroup, buildDropoutPayload } from '../../auth/dropout-ia-fo
 @Component({
   selector: 'eci-complete-profile-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ReactiveFormsModule,
-    TranslatePipe,
-    CardComponent,
-    ButtonComponent,
-    DropoutIaFieldsComponent,
-  ],
+  imports: [TranslatePipe, CardComponent, ButtonComponent, DropoutIaFieldsComponent],
   templateUrl: './complete-profile-section.html',
+  styleUrl: './complete-profile-section.css',
 })
 export class CompleteProfileSectionComponent {
   private readonly fb = inject(FormBuilder);

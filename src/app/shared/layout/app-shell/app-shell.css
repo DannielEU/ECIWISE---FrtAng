@@ -1,6 +1,10 @@
 :host {
-  display: block;
-  min-height: 100dvh;
+  /* Alto fijo del viewport: la barra superior y el menú quedan estáticos y
+     solo el contenido enrutado hace scroll interno. */
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
   background: var(--surface-2);
 }
 
@@ -16,20 +20,26 @@
 }
 
 .shell {
+  flex: 1;
   display: grid;
   grid-template-columns: 16rem 1fr;
-  min-height: calc(100dvh - 4rem);
+  /* Permite que las columnas se ajusten a la altura del shell y hagan scroll. */
+  min-height: 0;
 }
 
 .shell__nav {
   background: var(--surface);
   border-right: 1px solid var(--border);
+  /* El propio menú gestiona su scroll interno (lista) y deja la ayuda fija. */
+  overflow: hidden;
 }
 
 .shell__main {
   padding: var(--space-8);
   outline: none;
   min-width: 0;
+  /* El contenido enrutado hace su propio scroll; el menú permanece fijo. */
+  overflow-y: auto;
   /* Único elemento que participa en la View Transition al navegar:
      el header y el menú lateral quedan fuera y permanecen fijos. */
   view-transition-name: eci-main;

@@ -41,6 +41,8 @@ export function httpErrorToKey(err: unknown): string {
   switch (extractBackendCode(err)) {
     case 'email_taken':
       return 'auth.emailTaken';
+    case 'email_domain_not_allowed':
+      return 'auth.emailDomainNotAllowed';
     case 'invalid_credentials':
       return 'auth.invalid';
     case 'account_suspended':

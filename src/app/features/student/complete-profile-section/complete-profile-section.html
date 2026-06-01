@@ -6,14 +6,12 @@
     @if (!expanded()) {
       <eci-button (click)="start()">{{ 'completeProfile.start' | translate }}</eci-button>
     } @else {
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <eci-dropout-ia-fields [group]="dropoutGroup" />
-        <div class="cps__actions">
-          <eci-button type="submit" [disabled]="saving()">
-            {{ 'completeProfile.save' | translate }}
-          </eci-button>
-        </div>
-      </form>
+      <eci-dropout-ia-fields
+        [group]="dropoutGroup"
+        [paginated]="true"
+        [pending]="saving()"
+        (completed)="submit()"
+      />
     }
   </eci-card>
 }

@@ -39,6 +39,36 @@
   border-color: var(--brand-red);
 }
 
+/* Botón de menú (toggle): el "+" gira a "x" al desplegar. */
+.fab--toggle svg {
+  transition: transform var(--transition-base);
+}
+
+.fab--toggle-open svg {
+  transform: rotate(135deg);
+}
+
+/* IA y chats ocultos hasta abrir el menú; entran y salen con suavidad. */
+.fab--reveal {
+  opacity: 0;
+  transform: translateY(16px) scale(0.6);
+  pointer-events: none;
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-base);
+}
+
+.fab-group--expanded .fab--reveal {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Cascada sutil: el chat (arriba) entra un instante después que la IA. */
+.fab-group--expanded .fab--chat {
+  transition-delay: 60ms;
+}
+
 /* Fondo semitransparente bajo el panel lateral */
 .dock-backdrop {
   position: fixed;

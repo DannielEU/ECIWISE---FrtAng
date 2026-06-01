@@ -8,16 +8,14 @@
     <h2 class="fpc__title">{{ 'completeProfile.popupTitle' | translate }}</h2>
     <p class="fpc__desc">{{ 'completeProfile.popupDesc' | translate }}</p>
 
-    <form class="fpc__form" [formGroup]="form" (ngSubmit)="submit()">
-      <eci-datos-ia-fields [group]="datosIaGroup" />
-
-      @if (errorKey(); as err) {
-        <p class="fpc__error" role="alert">{{ err | translate }}</p>
-      }
-
-      <eci-button type="submit" [block]="true" [disabled]="loading()">
-        {{ 'completeProfile.save' | translate }}
-      </eci-button>
-    </form>
+    <div class="fpc__form">
+      <eci-datos-ia-fields
+        [group]="datosIaGroup"
+        [paginated]="true"
+        [pending]="loading()"
+        [error]="errorKey()"
+        (completed)="submit()"
+      />
+    </div>
   </div>
 </div>

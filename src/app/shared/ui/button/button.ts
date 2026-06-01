@@ -18,6 +18,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
       [class.eci-button--block]="block()"
       [type]="type()"
       [disabled]="disabled()"
+      [attr.aria-label]="ariaLabel() || null"
     >
       <ng-content />
     </button>
@@ -29,4 +30,6 @@ export class ButtonComponent {
   readonly type = input<'button' | 'submit'>('button');
   readonly disabled = input(false);
   readonly block = input(false);
+  /** Etiqueta accesible; útil para botones que solo muestran un icono. */
+  readonly ariaLabel = input<string>();
 }

@@ -1,47 +1,81 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ButtonComponent } from '../../../shared/ui/button/button';
+import { IconComponent } from '../../../shared/ui/icon/icon';
 
 interface Option {
   readonly value: number;
   readonly key: string;
 }
-interface SelectField {
-  readonly control: string;
-  readonly options: readonly Option[];
-}
-interface NumberField {
-  readonly control: string;
-  readonly min: number;
-  readonly max: number;
-  readonly step: number;
+
+/** Descriptor de un campo del formulario, discriminado por tipo de control. */
+type FieldDef =
+  | {
+      readonly kind: 'select';
+      readonly control: string;
+      readonly options: readonly Option[];
+      readonly hint?: boolean;
+    }
+  | {
+      readonly kind: 'number';
+      readonly control: string;
+      readonly min: number;
+      readonly max: number;
+      readonly step: number;
+      readonly hint?: boolean;
+    }
+  | { readonly kind: 'yesno'; readonly control: string; readonly hint?: boolean };
+
+/** Una página del asistente: título i18n y los controles que agrupa. */
+interface Page {
+  readonly titleKey: string;
+  readonly controls: readonly string[];
 }
 
 /**
  * Campos del modelo de deserción con presentación amigable (selects con texto,
  * sí/no y numéricos con ayuda). Recibe el `FormGroup` de `buildDropoutGroup`.
- * Los catálogos institucionales se muestran resumidos (+ "Otro") con códigos
- * válidos para el modelo.
+ * En modo `paginated` reparte las preguntas en pasos cortos con navegación
+ * Anterior/Siguiente para no abrumar al estudiante; en modo normal las muestra
+ * todas en una sola grilla.
  */
 @Component({
   selector: 'eci-dropout-ia-fields',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, TranslatePipe],
+  imports: [ReactiveFormsModule, TranslatePipe, ButtonComponent, IconComponent],
   templateUrl: './dropout-ia-fields.html',
   styleUrl: '../datos-ia-fields/datos-ia-fields.css',
 })
 export class DropoutIaFieldsComponent {
   readonly group = input.required<FormGroup>();
+  /** Activa la navegación por pasos (Anterior/Siguiente + botón final). */
+  readonly paginated = input(false);
+  /** Deshabilita el botón final mientras el contenedor guarda. */
+  readonly pending = input(false);
+  /** Clave i18n de error a mostrar sobre los botones de navegación. */
+  readonly error = input<string | null>(null);
+  /** Se emite al confirmar el último paso (tras validar la página). */
+  readonly completed = output<void>();
 
   protected readonly yesNo: readonly Option[] = [
     { value: 1, key: 'yes' },
     { value: 0, key: 'no' },
   ];
 
-  /** Selects con catálogos resumidos (valores = códigos válidos del modelo). */
-  protected readonly selectFields: readonly SelectField[] = [
+  /** Catálogo de campos indexado por control (valores = códigos del modelo). */
+  private readonly fields: readonly FieldDef[] = [
     {
+      kind: 'select',
       control: 'maritalStatus',
+      hint: true,
       options: [
         { value: 1, key: 'single' },
         { value: 2, key: 'married' },
@@ -52,7 +86,9 @@ export class DropoutIaFieldsComponent {
       ],
     },
     {
+      kind: 'select',
       control: 'applicationMode',
+      hint: true,
       options: [
         { value: 1, key: 'general' },
         { value: 2, key: 'secondPhase' },
@@ -62,7 +98,9 @@ export class DropoutIaFieldsComponent {
       ],
     },
     {
+      kind: 'select',
       control: 'course',
+      hint: true,
       options: [
         { value: 4, key: 'technologies' },
         { value: 9, key: 'management' },
@@ -73,7 +111,9 @@ export class DropoutIaFieldsComponent {
       ],
     },
     {
+      kind: 'select',
       control: 'previousQualification',
+      hint: true,
       options: [
         { value: 1, key: 'secondary' },
         { value: 5, key: 'technical' },
@@ -83,15 +123,17 @@ export class DropoutIaFieldsComponent {
       ],
     },
     {
+      kind: 'select',
       control: 'nacionality',
       options: [
-        { value: 1, key: 'local' },
-        { value: 6, key: 'european' },
+        { value: 1, key: 'colombian' },
         { value: 13, key: 'latinAmerican' },
+        { value: 6, key: 'european' },
         { value: 21, key: 'other' },
       ],
     },
     {
+      kind: 'select',
       control: 'motherQualification',
       options: [
         { value: 1, key: 'none' },
@@ -103,6 +145,7 @@ export class DropoutIaFieldsComponent {
       ],
     },
     {
+      kind: 'select',
       control: 'fatherQualification',
       options: [
         { value: 1, key: 'none' },
@@ -114,6 +157,7 @@ export class DropoutIaFieldsComponent {
       ],
     },
     {
+      kind: 'select',
       control: 'motherOccupation',
       options: [
         { value: 2, key: 'professional' },
@@ -126,6 +170,7 @@ export class DropoutIaFieldsComponent {
       ],
     },
     {
+      kind: 'select',
       control: 'fatherOccupation',
       options: [
         { value: 2, key: 'professional' },
@@ -137,25 +182,121 @@ export class DropoutIaFieldsComponent {
         { value: 46, key: 'other' },
       ],
     },
+    { kind: 'number', control: 'ageAtEnrollment', min: 17, max: 70, step: 1, hint: true },
+    { kind: 'number', control: 'applicationOrder', min: 0, max: 9, step: 1, hint: true },
+    { kind: 'number', control: 'curricularUnits1stSemEnrolled', min: 0, max: 26, step: 1, hint: true },
+    { kind: 'number', control: 'curricularUnits1stSemApproved', min: 0, max: 26, step: 1, hint: true },
+    { kind: 'number', control: 'curricularUnits1stSemEvaluations', min: 0, max: 45, step: 1, hint: true },
+    { kind: 'number', control: 'curricularUnits1stSemCredited', min: 0, max: 20, step: 1, hint: true },
+    { kind: 'yesno', control: 'displaced' },
+    { kind: 'yesno', control: 'educationalSpecialNeeds' },
+    { kind: 'yesno', control: 'debtor' },
+    { kind: 'yesno', control: 'tuitionFeesUpToDate' },
+    { kind: 'yesno', control: 'scholarshipHolder' },
+    { kind: 'yesno', control: 'international' },
   ];
 
-  /** Preguntas sí/no. */
-  protected readonly yesNoFields: readonly string[] = [
-    'displaced',
-    'educationalSpecialNeeds',
-    'debtor',
-    'tuitionFeesUpToDate',
-    'scholarshipHolder',
-    'international',
+  private readonly fieldMap = new Map(this.fields.map((f) => [f.control, f]));
+
+  /** Agrupación de las preguntas en pasos cortos y temáticos. */
+  protected readonly pages: readonly Page[] = [
+    {
+      titleKey: 'datosIa.dropout.pages.personal',
+      controls: ['maritalStatus', 'nacionality', 'ageAtEnrollment', 'displaced', 'international'],
+    },
+    {
+      titleKey: 'datosIa.dropout.pages.family',
+      controls: [
+        'motherQualification',
+        'fatherQualification',
+        'motherOccupation',
+        'fatherOccupation',
+      ],
+    },
+    {
+      titleKey: 'datosIa.dropout.pages.admission',
+      controls: [
+        'applicationMode',
+        'course',
+        'previousQualification',
+        'applicationOrder',
+        'educationalSpecialNeeds',
+      ],
+    },
+    {
+      titleKey: 'datosIa.dropout.pages.firstSemester',
+      controls: [
+        'curricularUnits1stSemEnrolled',
+        'curricularUnits1stSemApproved',
+        'curricularUnits1stSemEvaluations',
+        'curricularUnits1stSemCredited',
+        'scholarshipHolder',
+        'debtor',
+        'tuitionFeesUpToDate',
+      ],
+    },
   ];
 
-  /** Campos genuinamente numéricos (con ayuda descriptiva). */
-  protected readonly numberFields: readonly NumberField[] = [
-    { control: 'ageAtEnrollment', min: 17, max: 70, step: 1 },
-    { control: 'applicationOrder', min: 0, max: 9, step: 1 },
-    { control: 'curricularUnits1stSemEnrolled', min: 0, max: 26, step: 1 },
-    { control: 'curricularUnits1stSemApproved', min: 0, max: 26, step: 1 },
-    { control: 'curricularUnits1stSemEvaluations', min: 0, max: 45, step: 1 },
-    { control: 'curricularUnits1stSemCredited', min: 0, max: 20, step: 1 },
-  ];
+  /** Paso actual (0-based). */
+  protected readonly step = signal(0);
+  /** Dirección del último cambio de paso (para la animación de slide). */
+  protected readonly direction = signal<'forward' | 'back'>('forward');
+  protected readonly isFirst = computed(() => this.step() === 0);
+  protected readonly isLast = computed(() => this.step() === this.pages.length - 1);
+
+  /** Campos visibles: los del paso actual si está paginado; todos si no. */
+  protected readonly visibleFields = computed<readonly FieldDef[]>(() => {
+    const names = this.paginated()
+      ? this.pages[this.step()].controls
+      : this.fields.map((f) => f.control);
+    return names.map((name) => this.fieldMap.get(name)!);
+  });
+
+  /** Avanza al siguiente paso si la página actual es válida. */
+  next(): void {
+    if (this.validateCurrentPage() && !this.isLast()) {
+      this.direction.set('forward');
+      this.step.update((s) => s + 1);
+    }
+  }
+
+  /** Retrocede al paso anterior. */
+  back(): void {
+    if (!this.isFirst()) {
+      this.direction.set('back');
+      this.step.update((s) => s - 1);
+    }
+  }
+
+  /** Confirma el último paso: valida y emite `finish` para que el padre guarde. */
+  finishStep(): void {
+    if (this.validateCurrentPage()) {
+      this.completed.emit();
+    }
+  }
+
+  /** Clave i18n del error a mostrar bajo un campo (o null si es válido/intacto). */
+  errorKeyFor(name: string): string | null {
+    const control = this.group().get(name);
+    if (!control || control.valid || !control.touched) {
+      return null;
+    }
+    return control.hasError('required')
+      ? 'datosIa.errors.required'
+      : 'datosIa.errors.range';
+  }
+
+  /** Marca como tocados los controles del paso actual y reporta si son válidos. */
+  private validateCurrentPage(): boolean {
+    const formGroup = this.group();
+    let valid = true;
+    for (const name of this.pages[this.step()].controls) {
+      const control = formGroup.get(name);
+      if (control) {
+        control.markAsTouched();
+        valid = valid && control.valid;
+      }
+    }
+    return valid;
+  }
 }

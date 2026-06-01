@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
+  LucideArrowLeft,
+  LucideArrowRight,
   LucideBell,
   LucideBookOpen,
   LucideBot,
   LucideCalendarCheck,
   LucideCalendarClock,
+  LucideCheck,
   LucideCloudUpload,
   LucideFileText,
   LucideFolderOpen,
@@ -48,7 +51,10 @@ export type IconName =
   | 'assistant'
   | 'chat'
   | 'ethics'
-  | 'notifications';
+  | 'notifications'
+  | 'arrow-left'
+  | 'arrow-right'
+  | 'check';
 
 /**
  * Envoltorio de iconos. Mapea un nombre semántico a su icono lucide.
@@ -80,6 +86,9 @@ export type IconName =
     LucideMessageCircle,
     LucideShieldCheck,
     LucideBell,
+    LucideArrowLeft,
+    LucideArrowRight,
+    LucideCheck,
   ],
   template: `
     @switch (name()) {
@@ -151,6 +160,15 @@ export type IconName =
       }
       @case ('notifications') {
         <svg lucideBell [size]="size()" aria-hidden="true"></svg>
+      }
+      @case ('arrow-left') {
+        <svg lucideArrowLeft [size]="size()" aria-hidden="true"></svg>
+      }
+      @case ('arrow-right') {
+        <svg lucideArrowRight [size]="size()" aria-hidden="true"></svg>
+      }
+      @case ('check') {
+        <svg lucideCheck [size]="size()" aria-hidden="true"></svg>
       }
     }
   `,
