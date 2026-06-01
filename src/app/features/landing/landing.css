@@ -1,7 +1,10 @@
 .landing {
   position: relative;
-  min-height: 100dvh;
-  overflow-x: hidden;
+  /* Alto fijo del viewport y dividida en secciones: la página no hace scroll. */
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   outline: none;
   background:
     radial-gradient(
@@ -32,15 +35,34 @@
   gap: var(--space-2);
 }
 
-.landing__hero {
+/* Botones de sección centrados, bajo la barra superior. */
+.landing__nav {
   position: relative;
   z-index: 2;
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--space-8);
+}
+
+/* Escenario flexible: aloja la sección activa centrada y contiene su scroll
+   como último recurso, sin que la página crezca. */
+.landing__stage {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.landing__hero {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 78dvh;
   padding: var(--space-8);
 }
 
@@ -81,15 +103,15 @@
   justify-content: center;
 }
 
-/* Secciones de descripción / misión / visión */
+/* Secciones de descripción / misión / visión: centradas en el escenario. */
 .landing__info {
-  position: relative;
-  z-index: 2;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
   gap: var(--space-6);
+  align-content: center;
   max-width: 64rem;
-  margin: 0 auto;
+  width: 100%;
+  margin: auto;
   padding: var(--space-8);
 }
 

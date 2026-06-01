@@ -1,5 +1,7 @@
-<eci-page-header titleKey="monitorias.title" icon="monitorias" />
+<div class="eci-fit">
+  <eci-page-header titleKey="monitorias.title" icon="monitorias" />
 
+  <div class="eci-fit__body">
 @if (items().length === 0) {
   <eci-card><p class="empty">{{ 'monitorias.empty' | translate }}</p></eci-card>
 } @else {
@@ -33,3 +35,5 @@
     }
   </ul>
 }
+  </div>
+</div>

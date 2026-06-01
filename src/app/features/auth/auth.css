@@ -2,10 +2,12 @@
    espacio 3D de fondo y tarjetas de vidrio con texto claro. */
 .auth {
   position: relative;
-  min-height: 100dvh;
+  /* Alto fijo del viewport: la página no hace scroll; si una tarjeta no cupiera
+     (p. ej. registro en pantallas bajas) el scroll queda contenido en .auth__main. */
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow: hidden;
   outline: none;
   /* Mismo fondo espacial que la landing, adaptable al tema. */
   background:
@@ -43,6 +45,9 @@
   position: relative;
   z-index: 2;
   flex: 1;
+  min-height: 0;
+  /* La tarjeta se centra cuando cabe; si no, el scroll queda aquí, no en la página. */
+  overflow: auto;
   display: flex;
   align-items: center;
   justify-content: center;

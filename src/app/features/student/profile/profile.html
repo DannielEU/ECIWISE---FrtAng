@@ -1,5 +1,7 @@
-<eci-page-header titleKey="profile.title" icon="profile" />
+<div class="eci-fit">
+  <eci-page-header titleKey="profile.title" icon="profile" />
 
+  <div class="eci-fit__body">
 @if (user(); as currentUser) {
   <eci-card>
     <form class="profile" [formGroup]="form" (ngSubmit)="save()">
@@ -31,3 +33,5 @@
     </form>
   </eci-card>
 }
+  </div>
+</div>

@@ -1,5 +1,7 @@
-<eci-page-header titleKey="tutor.requests.title" icon="requests" />
+<div class="eci-fit">
+  <eci-page-header titleKey="tutor.requests.title" icon="requests" />
 
+  <div class="eci-fit__body">
 @if (requests().length === 0) {
   <eci-card><p class="empty">{{ 'tutor.requests.empty' | translate }}</p></eci-card>
 } @else {
@@ -35,3 +37,5 @@
     }
   </ul>
 }
+  </div>
+</div>

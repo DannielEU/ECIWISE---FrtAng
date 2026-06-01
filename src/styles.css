@@ -58,6 +58,9 @@
   --border: #d9d9e0;
   --overlay: rgba(17, 17, 20, 0.45);
   --accent: var(--brand-red);
+  /* Chevron de los <select>: usa el color text-muted del tema (no se puede
+     usar currentColor dentro de background-image, por eso va embebido). */
+  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235b5b66' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   color-scheme: light;
 }
 
@@ -71,6 +74,7 @@
   --border: #33333d;
   --overlay: rgba(0, 0, 0, 0.6);
   --accent: var(--brand-red-soft);
+  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a1a1ad' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   color-scheme: dark;
 }
 
@@ -302,6 +306,110 @@ body {
 *:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* ============================================================
+   Controles de formulario — estilo minimalista único
+   Los <select> nativos pierden su flecha del SO (appearance:none)
+   y reciben un chevron propio acorde al tema. Definido una sola
+   vez aquí; los componentes solo ajustan layout (ancho/alto).
+   ============================================================ */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  color: var(--text);
+  background-color: var(--surface-2);
+  background-image: var(--select-chevron);
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  /* Padding derecho mayor para no solapar el chevron. */
+  padding: var(--space-3) 2.25rem var(--space-3) var(--space-3);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-base),
+    background-color var(--transition-base);
+}
+
+select:hover:not(:disabled) {
+  border-color: var(--text-muted);
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Panel desplegable nativo legible en modo oscuro (Windows/Linux). */
+option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Checkboxes y radios: minimalismo nativo con el acento de marca. */
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--accent);
+}
+
+/* ============================================================
+   Layout "a pantalla" — la página ocupa el alto disponible del
+   shell y se divide en secciones; el contenido cabe sin scroll
+   de página. Patrón: encabezado + botones de sección (chrome
+   fijo) + cuerpo flexible que solo hace scroll como último
+   recurso si una sección concreta no cupiera.
+   ============================================================ */
+.eci-fit {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  gap: var(--space-4);
+}
+
+/* Encabezado y botones de sección no se encogen (chrome fijo). */
+.eci-fit > eci-page-header,
+.eci-fit > eci-section-tabs,
+.eci-fit__chrome {
+  flex: none;
+}
+
+/* eci-page-header trae su propio margen inferior; dentro de .eci-fit el
+   espaciado lo da el gap del contenedor. */
+.eci-fit > eci-page-header .page-header {
+  margin-bottom: 0;
+}
+
+/* Cuerpo de la sección activa: ocupa el resto y contiene su propio overflow. */
+.eci-fit__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Animación de entrada al cambiar de sección (sutil, hacia arriba). */
+.eci-section-enter {
+  animation: eci-section-in var(--transition-base);
+}
+
+@keyframes eci-section-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eci-section-enter {
+    animation: none;
+  }
 }
 
 /* Enlace para saltar al contenido principal (a11y) */

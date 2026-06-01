@@ -1,16 +1,18 @@
-<eci-page-header titleKey="materials.title" icon="materials" />
+<div class="eci-fit">
+  <eci-page-header titleKey="materials.title" icon="materials" />
 
-<div class="materials-search">
-  <eci-icon name="search" [size]="18" />
-  <input
-    type="search"
-    [value]="query()"
-    (input)="onSearch($any($event.target).value)"
-    [placeholder]="'materials.searchPlaceholder' | translate"
-    [attr.aria-label]="'common.search' | translate"
-  />
-</div>
+  <div class="materials-search eci-fit__chrome">
+    <eci-icon name="search" [size]="18" />
+    <input
+      type="search"
+      [value]="query()"
+      (input)="onSearch($any($event.target).value)"
+      [placeholder]="'materials.searchPlaceholder' | translate"
+      [attr.aria-label]="'common.search' | translate"
+    />
+  </div>
 
+  <div class="eci-fit__body">
 @if (filtered().length === 0) {
   <eci-card><p class="empty">{{ 'materials.empty' | translate }}</p></eci-card>
 } @else {
@@ -33,3 +35,5 @@
     }
   </ul>
 }
+  </div>
+</div>

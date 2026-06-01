@@ -6,6 +6,7 @@ import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header'
 import { CardComponent } from '../../../shared/ui/card/card';
 import { ButtonComponent } from '../../../shared/ui/button/button';
 import { IconComponent } from '../../../shared/ui/icon/icon';
+import { SectionTabsComponent, SectionTab } from '../../../shared/ui/section-tabs/section-tabs';
 import { BulkResultDialogComponent } from '../bulk-result-dialog/bulk-result-dialog';
 import { BulkUploadResult, UserAdminService } from '../user-admin.service';
 
@@ -19,6 +20,7 @@ import { BulkUploadResult, UserAdminService } from '../user-admin.service';
     CardComponent,
     ButtonComponent,
     IconComponent,
+    SectionTabsComponent,
     BulkResultDialogComponent,
   ],
   templateUrl: './users.html',
@@ -29,6 +31,13 @@ export class AdminUsersComponent implements OnInit {
 
   protected readonly users = this.service.users;
   protected readonly roles = Object.values(Role);
+
+  /** Secciones de la pantalla (caben sin scroll de página). */
+  protected readonly sections: readonly SectionTab[] = [
+    { id: 'list', labelKey: 'admin.users.tabList', icon: 'users' },
+    { id: 'import', labelKey: 'admin.users.tabImport', icon: 'csv' },
+  ];
+  protected readonly section = signal('list');
 
   /** Estado de la carga CSV: mensaje a mostrar, si es error y resultado. */
   protected readonly uploading = signal(false);

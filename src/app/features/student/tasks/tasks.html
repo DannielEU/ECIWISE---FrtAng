@@ -1,7 +1,8 @@
-<eci-page-header titleKey="tasks.title" icon="tasks" />
+<div class="eci-fit">
+  <eci-page-header titleKey="tasks.title" icon="tasks" />
 
-<eci-card>
-  <form class="task-add" (ngSubmit)="add()">
+  <eci-card class="eci-fit__chrome">
+    <form class="task-add" (ngSubmit)="add()">
     <input
       class="task-add__input"
       type="text"
@@ -16,36 +17,41 @@
       {{ 'tasks.add' | translate }}
     </eci-button>
   </form>
-</eci-card>
-
-<p class="task-summary">{{ 'tasks.remaining' | translate: { count: pendingCount() } }}</p>
-
-@if (tasks().length === 0) {
-  <eci-card>
-    <p class="task-empty">{{ 'tasks.empty' | translate }}</p>
   </eci-card>
-} @else {
-  <ul class="task-list">
-    @for (task of tasks(); track task.id) {
-      <li class="task" [class.task--done]="task.status === 'done'">
-        <label class="task__main">
-          <input
-            type="checkbox"
-            [checked]="task.status === 'done'"
-            (change)="toggle(task)"
-            [attr.aria-label]="'tasks.markDone' | translate"
-          />
-          <span class="task__title">{{ task.title }}</span>
-        </label>
-        <span class="task__meta">
-          @if (task.subject) {
-            <span class="task__subject">{{ task.subject }}</span>
-          }
-          <span class="task__status" [attr.data-status]="task.status">
-            {{ statusKey(task) | translate }}
-          </span>
-        </span>
-      </li>
+
+  <p class="task-summary eci-fit__chrome">
+    {{ 'tasks.remaining' | translate: { count: pendingCount() } }}
+  </p>
+
+  <div class="eci-fit__body">
+    @if (tasks().length === 0) {
+      <eci-card>
+        <p class="task-empty">{{ 'tasks.empty' | translate }}</p>
+      </eci-card>
+    } @else {
+      <ul class="task-list">
+        @for (task of tasks(); track task.id) {
+          <li class="task" [class.task--done]="task.status === 'done'">
+            <label class="task__main">
+              <input
+                type="checkbox"
+                [checked]="task.status === 'done'"
+                (change)="toggle(task)"
+                [attr.aria-label]="'tasks.markDone' | translate"
+              />
+              <span class="task__title">{{ task.title }}</span>
+            </label>
+            <span class="task__meta">
+              @if (task.subject) {
+                <span class="task__subject">{{ task.subject }}</span>
+              }
+              <span class="task__status" [attr.data-status]="task.status">
+                {{ statusKey(task) | translate }}
+              </span>
+            </span>
+          </li>
+        }
+      </ul>
     }
-  </ul>
-}
+  </div>
+</div>

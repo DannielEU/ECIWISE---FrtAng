@@ -1,102 +1,114 @@
-<eci-page-header titleKey="admin.statistics.title" icon="trophy" />
+<div class="eci-fit">
+  <eci-page-header titleKey="admin.statistics.title" icon="trophy" />
 
-@if (loading()) {
-  <p>{{ 'common.loading' | translate }}</p>
-} @else if (stats(); as s) {
-  <div class="stats__cards">
-    <eci-card>
-      <span class="stats__num">{{ s.totalEstudiantes }}</span>
-      <span class="stats__label">{{ 'admin.statistics.totalStudents' | translate }}</span>
-    </eci-card>
-    <eci-card>
-      <span class="stats__num">{{ s.conDatos }}</span>
-      <span class="stats__label">{{ 'admin.statistics.withData' | translate }}</span>
-    </eci-card>
-    <eci-card>
-      <span class="stats__num">{{ s.conPrediccion }}</span>
-      <span class="stats__label">{{ 'admin.statistics.withPrediction' | translate }}</span>
-    </eci-card>
-    <eci-card>
-      <span class="stats__num stats__num--risk">{{ s.enRiesgo }}</span>
-      <span class="stats__label">{{ 'admin.statistics.atRisk' | translate }}</span>
-    </eci-card>
-  </div>
+  @if (loading()) {
+    <div class="eci-fit__body">
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  } @else if (stats(); as s) {
+    <eci-section-tabs [tabs]="sections" [(active)]="section" />
 
-  <!-- ── Registro e ingreso de la plataforma ── -->
-  <h2 class="stats__section">{{ 'admin.statistics.platformSection' | translate }}</h2>
-  <div class="stats__grid">
-    <eci-card>
-      <h3 class="stats__heading">{{ 'admin.statistics.roleDistribution' | translate }}</h3>
-      <eci-pie-chart [data]="rolesPie()" [title]="'admin.statistics.roleDistribution' | translate">
-        {{ 'admin.statistics.noData' | translate }}
-      </eci-pie-chart>
-    </eci-card>
+    <div class="eci-fit__body">
+      @switch (section()) {
+        @case ('summary') {
+          <div class="eci-section-enter stats__cards">
+            <eci-card>
+              <span class="stats__num">{{ s.totalEstudiantes }}</span>
+              <span class="stats__label">{{ 'admin.statistics.totalStudents' | translate }}</span>
+            </eci-card>
+            <eci-card>
+              <span class="stats__num">{{ s.conDatos }}</span>
+              <span class="stats__label">{{ 'admin.statistics.withData' | translate }}</span>
+            </eci-card>
+            <eci-card>
+              <span class="stats__num">{{ s.conPrediccion }}</span>
+              <span class="stats__label">{{ 'admin.statistics.withPrediction' | translate }}</span>
+            </eci-card>
+            <eci-card>
+              <span class="stats__num stats__num--risk">{{ s.enRiesgo }}</span>
+              <span class="stats__label">{{ 'admin.statistics.atRisk' | translate }}</span>
+            </eci-card>
+          </div>
+        }
 
-    <eci-card>
-      <h3 class="stats__heading">{{ 'admin.statistics.loginStatus' | translate }}</h3>
-      <eci-pie-chart [data]="accesoPie()" [title]="'admin.statistics.loginStatus' | translate">
-        {{ 'admin.statistics.noData' | translate }}
-      </eci-pie-chart>
-    </eci-card>
+        @case ('platform') {
+          <div class="eci-section-enter stats__grid">
+            <eci-card>
+              <h3 class="stats__heading">{{ 'admin.statistics.roleDistribution' | translate }}</h3>
+              <eci-pie-chart [data]="rolesPie()" [title]="'admin.statistics.roleDistribution' | translate">
+                {{ 'admin.statistics.noData' | translate }}
+              </eci-pie-chart>
+            </eci-card>
 
-    <eci-card>
-      <h3 class="stats__heading">{{ 'admin.statistics.registrationsPerMonth' | translate }}</h3>
-      <eci-histogram [data]="registrosBars()" color="var(--info)">
-        {{ 'admin.statistics.noData' | translate }}
-      </eci-histogram>
-    </eci-card>
+            <eci-card>
+              <h3 class="stats__heading">{{ 'admin.statistics.loginStatus' | translate }}</h3>
+              <eci-pie-chart [data]="accesoPie()" [title]="'admin.statistics.loginStatus' | translate">
+                {{ 'admin.statistics.noData' | translate }}
+              </eci-pie-chart>
+            </eci-card>
 
-    <eci-card>
-      <h3 class="stats__heading">{{ 'admin.statistics.loginsPerMonth' | translate }}</h3>
-      <eci-histogram [data]="accesosBars()" color="var(--success)">
-        {{ 'admin.statistics.noData' | translate }}
-      </eci-histogram>
-    </eci-card>
-  </div>
+            <eci-card>
+              <h3 class="stats__heading">{{ 'admin.statistics.registrationsPerMonth' | translate }}</h3>
+              <eci-histogram [data]="registrosBars()" color="var(--info)">
+                {{ 'admin.statistics.noData' | translate }}
+              </eci-histogram>
+            </eci-card>
 
-  <!-- ── Predicciones de IA ── -->
-  <h2 class="stats__section">{{ 'admin.statistics.iaSection' | translate }}</h2>
-  <div class="stats__grid">
-    <eci-card>
-      <h3 class="stats__heading">{{ 'admin.statistics.gradeDistribution' | translate }}</h3>
-      <eci-histogram [data]="rendimientoBars()">
-        {{ 'admin.statistics.noPredictions' | translate }}
-      </eci-histogram>
-    </eci-card>
+            <eci-card>
+              <h3 class="stats__heading">{{ 'admin.statistics.loginsPerMonth' | translate }}</h3>
+              <eci-histogram [data]="accesosBars()" color="var(--success)">
+                {{ 'admin.statistics.noData' | translate }}
+              </eci-histogram>
+            </eci-card>
+          </div>
+        }
 
-    <eci-card>
-      <h3 class="stats__heading">{{ 'admin.statistics.dropoutDistribution' | translate }}</h3>
-      <eci-pie-chart [data]="desercionPie()" [title]="'admin.statistics.dropoutDistribution' | translate">
-        {{ 'admin.statistics.noPredictions' | translate }}
-      </eci-pie-chart>
-    </eci-card>
+        @case ('ia') {
+          <div class="eci-section-enter stats__grid">
+            <eci-card>
+              <h3 class="stats__heading">{{ 'admin.statistics.gradeDistribution' | translate }}</h3>
+              <eci-histogram [data]="rendimientoBars()">
+                {{ 'admin.statistics.noPredictions' | translate }}
+              </eci-histogram>
+            </eci-card>
 
-    <eci-card>
-      <h3 class="stats__heading">{{ 'admin.statistics.successProbStats' | translate }}</h3>
-      @if (s.estadisticasProbabilidadExito.n === 0) {
-        <p class="stats__muted">{{ 'admin.statistics.noPredictions' | translate }}</p>
-      } @else {
-        <ul class="stats__metrics">
-          <li><span>{{ 'admin.statistics.mean' | translate }}</span><b>{{ s.estadisticasProbabilidadExito.media | number:'1.0-1' }}%</b></li>
-          <li><span>{{ 'admin.statistics.median' | translate }}</span><b>{{ s.estadisticasProbabilidadExito.mediana | number:'1.0-1' }}%</b></li>
-          <li><span>{{ 'admin.statistics.mode' | translate }}</span><b>{{ s.estadisticasProbabilidadExito.moda | number:'1.0-1' }}%</b></li>
-          <li class="stats__metrics-n"><span>{{ 'admin.statistics.sampleSize' | translate }}</span><b>{{ s.estadisticasProbabilidadExito.n }}</b></li>
-        </ul>
+            <eci-card>
+              <h3 class="stats__heading">{{ 'admin.statistics.dropoutDistribution' | translate }}</h3>
+              <eci-pie-chart [data]="desercionPie()" [title]="'admin.statistics.dropoutDistribution' | translate">
+                {{ 'admin.statistics.noPredictions' | translate }}
+              </eci-pie-chart>
+            </eci-card>
+
+            <eci-card>
+              <h3 class="stats__heading">{{ 'admin.statistics.successProbStats' | translate }}</h3>
+              @if (s.estadisticasProbabilidadExito.n === 0) {
+                <p class="stats__muted">{{ 'admin.statistics.noPredictions' | translate }}</p>
+              } @else {
+                <ul class="stats__metrics">
+                  <li><span>{{ 'admin.statistics.mean' | translate }}</span><b>{{ s.estadisticasProbabilidadExito.media | number:'1.0-1' }}%</b></li>
+                  <li><span>{{ 'admin.statistics.median' | translate }}</span><b>{{ s.estadisticasProbabilidadExito.mediana | number:'1.0-1' }}%</b></li>
+                  <li><span>{{ 'admin.statistics.mode' | translate }}</span><b>{{ s.estadisticasProbabilidadExito.moda | number:'1.0-1' }}%</b></li>
+                  <li class="stats__metrics-n"><span>{{ 'admin.statistics.sampleSize' | translate }}</span><b>{{ s.estadisticasProbabilidadExito.n }}</b></li>
+                </ul>
+              }
+            </eci-card>
+
+            <eci-card>
+              <h3 class="stats__heading">{{ 'admin.statistics.dropoutConfStats' | translate }}</h3>
+              @if (s.estadisticasConfianzaDesercion.n === 0) {
+                <p class="stats__muted">{{ 'admin.statistics.noPredictions' | translate }}</p>
+              } @else {
+                <ul class="stats__metrics">
+                  <li><span>{{ 'admin.statistics.mean' | translate }}</span><b>{{ s.estadisticasConfianzaDesercion.media | number:'1.0-1' }}%</b></li>
+                  <li><span>{{ 'admin.statistics.median' | translate }}</span><b>{{ s.estadisticasConfianzaDesercion.mediana | number:'1.0-1' }}%</b></li>
+                  <li><span>{{ 'admin.statistics.mode' | translate }}</span><b>{{ s.estadisticasConfianzaDesercion.moda | number:'1.0-1' }}%</b></li>
+                  <li class="stats__metrics-n"><span>{{ 'admin.statistics.sampleSize' | translate }}</span><b>{{ s.estadisticasConfianzaDesercion.n }}</b></li>
+                </ul>
+              }
+            </eci-card>
+          </div>
+        }
       }
-    </eci-card>
-
-    <eci-card>
-      <h3 class="stats__heading">{{ 'admin.statistics.dropoutConfStats' | translate }}</h3>
-      @if (s.estadisticasConfianzaDesercion.n === 0) {
-        <p class="stats__muted">{{ 'admin.statistics.noPredictions' | translate }}</p>
-      } @else {
-        <ul class="stats__metrics">
-          <li><span>{{ 'admin.statistics.mean' | translate }}</span><b>{{ s.estadisticasConfianzaDesercion.media | number:'1.0-1' }}%</b></li>
-          <li><span>{{ 'admin.statistics.median' | translate }}</span><b>{{ s.estadisticasConfianzaDesercion.mediana | number:'1.0-1' }}%</b></li>
-          <li><span>{{ 'admin.statistics.mode' | translate }}</span><b>{{ s.estadisticasConfianzaDesercion.moda | number:'1.0-1' }}%</b></li>
-          <li class="stats__metrics-n"><span>{{ 'admin.statistics.sampleSize' | translate }}</span><b>{{ s.estadisticasConfianzaDesercion.n }}</b></li>
-        </ul>
-      }
-    </eci-card>
-  </div>
-}
+    </div>
+  }
+</div>

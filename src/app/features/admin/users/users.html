@@ -1,84 +1,98 @@
-<eci-page-header titleKey="admin.users.title" icon="users" />
+<div class="eci-fit">
+  <eci-page-header titleKey="admin.users.title" icon="users" />
 
-<div class="admin-grid">
-  <eci-card>
-    <h2 class="admin__heading">{{ 'admin.csv.title' | translate }}</h2>
-    <p class="admin__hint">{{ 'admin.csv.hint' | translate }}</p>
-    <label class="admin__upload" [class.admin__upload--disabled]="uploading()">
-      <eci-icon name="csv" [size]="20" />
-      <span>{{ 'admin.csv.choose' | translate }}</span>
-      <input
-        type="file"
-        accept=".csv,text/csv"
-        (change)="onCsv($event)"
-        [disabled]="uploading()"
-        hidden
-      />
-    </label>
-    @if (importMessage(); as msg) {
-      <p class="admin__import" [class.admin__import--error]="importError()" role="status">
-        {{ msg | translate: { creados: importCreated(), errores: importErrors() } }}
-        @if (uploadResult(); as res) {
-          @if (res.usuarios.length > 0) {
-            <button type="button" class="admin__import-link" (click)="uploadResult.set(res)">
-              {{ 'admin.csv.dialog.view' | translate }}
-            </button>
+  <eci-section-tabs [tabs]="sections" [(active)]="section" />
+
+  <div class="eci-fit__body">
+    @switch (section()) {
+      @case ('list') {
+        <div class="eci-section-enter">
+          <p class="admin__count">{{ 'admin.users.count' | translate: { count: users().length } }}</p>
+
+          @if (users().length === 0) {
+            <eci-card><p class="admin__empty">{{ 'admin.users.empty' | translate }}</p></eci-card>
+          } @else {
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>{{ 'common.name' | translate }}</th>
+                    <th>{{ 'common.email' | translate }}</th>
+                    <th>{{ 'profile.role' | translate }}</th>
+                    <th>{{ 'fields.status' | translate }}</th>
+                    <th>{{ 'fields.actions' | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (user of users(); track user.id) {
+                    <tr>
+                      <td>{{ user.name }}</td>
+                      <td class="admin-table__email">{{ user.email }}</td>
+                      <td>
+                        <select
+                          [value]="user.role"
+                          (change)="changeRole(user, $any($event.target).value)"
+                          [attr.aria-label]="'admin.users.changeRole' | translate"
+                        >
+                          @for (role of roles; track role) {
+                            <option [value]="role">{{ 'roles.' + role | translate }}</option>
+                          }
+                        </select>
+                      </td>
+                      <td>
+                        <span class="admin-status" [class.admin-status--on]="user.active">
+                          {{ (user.active ? 'admin.users.active' : 'admin.users.inactive') | translate }}
+                        </span>
+                      </td>
+                      <td>
+                        <eci-button variant="ghost" (click)="toggleActive(user)">
+                          {{ (user.active ? 'admin.users.deactivate' : 'admin.users.activate') | translate }}
+                        </eci-button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
           }
-        }
-      </p>
+        </div>
+      }
+
+      @case ('import') {
+        <div class="eci-section-enter">
+          <eci-card>
+            <h2 class="admin__heading">{{ 'admin.csv.title' | translate }}</h2>
+            <p class="admin__hint">{{ 'admin.csv.hint' | translate }}</p>
+            <label class="admin__upload" [class.admin__upload--disabled]="uploading()">
+              <eci-icon name="csv" [size]="20" />
+              <span>{{ 'admin.csv.choose' | translate }}</span>
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                (change)="onCsv($event)"
+                [disabled]="uploading()"
+                hidden
+              />
+            </label>
+            @if (importMessage(); as msg) {
+              <p class="admin__import" [class.admin__import--error]="importError()" role="status">
+                {{ msg | translate: { creados: importCreated(), errores: importErrors() } }}
+                @if (uploadResult(); as res) {
+                  @if (res.usuarios.length > 0) {
+                    <button type="button" class="admin__import-link" (click)="uploadResult.set(res)">
+                      {{ 'admin.csv.dialog.view' | translate }}
+                    </button>
+                  }
+                }
+              </p>
+            }
+          </eci-card>
+        </div>
+      }
     }
-  </eci-card>
+  </div>
 </div>
 
 @if (uploadResult(); as res) {
   <eci-bulk-result-dialog [result]="res" (closed)="closeResult()" />
-}
-
-<p class="admin__count">{{ 'admin.users.count' | translate: { count: users().length } }}</p>
-
-@if (users().length === 0) {
-  <eci-card><p class="admin__empty">{{ 'admin.users.empty' | translate }}</p></eci-card>
-} @else {
-  <div class="admin-table-wrap">
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>{{ 'common.name' | translate }}</th>
-          <th>{{ 'common.email' | translate }}</th>
-          <th>{{ 'profile.role' | translate }}</th>
-          <th>{{ 'fields.status' | translate }}</th>
-          <th>{{ 'fields.actions' | translate }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (user of users(); track user.id) {
-          <tr>
-            <td>{{ user.name }}</td>
-            <td class="admin-table__email">{{ user.email }}</td>
-            <td>
-              <select
-                [value]="user.role"
-                (change)="changeRole(user, $any($event.target).value)"
-                [attr.aria-label]="'admin.users.changeRole' | translate"
-              >
-                @for (role of roles; track role) {
-                  <option [value]="role">{{ 'roles.' + role | translate }}</option>
-                }
-              </select>
-            </td>
-            <td>
-              <span class="admin-status" [class.admin-status--on]="user.active">
-                {{ (user.active ? 'admin.users.active' : 'admin.users.inactive') | translate }}
-              </span>
-            </td>
-            <td>
-              <eci-button variant="ghost" (click)="toggleActive(user)">
-                {{ (user.active ? 'admin.users.deactivate' : 'admin.users.activate') | translate }}
-              </eci-button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
 }

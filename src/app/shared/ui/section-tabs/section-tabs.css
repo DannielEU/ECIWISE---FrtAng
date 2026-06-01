@@ -1,0 +1,72 @@
+/* Control segmentado: pista contenedora con la píldora deslizante detrás. */
+.seg {
+  position: relative;
+  display: flex;
+  /* Sin separación entre botones: cada uno ocupa exactamente 1/N del ancho
+     interno, así el indicador (misma fracción) se alinea con precisión. */
+  gap: 0;
+  padding: var(--space-1);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  /* No se encoge ni hace scroll: forma parte del chrome fijo de la sección. */
+  flex: none;
+}
+
+/* Píldora que se desliza bajo la sección activa. */
+.seg__indicator {
+  position: absolute;
+  top: var(--space-1);
+  left: var(--space-1);
+  bottom: var(--space-1);
+  /* Misma fracción que cada botón: ancho interno (descontado el padding) / N. */
+  width: calc((100% - var(--space-2)) / var(--seg-n, 1));
+  background: var(--surface);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base);
+  will-change: transform;
+}
+
+.seg__btn {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-full);
+  color: var(--text-muted);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--transition-base);
+}
+
+.seg__btn:hover:not(.seg__btn--active) {
+  color: var(--text);
+}
+
+.seg__btn--active {
+  color: var(--accent);
+}
+
+@media (max-width: 30rem) {
+  .seg__label {
+    display: none;
+  }
+  .seg__btn {
+    padding: var(--space-2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seg__indicator {
+    transition: none;
+  }
+}

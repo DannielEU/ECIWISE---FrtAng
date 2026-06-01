@@ -11,9 +11,13 @@ import { CompleteProfileSectionComponent } from './complete-profile-section/comp
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PageHeaderComponent, DashboardGridComponent, CompleteProfileSectionComponent],
   template: `
-    <eci-page-header titleKey="nav.dashboard" icon="dashboard" />
-    <eci-complete-profile-section />
-    <eci-dashboard-grid [items]="items" />
+    <div class="eci-fit">
+      <eci-page-header titleKey="nav.dashboard" icon="dashboard" />
+      <eci-complete-profile-section class="eci-fit__chrome" />
+      <div class="eci-fit__body">
+        <eci-dashboard-grid [items]="items" />
+      </div>
+    </div>
   `,
 })
 export class StudentDashboardComponent {

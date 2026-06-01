@@ -64,7 +64,14 @@
   line-height: 1.3;
 }
 
-.dia__field select,
+/* El <select> toma su estilo visual del global; aquí solo layout. */
+.dia__field select {
+  margin-top: var(--space-1);
+  width: 100%;
+  box-sizing: border-box;
+  height: 2.75rem;
+}
+
 .dia__field input {
   margin-top: var(--space-1);
   width: 100%;
@@ -78,7 +85,6 @@
   height: 2.75rem;
 }
 
-.dia__field select:focus,
 .dia__field input:focus {
   outline: none;
   border-color: var(--accent);

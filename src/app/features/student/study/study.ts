@@ -17,8 +17,10 @@ interface StudyGroup {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslatePipe, PageHeaderComponent, CardComponent, ButtonComponent],
   template: `
+    <div class="eci-fit">
     <eci-page-header titleKey="study.title" icon="study" />
-    <h2 class="study__heading">{{ 'study.groups' | translate }}</h2>
+    <h2 class="study__heading eci-fit__chrome">{{ 'study.groups' | translate }}</h2>
+    <div class="eci-fit__body">
     <ul class="study__list">
       @for (group of groups; track group.id) {
         <li>
@@ -37,6 +39,8 @@ interface StudyGroup {
         </li>
       }
     </ul>
+    </div>
+    </div>
   `,
   styleUrl: './study.css',
 })

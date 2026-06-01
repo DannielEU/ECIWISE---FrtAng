@@ -11,12 +11,7 @@
 }
 
 .admin-form select {
-  padding: var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--surface-2);
-  color: var(--text);
-  font: inherit;
+  /* Estilo visual heredado del global; aquí solo el ancho mínimo. */
   min-width: 16rem;
 }
 

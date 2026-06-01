@@ -22,9 +22,7 @@
   gap: var(--space-3);
 }
 
-.admin-form input,
-.admin-form select,
-.admin-table select {
+.admin-form input {
   padding: var(--space-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -116,7 +114,9 @@
 }
 
 .admin-table select {
-  padding: var(--space-1) var(--space-2);
+  /* Versión compacta dentro de la tabla; conserva hueco para el chevron. */
+  padding: var(--space-1) 1.75rem var(--space-1) var(--space-2);
+  background-position: right var(--space-2) center;
 }
 
 .admin-status {

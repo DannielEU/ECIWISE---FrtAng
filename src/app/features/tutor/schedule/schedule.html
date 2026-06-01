@@ -1,7 +1,8 @@
-<eci-page-header titleKey="tutor.schedule.title" icon="schedule" />
+<div class="eci-fit">
+  <eci-page-header titleKey="tutor.schedule.title" icon="schedule" />
 
-<eci-card>
-  <form class="sched-form" [formGroup]="form" (ngSubmit)="create()">
+  <eci-card class="eci-fit__chrome">
+    <form class="sched-form" [formGroup]="form" (ngSubmit)="create()">
     <label class="sched-form__field">
       <span>{{ 'fields.subject' | translate }}</span>
       <input type="text" formControlName="subject" />
@@ -16,8 +17,9 @@
     </label>
     <eci-button type="submit">{{ 'tutor.schedule.create' | translate }}</eci-button>
   </form>
-</eci-card>
+  </eci-card>
 
+  <div class="eci-fit__body">
 @if (sessions().length === 0) {
   <eci-card><p class="empty">{{ 'tutor.schedule.empty' | translate }}</p></eci-card>
 } @else {
@@ -42,3 +44,5 @@
     }
   </ul>
 }
+  </div>
+</div>

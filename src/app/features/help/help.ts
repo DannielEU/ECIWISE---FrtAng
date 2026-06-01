@@ -9,8 +9,10 @@ import { PageHeaderComponent } from '../../shared/ui/page-header/page-header';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslatePipe, CardComponent, PageHeaderComponent],
   template: `
+    <div class="eci-fit">
     <eci-page-header titleKey="help.title" icon="help" />
-    <p class="help__subtitle">{{ 'help.subtitle' | translate }}</p>
+    <p class="help__subtitle eci-fit__chrome">{{ 'help.subtitle' | translate }}</p>
+    <div class="eci-fit__body">
     <div class="help__sections">
       @for (section of sections; track section.titleKey) {
         <eci-card>
@@ -19,11 +21,13 @@ import { PageHeaderComponent } from '../../shared/ui/page-header/page-header';
         </eci-card>
       }
     </div>
+    </div>
+    </div>
   `,
   styles: [
     `
       .help__subtitle {
-        margin: 0 0 var(--space-6);
+        margin: 0;
         color: var(--text-muted);
       }
       .help__sections {

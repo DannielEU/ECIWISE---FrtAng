@@ -16,7 +16,9 @@ interface Game {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslatePipe, PageHeaderComponent, ButtonComponent, IconComponent],
   template: `
+    <div class="eci-fit">
     <eci-page-header titleKey="games.title" icon="games" />
+    <div class="eci-fit__body">
     <ul class="games">
       @for (game of games; track game.id) {
         <li class="game">
@@ -27,6 +29,8 @@ interface Game {
         </li>
       }
     </ul>
+    </div>
+    </div>
   `,
   styleUrl: './games.css',
 })

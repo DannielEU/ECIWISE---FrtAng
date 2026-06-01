@@ -5,6 +5,7 @@ import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header'
 import { CardComponent } from '../../../shared/ui/card/card';
 import { PieChartComponent, PieSlice } from '../../../shared/ui/charts/pie-chart';
 import { HistogramComponent, HistogramBar } from '../../../shared/ui/charts/histogram';
+import { SectionTabsComponent, SectionTab } from '../../../shared/ui/section-tabs/section-tabs';
 import { IaAdminService, PlatformStats } from '../../../core/ia/ia-admin.service';
 
 /** Color institucional por rol. */
@@ -25,7 +26,15 @@ const ROLE_LABEL_KEY: Record<string, string> = {
 @Component({
   selector: 'eci-admin-statistics',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe, TranslatePipe, PageHeaderComponent, CardComponent, PieChartComponent, HistogramComponent],
+  imports: [
+    DecimalPipe,
+    TranslatePipe,
+    PageHeaderComponent,
+    CardComponent,
+    PieChartComponent,
+    HistogramComponent,
+    SectionTabsComponent,
+  ],
   templateUrl: './statistics.html',
   styleUrl: './statistics.css',
 })
@@ -35,6 +44,14 @@ export class AdminStatisticsComponent implements OnInit {
 
   protected readonly stats = signal<PlatformStats | null>(null);
   protected readonly loading = signal(true);
+
+  /** Secciones en que se divide la pantalla para caber sin scroll. */
+  protected readonly sections: readonly SectionTab[] = [
+    { id: 'summary', labelKey: 'admin.statistics.tabSummary', icon: 'trophy' },
+    { id: 'platform', labelKey: 'admin.statistics.tabPlatform', icon: 'users' },
+    { id: 'ia', labelKey: 'admin.statistics.tabIa', icon: 'assistant' },
+  ];
+  protected readonly section = signal('summary');
 
   ngOnInit(): void {
     this.service.platformStats().subscribe({

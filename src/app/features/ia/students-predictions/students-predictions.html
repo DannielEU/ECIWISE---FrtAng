@@ -1,5 +1,7 @@
-<eci-page-header titleKey="ia.predictions.title" icon="assistant" />
+<div class="eci-fit">
+  <eci-page-header titleKey="ia.predictions.title" icon="assistant" />
 
+  <div class="eci-fit__body">
 @if (loading()) {
   <p>{{ 'common.loading' | translate }}</p>
 } @else if (students().length === 0) {
@@ -42,3 +44,5 @@
     </table>
   </div>
 }
+  </div>
+</div>

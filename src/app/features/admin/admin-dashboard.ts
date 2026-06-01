@@ -10,8 +10,12 @@ import { navItemsFor } from '../../shared/layout/nav-items';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PageHeaderComponent, DashboardGridComponent],
   template: `
-    <eci-page-header titleKey="nav.dashboard" icon="dashboard" />
-    <eci-dashboard-grid [items]="items" />
+    <div class="eci-fit">
+      <eci-page-header titleKey="nav.dashboard" icon="dashboard" />
+      <div class="eci-fit__body">
+        <eci-dashboard-grid [items]="items" />
+      </div>
+    </div>
   `,
 })
 export class AdminDashboardComponent {
