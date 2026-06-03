@@ -9,8 +9,12 @@ import {
   LucideCalendarCheck,
   LucideCalendarClock,
   LucideCheck,
+  LucideCircle,
+  LucideCircleCheck,
+  LucideCircleDot,
   LucideCloudUpload,
   LucideFileText,
+  LucideFlame,
   LucideFolderOpen,
   LucideGamepad2,
   LucideGraduationCap,
@@ -22,6 +26,7 @@ import {
   LucideMessageCircle,
   LucidePencil,
   LucidePlus,
+  LucideRepeat,
   LucideSearch,
   LucideSettings,
   LucideShieldCheck,
@@ -66,7 +71,12 @@ export type IconName =
   | 'info'
   | 'plus'
   | 'edit'
-  | 'trash';
+  | 'trash'
+  | 'repeat'
+  | 'flame'
+  | 'circle'
+  | 'circle-dot'
+  | 'circle-check';
 
 /**
  * Envoltorio de iconos. Mapea un nombre semántico a su icono lucide.
@@ -107,6 +117,11 @@ export type IconName =
     LucidePlus,
     LucidePencil,
     LucideTrash2,
+    LucideRepeat,
+    LucideFlame,
+    LucideCircle,
+    LucideCircleDot,
+    LucideCircleCheck,
   ],
   template: `
     @switch (name()) {
@@ -205,6 +220,21 @@ export type IconName =
       }
       @case ('trash') {
         <svg lucideTrash2 [size]="size()" aria-hidden="true"></svg>
+      }
+      @case ('repeat') {
+        <svg lucideRepeat [size]="size()" aria-hidden="true"></svg>
+      }
+      @case ('flame') {
+        <svg lucideFlame [size]="size()" aria-hidden="true"></svg>
+      }
+      @case ('circle') {
+        <svg lucideCircle [size]="size()" aria-hidden="true"></svg>
+      }
+      @case ('circle-dot') {
+        <svg lucideCircleDot [size]="size()" aria-hidden="true"></svg>
+      }
+      @case ('circle-check') {
+        <svg lucideCircleCheck [size]="size()" aria-hidden="true"></svg>
       }
     }
   `,
