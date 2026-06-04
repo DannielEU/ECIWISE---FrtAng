@@ -476,6 +476,8 @@ export const en = {
     congratsCompleted: 'Congrats! You completed {{count}} tasks!',
     congratsPlanned: 'Great planning! You scheduled {{count}} tasks!',
     changeStatus: 'Change status',
+    toggleStats: 'Show or hide statistics',
+    fieldTitle: 'Title',
     fieldImportance: 'Importance',
     fieldDate: 'Date',
     fieldTime: 'Time',
@@ -730,6 +732,8 @@ export const en = {
       search: 'Search collections…',
       noResults: 'No collections match your search.',
       by: 'By {{name}}',
+      favorite: 'Pin collection',
+      unfavorite: 'Unpin collection',
     },
     flashcards: {
       back: 'Back to collections',

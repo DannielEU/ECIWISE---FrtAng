@@ -477,6 +477,8 @@ export const es = {
     congratsCompleted: '¡Felicidades! ¡Completaste {{count}} tareas!',
     congratsPlanned: '¡Gran planificación! ¡Programaste {{count}} tareas!',
     changeStatus: 'Cambiar estado',
+    toggleStats: 'Mostrar u ocultar estadísticas',
+    fieldTitle: 'Título',
     fieldImportance: 'Importancia',
     fieldDate: 'Fecha',
     fieldTime: 'Hora',
@@ -731,6 +733,8 @@ export const es = {
       search: 'Buscar colecciones…',
       noResults: 'No hay colecciones que coincidan con tu búsqueda.',
       by: 'Por {{name}}',
+      favorite: 'Fijar colección',
+      unfavorite: 'Quitar de fijadas',
     },
     flashcards: {
       back: 'Volver a colecciones',

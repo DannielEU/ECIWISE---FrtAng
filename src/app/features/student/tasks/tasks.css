@@ -14,15 +14,18 @@
   display: inline-flex;
   flex-shrink: 0;
 }
-.toast__close {
+.toast__close,
+.backlog__close {
   display: inline-flex;
   align-items: center;
   margin-left: auto;
   padding: 2px;
   background: none;
   border: none;
-  color: inherit;
   cursor: pointer;
+}
+.toast__close {
+  color: inherit;
   opacity: 0.8;
 }
 .toast__close:hover {
@@ -73,37 +76,50 @@
   text-align: center;
 }
 
-/* ---- Alta ---- */
+/* ---- Barra de acciones (pestañas + alta en pop-up) ---- */
+.tasks-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.tasks-bar__tabs {
+  flex: 1;
+  min-width: 0;
+}
+.tasks-bar__new-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ---- Alta (formulario dentro del modal) ---- */
 .creator {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
-.creator__row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
+.creator__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
 }
 .creator__advanced {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
+  flex-direction: column;
   gap: var(--space-4);
   padding-top: var(--space-2);
-}
-.creator__input {
-  flex: 1 1 220px;
-}
-.creator__tags {
-  width: 200px;
 }
 .creator__add {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
 }
-
+.creator__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
 /* Campo con etiqueta + control + tooltip */
 .field {
   display: flex;
@@ -122,8 +138,7 @@
 .creator input,
 .creator select,
 .search input,
-.search select,
-.agenda-toolbar input {
+.search select {
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -156,6 +171,10 @@
   gap: var(--space-3);
   align-items: center;
   margin-bottom: var(--space-3);
+}
+.search eci-date-picker {
+  flex: 1 1 150px;
+  min-width: 0;
 }
 
 /* ---- Lista ---- */
@@ -238,25 +257,10 @@
   color: var(--text-muted);
   cursor: default;
 }
-.badge--status {
-  cursor: pointer;
-}
 .badge[data-imp='HIGH'],
 .badge[data-imp='URGENT'] {
   background: color-mix(in srgb, var(--danger) 18%, transparent);
   color: var(--danger);
-}
-.badge[data-status='PENDING'] {
-  background: color-mix(in srgb, var(--warning) 18%, transparent);
-  color: var(--warning);
-}
-.badge[data-status='IN_PROGRESS'] {
-  background: color-mix(in srgb, var(--info) 18%, transparent);
-  color: var(--info);
-}
-.badge[data-status='DONE'] {
-  background: color-mix(in srgb, var(--success) 18%, transparent);
-  color: var(--success);
 }
 .icon-btn {
   display: inline-flex;
@@ -277,20 +281,32 @@
 }
 
 /* ===================== AGENDA ===================== */
-.agenda-layout {
-  display: grid;
-  grid-template-columns: minmax(180px, 240px) 1fr;
-  gap: var(--space-4);
-  align-items: start;
+.agenda-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
   height: 100%;
   min-height: 0;
 }
+.agenda-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  gap: var(--space-4);
+  flex: 1;
+  min-height: 0;
+}
+/* Con la bandeja desplegada aparece la columna lateral. */
+.agenda-layout--with-backlog {
+  grid-template-columns: minmax(180px, 260px) 1fr;
+}
 
-/* ---- Bandeja sin agendar ---- */
+/* ---- Bandeja sin agendar (desplegable) ---- */
 .backlog {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  min-height: 0;
   max-height: 100%;
   overflow: auto;
 }
@@ -300,6 +316,16 @@
   gap: var(--space-2);
   font-weight: 700;
   color: var(--text);
+}
+.backlog__close {
+  color: var(--text-muted);
+}
+.backlog__close:hover {
+  color: var(--text);
+}
+.agenda-toolbar__date {
+  flex: 1 1 150px;
+  min-width: 0;
 }
 .backlog__drop {
   display: flex;
@@ -323,9 +349,8 @@
 .timeline {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
   min-width: 0;
-  max-height: 100%;
+  min-height: 0;
 }
 .agenda-toolbar {
   display: flex;
@@ -343,6 +368,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex: 1;
   overflow: auto;
   min-height: 0;
 }
@@ -449,37 +475,16 @@
   font-size: 0.6rem;
   padding: 0.1rem 0.4rem;
 }
-.card-task__status {
-  flex-shrink: 0;
-  border: none;
-  border-radius: var(--radius-full);
-  background: var(--surface-3);
-  color: var(--text-muted);
-  font-size: 0.6rem;
-  font-weight: 700;
-  padding: 0.1rem 0.45rem;
-  cursor: pointer;
-}
-.card-task__status[data-status='PENDING'] {
-  background: color-mix(in srgb, var(--warning) 18%, transparent);
-  color: var(--warning);
-}
-.card-task__status[data-status='IN_PROGRESS'] {
-  background: color-mix(in srgb, var(--info) 18%, transparent);
-  color: var(--info);
-}
-.card-task__status[data-status='DONE'] {
-  background: color-mix(in srgb, var(--success) 18%, transparent);
-  color: var(--success);
-}
 
 /* Responsive: una columna en pantallas estrechas */
 @media (max-width: 720px) {
-  .agenda-layout {
+  .agenda-layout,
+  .agenda-layout--with-backlog {
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
   }
   .backlog {
-    max-height: none;
+    max-height: 50vh;
   }
   .agenda-toolbar__hours {
     margin-left: 0;
@@ -489,34 +494,25 @@
 /* Móvil: los controles del formulario y la búsqueda se apilan a todo el ancho
    para que se vean y se puedan tocar cómodamente. */
 @media (max-width: 640px) {
-  .creator__row,
-  .creator__advanced {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .creator__input,
-  .creator__tags,
-  .creator__submit,
-  .creator__row .field,
-  .creator__advanced .field {
-    flex: 1 1 auto;
-    width: 100%;
-  }
-  .creator input,
-  .creator select {
-    width: 100%;
+  /* Formulario del modal a una columna. */
+  .creator__grid {
+    grid-template-columns: 1fr;
   }
   .palette {
     flex-wrap: wrap;
   }
 
+  /* La barra de acciones permite que el botón de alta baje si no cabe. */
+  .tasks-bar {
+    flex-wrap: wrap;
+  }
+  .tasks-bar__tabs {
+    flex: 1 1 100%;
+  }
+
   .search {
     flex-direction: column;
     align-items: stretch;
-  }
-  .search input,
-  .search select {
-    width: 100%;
   }
 
   .stat {
@@ -526,7 +522,7 @@
   .agenda-toolbar {
     row-gap: var(--space-2);
   }
-  .agenda-toolbar input[type='date'] {
+  .agenda-toolbar__date {
     flex: 1 1 auto;
     min-width: 0;
   }

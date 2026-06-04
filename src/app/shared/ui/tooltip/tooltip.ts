@@ -54,6 +54,11 @@ export class InfoTooltipComponent {
   /** Etiqueta accesible del botón; por defecto el propio texto. */
   readonly ariaLabel = input<string>('');
   readonly size = input(16);
+  /**
+   * Posición de la burbuja: `'auto'` decide según el espacio disponible;
+   * `'below'`/`'above'` la fuerzan (útil cerca de tarjetas que no debe tapar).
+   */
+  readonly placement = input<'auto' | 'above' | 'below'>('auto');
 
   private readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
 
@@ -75,7 +80,10 @@ export class InfoTooltipComponent {
     const maxWidth = Math.min(256, window.innerWidth - margin * 2);
     // Estimación de alto: si no cabe encima, se muestra debajo.
     const estimatedHeight = 96;
-    const showBelow = rect.top < estimatedHeight + margin;
+    const placement = this.placement();
+    const showBelow =
+      placement === 'below' ||
+      (placement === 'auto' && rect.top < estimatedHeight + margin);
     this.below.set(showBelow);
 
     // Centrado horizontal sobre el disparador, ajustado a los bordes.

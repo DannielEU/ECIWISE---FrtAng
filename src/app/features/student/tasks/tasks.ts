@@ -9,6 +9,9 @@ import { ButtonComponent } from '../../../shared/ui/button/button';
 import { IconComponent } from '../../../shared/ui/icon/icon';
 import { InfoTooltipComponent } from '../../../shared/ui/tooltip/tooltip';
 import { CollapseComponent } from '../../../shared/ui/collapse/collapse';
+import { ModalComponent } from '../../../shared/ui/modal/modal';
+import { DatePickerComponent } from '../../../shared/ui/date-picker/date-picker';
+import { TimePickerComponent } from '../../../shared/ui/time-picker/time-picker';
 import { SectionTabsComponent, SectionTab } from '../../../shared/ui/section-tabs/section-tabs';
 import { StatusSwitcherComponent } from '../../../shared/ui/status-switcher/status-switcher';
 import { TasksService } from './tasks.service';
@@ -29,6 +32,9 @@ interface Occurrence {
   readonly virtual: boolean;
 }
 
+/** Clave en localStorage para recordar si la tira de estadísticas está visible. */
+const SHOW_STATS_KEY = 'eciwise.tasks.showStats';
+
 /** Planificador de tareas: lista con búsqueda y agenda diaria con arrastre por horas. */
 @Component({
   selector: 'eci-tasks',
@@ -43,6 +49,9 @@ interface Occurrence {
     IconComponent,
     InfoTooltipComponent,
     CollapseComponent,
+    ModalComponent,
+    DatePickerComponent,
+    TimePickerComponent,
     SectionTabsComponent,
     StatusSwitcherComponent,
     CdkDropListGroup,
@@ -61,6 +70,14 @@ export class TasksComponent implements OnInit {
 
   /** Sección activa (string para enlazar con eci-section-tabs). */
   protected readonly view = signal<string>('list');
+  /** Modal de alta de tarea abierto/cerrado. */
+  protected readonly showCreate = signal(false);
+  /** Bandeja "Sin agendar" desplegada en la vista agenda. */
+  protected readonly showBacklog = signal(false);
+  /** Tira de estadísticas visible (preferencia recordada por dispositivo). */
+  protected readonly showStats = signal<boolean>(
+    typeof localStorage === 'undefined' || localStorage.getItem(SHOW_STATS_KEY) !== '0',
+  );
   protected readonly viewTabs: readonly SectionTab[] = [
     { id: 'list', labelKey: 'tasks.viewList', icon: 'tasks' },
     { id: 'agenda', labelKey: 'tasks.viewAgenda', icon: 'schedule' },
@@ -171,6 +188,15 @@ export class TasksComponent implements OnInit {
     this.expandFullDay.update((v) => !v);
   }
 
+  /** Muestra u oculta la tira de estadísticas y recuerda la preferencia. */
+  toggleStats(): void {
+    const next = !this.showStats();
+    this.showStats.set(next);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(SHOW_STATS_KEY, next ? '1' : '0');
+    }
+  }
+
   hourTasks(hour: number): Occurrence[] {
     return this.tasksByHour().get(hour) ?? [];
   }
@@ -201,6 +227,7 @@ export class TasksComponent implements OnInit {
     this.tasksService.create(body).subscribe(() => {
       this.draftTitle.set('');
       this.draftTags.set('');
+      this.showCreate.set(false);
       this.tasksService.stats().subscribe((s) => this.stats.set(s));
     });
   }

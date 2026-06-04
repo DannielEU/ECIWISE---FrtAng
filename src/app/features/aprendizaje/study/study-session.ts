@@ -11,6 +11,17 @@ import { Collection, ReviewGrade, StudyCard } from '../study.models';
 /** Distancia (px) que hay que arrastrar para calificar al soltar. */
 const DRAG_THRESHOLD = 90;
 
+/** Distancia (px) a la que la tarjeta alcanza su tamaño mínimo al arrastrar. */
+const SCALE_DISTANCE = 220;
+/** Escala mínima de la tarjeta cuando se acerca al borde (paralax inverso). */
+const MIN_SCALE = 0.4;
+/**
+ * Tope (px) del desplazamiento visual de la tarjeta. El movimiento se amortigua
+ * con `tanh`, de modo que por mucho que se arrastre el centro nunca se aleja más
+ * de este margen: la tarjeta se encoge y se queda dentro de los bordes.
+ */
+const MAX_OFFSET = 120;
+
 /** Intención de calificación según la dirección del arrastre. */
 type DragIntent = ReviewGrade | null;
 
@@ -61,6 +72,25 @@ export class StudySessionComponent {
       return null;
     }
     return this.resolveIntent(this.dragX(), this.dragY());
+  });
+
+  /**
+   * Transformación de la tarjeta durante el arrastre: además de seguir al
+   * puntero y girar levemente, se encoge cuanto más se aleja del centro
+   * (paralax inverso), reforzando que se va "soltando" hacia un estado.
+   */
+  protected readonly cardTransform = computed<string | null>(() => {
+    const dx = this.dragX();
+    const dy = this.dragY();
+    if (!this.dragging() && dx === 0 && dy === 0) {
+      return null;
+    }
+    const distance = Math.hypot(dx, dy);
+    const scale = Math.max(MIN_SCALE, 1 - (distance / SCALE_DISTANCE) * (1 - MIN_SCALE));
+    // Desplazamiento amortiguado: tiende a MAX_OFFSET pero nunca lo supera.
+    const tx = MAX_OFFSET * Math.tanh(dx / MAX_OFFSET);
+    const ty = MAX_OFFSET * Math.tanh(dy / MAX_OFFSET);
+    return `translate(${tx}px, ${ty}px) rotate(${tx / 9}deg) scale(${scale})`;
   });
 
   constructor() {

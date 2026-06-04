@@ -32,11 +32,7 @@
       [class.flashcard--repetir]="intent() === 'REPETIR'"
       [class.flashcard--aceptable]="intent() === 'ACEPTABLE'"
       [class.flashcard--aprendido]="intent() === 'APRENDIDO'"
-      [style.transform]="
-        dragging() || dragX() || dragY()
-          ? 'translate(' + dragX() + 'px,' + dragY() + 'px) rotate(' + dragX() / 20 + 'deg)'
-          : null
-      "
+      [style.transform]="cardTransform()"
       (click)="reveal()"
       (keydown.enter)="reveal()"
       (keydown.space)="$event.preventDefault(); reveal()"
@@ -77,7 +73,7 @@
     <div class="study-grades">
       <span class="study-grades__label">
         {{ 'aprendizaje.study.howWasIt' | translate }}
-        <eci-info-tooltip [text]="'aprendizaje.tip.grades' | translate" />
+        <eci-info-tooltip [text]="'aprendizaje.tip.grades' | translate" placement="below" />
       </span>
       <div class="study-grades__btns">
         <button
@@ -87,7 +83,7 @@
           (click)="grade('REPETIR')"
         >
           ← {{ 'aprendizaje.grade.repetir' | translate }}
-          <eci-info-tooltip [text]="'aprendizaje.tip.repetir' | translate" />
+          <eci-info-tooltip [text]="'aprendizaje.tip.repetir' | translate" placement="below" />
         </button>
         <button
           type="button"
@@ -96,7 +92,7 @@
           (click)="grade('ACEPTABLE')"
         >
           ↓ {{ 'aprendizaje.grade.aceptable' | translate }}
-          <eci-info-tooltip [text]="'aprendizaje.tip.aceptable' | translate" />
+          <eci-info-tooltip [text]="'aprendizaje.tip.aceptable' | translate" placement="below" />
         </button>
         <button
           type="button"
@@ -105,7 +101,7 @@
           (click)="grade('APRENDIDO')"
         >
           {{ 'aprendizaje.grade.aprendido' | translate }} →
-          <eci-info-tooltip [text]="'aprendizaje.tip.aprendido' | translate" />
+          <eci-info-tooltip [text]="'aprendizaje.tip.aprendido' | translate" placement="below" />
         </button>
       </div>
     </div>
