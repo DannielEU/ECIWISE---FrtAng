@@ -749,6 +749,8 @@ export const es = {
       pick: 'Colección a estudiar',
       choose: 'Elige una colección…',
       prompt: 'Selecciona una colección para empezar a repasar.',
+      noFavorites:
+        'Aún no tienes colecciones fijadas. Ve a la pestaña Colecciones y marca con la estrella las que quieras estudiar.',
       remaining: 'Quedan {{count}} por repasar',
       show: 'Mostrar respuesta',
       howWasIt: '¿Qué tal lo recordaste?',
@@ -758,6 +760,7 @@ export const es = {
       reviewedCount: 'Repasaste {{count}} tarjetas',
       done: '¡Todo al día! No hay tarjetas pendientes por ahora.',
       another: 'Estudiar otra colección',
+      back: 'Volver a las colecciones',
     },
     grade: {
       repetir: 'Repetir',

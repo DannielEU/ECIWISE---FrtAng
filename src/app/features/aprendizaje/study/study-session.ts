@@ -12,18 +12,27 @@ import { Collection, ReviewGrade, StudyCard } from '../study.models';
 const DRAG_THRESHOLD = 90;
 
 /** Distancia (px) a la que la tarjeta alcanza su tamaño mínimo al arrastrar. */
-const SCALE_DISTANCE = 220;
-/** Escala mínima de la tarjeta cuando se acerca al borde (paralax inverso). */
+const SCALE_DISTANCE = 320;
+/** Escala mínima de la tarjeta cuando se aleja del centro (paralax inverso). */
 const MIN_SCALE = 0.4;
+/** Opacidad mínima de la tarjeta cuando alcanza su tamaño mínimo (paralax inverso). */
+const MIN_OPACITY = 0.45;
 /**
  * Tope (px) del desplazamiento visual de la tarjeta. El movimiento se amortigua
- * con `tanh`, de modo que por mucho que se arrastre el centro nunca se aleja más
- * de este margen: la tarjeta se encoge y se queda dentro de los bordes.
+ * con `tanh`, pero con un tope amplio: la tarjeta sigue al puntero mucho más
+ * allá del centro y solo frena al acercarse al borde del escenario.
  */
-const MAX_OFFSET = 120;
+const MAX_OFFSET = 320;
+/** Proporción del desplazamiento real que se aplica (seguimiento casi lineal). */
+const FOLLOW = 0.9;
 
 /** Intención de calificación según la dirección del arrastre. */
 type DragIntent = ReviewGrade | null;
+
+/** Escala de la tarjeta según cuánto se ha alejado del centro (paralax inverso). */
+function dragScale(distance: number): number {
+  return Math.max(MIN_SCALE, 1 - (distance / SCALE_DISTANCE) * (1 - MIN_SCALE));
+}
 
 /** Sesión de estudio con repetición espaciada (tarjeta volteable + gestos). */
 @Component({
@@ -44,6 +53,9 @@ export class StudySessionComponent {
   private readonly service = inject(AprendizajeService);
 
   protected readonly collections = signal<Collection[]>([]);
+  /** Solo las colecciones fijadas con estrella: son las que se pueden estudiar. */
+  protected readonly favorites = computed(() => this.collections().filter((c) => c.favorite));
+  protected readonly hasFavorites = computed(() => this.favorites().length > 0);
   protected readonly selectedId = signal<number | null>(null);
   protected readonly queue = signal<StudyCard[]>([]);
   protected readonly index = signal(0);
@@ -85,24 +97,31 @@ export class StudySessionComponent {
     if (!this.dragging() && dx === 0 && dy === 0) {
       return null;
     }
-    const distance = Math.hypot(dx, dy);
-    const scale = Math.max(MIN_SCALE, 1 - (distance / SCALE_DISTANCE) * (1 - MIN_SCALE));
-    // Desplazamiento amortiguado: tiende a MAX_OFFSET pero nunca lo supera.
-    const tx = MAX_OFFSET * Math.tanh(dx / MAX_OFFSET);
-    const ty = MAX_OFFSET * Math.tanh(dy / MAX_OFFSET);
-    return `translate(${tx}px, ${ty}px) rotate(${tx / 9}deg) scale(${scale})`;
+    const scale = dragScale(Math.hypot(dx, dy));
+    // Seguimiento casi lineal con tope suave amplio: se aleja mucho del centro
+    // pero nunca abandona del todo el escenario.
+    const tx = MAX_OFFSET * Math.tanh((dx * FOLLOW) / MAX_OFFSET);
+    const ty = MAX_OFFSET * Math.tanh((dy * FOLLOW) / MAX_OFFSET);
+    return `translate(${tx}px, ${ty}px) rotate(${tx / 14}deg) scale(${scale})`;
+  });
+
+  /** Opacidad ligada al encogido: cuanto más pequeña la tarjeta, menos opaca. */
+  protected readonly cardOpacity = computed<number | null>(() => {
+    const dx = this.dragX();
+    const dy = this.dragY();
+    if (!this.dragging() && dx === 0 && dy === 0) {
+      return null;
+    }
+    const scale = dragScale(Math.hypot(dx, dy));
+    // Mapea la escala [MIN_SCALE..1] al rango de opacidad [MIN_OPACITY..1].
+    return MIN_OPACITY + ((scale - MIN_SCALE) / (1 - MIN_SCALE)) * (1 - MIN_OPACITY);
   });
 
   constructor() {
     this.service.collections().subscribe((cols) => this.collections.set(cols));
   }
 
-  protected pick(value: string): void {
-    const id = Number(value);
-    if (!id) {
-      this.selectedId.set(null);
-      return;
-    }
+  protected select(id: number): void {
     this.selectedId.set(id);
     this.loadQueue(id);
   }

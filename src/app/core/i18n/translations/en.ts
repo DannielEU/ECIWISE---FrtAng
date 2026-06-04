@@ -748,6 +748,8 @@ export const en = {
       pick: 'Collection to study',
       choose: 'Choose a collection…',
       prompt: 'Select a collection to start reviewing.',
+      noFavorites:
+        'You have no pinned collections yet. Go to the Collections tab and star the ones you want to study.',
       remaining: '{{count}} left to review',
       show: 'Show answer',
       howWasIt: 'How well did you recall it?',
@@ -757,6 +759,7 @@ export const en = {
       reviewedCount: 'You reviewed {{count}} cards',
       done: 'All caught up! No cards due right now.',
       another: 'Study another collection',
+      back: 'Back to collections',
     },
     grade: {
       repetir: 'Repeat',
