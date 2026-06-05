@@ -5,6 +5,8 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SelectComponent, SelectOption as EciSelectOption } from '../../../shared/ui/select/select';
+import { InfoTooltipComponent } from '../../../shared/ui/tooltip/tooltip';
 import { WizardChromeComponent } from '../wizard-chrome/wizard-chrome';
 import { WizardFieldsBase } from '../wizard-fields.base';
 
@@ -50,14 +52,20 @@ interface Page {
 /**
  * Campos del modelo de deserción con presentación amigable (selects con texto,
  * sí/no y numéricos con ayuda). Recibe el `FormGroup` de `buildDropoutGroup`.
- * En modo `paginated` reparte las preguntas en pasos cortos con navegación
- * Anterior/Siguiente para no abrumar al estudiante; en modo normal las muestra
- * todas en una sola grilla.
+ * En modo `paginated` reparte las preguntas en pasos cortos con la navegación
+ * del componente `eci-wizard-chrome`; en modo normal las muestra todas en una
+ * sola grilla.
  */
 @Component({
   selector: 'eci-dropout-ia-fields',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, TranslatePipe, WizardChromeComponent],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    WizardChromeComponent,
+    SelectComponent,
+    InfoTooltipComponent,
+  ],
   templateUrl: './dropout-ia-fields.html',
   styleUrl: '../datos-ia-fields/datos-ia-fields.css',
 })
@@ -177,10 +185,10 @@ export class DropoutIaFieldsComponent extends WizardFieldsBase {
     { kind: 'yesno', control: 'international' },
   ];
 
-  private readonly fieldMap = new Map(this.fields.map((f) => [f.control, f]));
+  private readonly fieldMap = new Map(this.fields.map((field) => [field.control, field]));
 
   /** Agrupación de las preguntas en pasos cortos y temáticos. */
-  protected readonly pages: readonly Page[] = [
+  protected override readonly pages: readonly Page[] = [
     {
       titleKey: 'datosIa.dropout.pages.personal',
       controls: ['maritalStatus', 'nacionality', 'ageAtEnrollment', 'displaced', 'international'],
@@ -222,7 +230,21 @@ export class DropoutIaFieldsComponent extends WizardFieldsBase {
   protected readonly visibleFields = computed<readonly FieldDef[]>(() => {
     const names = this.paginated()
       ? this.pages[this.step()].controls
-      : this.fields.map((f) => f.control);
+      : this.fields.map((field) => field.control);
     return names.map((name) => this.fieldMap.get(name)!);
   });
+
+  protected selectOptions(field: Extract<FieldDef, { kind: 'select' }>): readonly EciSelectOption[] {
+    return field.options.map((option) => ({
+      value: option.value,
+      labelKey: `datosIa.dropout.options.${field.control}.${option.key}`,
+    }));
+  }
+
+  protected yesNoOptions(): readonly EciSelectOption[] {
+    return this.yesNo.map((option) => ({
+      value: option.value,
+      labelKey: `datosIa.yesNo.${option.key}`,
+    }));
+  }
 }
