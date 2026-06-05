@@ -392,17 +392,47 @@ input[type='radio'] {
   flex: 1;
   min-height: 0;
   overflow: auto;
+  --eci-fade: var(--space-5);
 }
 
-/* Animación de entrada al cambiar de sección (sutil, hacia arriba). */
+/* Difuminado de los bordes al hacer scroll: dos degradados pegados (sticky) a
+   los bordes superior e inferior del área desplazable que funden el contenido
+   con el fondo, en vez de un corte seco. No ocupan espacio (margen negativo) ni
+   capturan clics, y quedan por debajo de los popovers (z muy alto). */
+.eci-fit__body::before,
+.eci-fit__body::after {
+  content: '';
+  display: block;
+  position: sticky;
+  z-index: 4;
+  height: var(--eci-fade);
+  pointer-events: none;
+}
+.eci-fit__body::before {
+  top: 0;
+  margin-bottom: calc(-1 * var(--eci-fade));
+  background: linear-gradient(to bottom, var(--surface-2), transparent);
+}
+.eci-fit__body::after {
+  bottom: 0;
+  margin-top: calc(-1 * var(--eci-fade));
+  background: linear-gradient(to top, var(--surface-2), transparent);
+}
+
+/* Disolución al cambiar de sección: en vez de un corte seco, el contenido
+   nuevo aparece con un desvanecido suave (como una desintegración limpia). */
 .eci-section-enter {
-  animation: eci-section-in var(--transition-base);
+  animation: eci-section-in var(--transition-base) ease;
 }
 
 @keyframes eci-section-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -430,6 +460,32 @@ input[type='radio'] {
 @media (max-width: 30rem) {
   .landing__bar .eci-logo__word,
   .auth__bar .eci-logo__word {
+    display: none;
+  }
+}
+
+/* La barra de la app reúne muchos controles (menú, idioma, tema, accesibilidad,
+   notificaciones, avatar, salir). En celular se compactan los botones para que
+   la fila nunca se desborde y ningún control quede cortado. Va en el CSS global
+   porque los botones de idioma/tema/a11y/campana viven en componentes propios
+   (estilos encapsulados que el CSS de la barra no alcanza). */
+@media (max-width: 30rem) {
+  .top-bar .icon-button {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+  /* El selector de idioma usa ancho automático: solo ajustamos su padding. */
+  .top-bar .icon-button:has(.lang-code) {
+    width: auto;
+    padding: 0 var(--space-1);
+  }
+}
+
+/* Pantallas muy estrechas (≈320px): el avatar es decorativo (el nombre ya se
+   oculta y el botón de salir sigue visible), así que se esconde para garantizar
+   que los controles funcionales quepan sin recortarse. */
+@media (max-width: 22rem) {
+  .top-bar__profile eci-avatar {
     display: none;
   }
 }
@@ -534,13 +590,8 @@ input[type='radio'] {
 }
 
 .conv__input {
+  /* Caja base compartida con los pickers (ver "Primitivas compartidas"). */
   flex: 1;
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--surface-2);
-  color: var(--text);
-  font: inherit;
 }
 
 .conv__send:disabled {
@@ -565,4 +616,231 @@ input[type='radio'] {
   align-items: center;
   justify-content: center;
   line-height: 1;
+}
+
+/* ============================================================================
+   Primitivas compartidas (deduplicadas)
+   Reglas idénticas que vivían repetidas en varios componentes. Se centralizan
+   aquí (clases BEM únicas) para que existan una sola vez. Cada componente solo
+   conserva sus variaciones propias.
+   ============================================================================ */
+
+/* Fondo espacial de las pantallas a pantalla completa (landing y auth). */
+.auth,
+.landing {
+  position: relative;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  outline: none;
+  background:
+    radial-gradient(
+      circle at 25% 15%,
+      color-mix(in srgb, var(--brand-red) 18%, transparent),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      color-mix(in srgb, var(--accent-student) 14%, transparent),
+      transparent 50%
+    ),
+    var(--surface);
+  color: var(--text);
+}
+
+/* Campos de formulario (perfil, horario, auth): misma caja de entrada. */
+.profile__field input,
+.sched-form__field input,
+.auth__field input {
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-weight: 400;
+}
+
+/* Disparadores desplegables (date/time picker), compositor de chat y los
+   campos del creador/buscador de tareas: misma caja de entrada compacta. */
+.dp-field,
+.tp-field,
+.conv__input,
+.creator input,
+.creator select,
+.search input,
+.search select {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+}
+
+.dp-field,
+.tp-field {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dp-field:focus-visible,
+.dp-field[aria-expanded='true'],
+.tp-field:focus-visible,
+.tp-field[aria-expanded='true'] {
+  border-color: var(--brand-red);
+  outline: none;
+}
+
+/* Entradas compactas del módulo de chat (buscador y palabras censuradas). */
+.cwords__input,
+.new-conv__field,
+.new-conv__search input {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+/* Tablas de administración (usuarios, asignaciones, predicciones). */
+.admin-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.admin-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin-table__email {
+  color: var(--text-muted);
+}
+
+/* Indicador de pasos del asistente (registro y campos de IA). */
+.auth__step,
+.dia__step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 3px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition:
+    color var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.auth__step--active,
+.auth__step--done,
+.dia__step--active,
+.dia__step--done {
+  color: var(--text);
+  border-top-color: var(--accent);
+}
+
+.auth__step-dot,
+.dia__step-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: none;
+  border-radius: var(--radius-full);
+  background: var(--surface-3);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.auth__step--active .auth__step-dot,
+.auth__step--done .auth__step-dot,
+.dia__step--active .dia__step-dot,
+.dia__step--done .dia__step-dot {
+  background: var(--brand-red);
+  color: #ffffff;
+}
+
+/* Chips de icono grandes (3rem): juegos y tarjetas de la grilla del panel. */
+.game__icon,
+.grid__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+
+/* Chips de icono medianos (2.75rem): estadísticas y tipos de material. */
+.stat__icon,
+.material__type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+
+/* Fondo de los diálogos modales a pantalla completa. */
+.dialog__backdrop,
+.fpc__backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Margen generoso para que el diálogo nunca toque los bordes de la pantalla. */
+  padding: clamp(var(--space-4), 5vh, var(--space-8));
+  background: var(--overlay);
+  backdrop-filter: blur(4px);
+}
+
+/* Icono circular del encabezado de los diálogos. */
+.dialog__title-icon,
+.fpc__head-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
 }

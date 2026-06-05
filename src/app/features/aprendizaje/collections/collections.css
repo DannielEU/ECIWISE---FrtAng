@@ -170,25 +170,20 @@ eci-card {
   gap: var(--space-1);
 }
 
-.icon-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--surface);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: color var(--transition-fast);
+/* `.icon-btn`, `:hover` y `--danger:hover` viven en shared/styles/icon-btn.css. */
+
+/* Estrella de favorita: rellena y resaltada cuando está activa. */
+.icon-btn--fav {
+  color: var(--warning);
+  border-color: color-mix(in srgb, var(--warning) 40%, var(--border));
 }
 
-.icon-btn:hover {
-  color: var(--accent);
+.icon-btn--fav:hover {
+  color: var(--warning);
 }
 
-.icon-btn--danger:hover {
-  color: var(--danger);
+.icon-btn--fav eci-icon svg {
+  fill: currentColor;
 }
 
 @media (max-width: 30rem) {
