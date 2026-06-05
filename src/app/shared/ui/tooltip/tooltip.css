@@ -56,6 +56,15 @@
   transform: translateX(-50%) translateY(0) scale(1);
 }
 
+.tip__bubble--above {
+  transform: translateX(-50%) translateY(calc(-100% + 0.25rem)) scale(0.96);
+  transform-origin: bottom center;
+}
+
+.tip__bubble--above.tip__bubble--visible {
+  transform: translateX(-50%) translateY(-100%) scale(1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tip__bubble {
     transition: none;
