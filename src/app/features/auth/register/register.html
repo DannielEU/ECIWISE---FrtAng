@@ -95,10 +95,8 @@
                   @if (confirmPasswordErrorKey(); as ek) {
                     <small class="auth__error" role="alert">{{ ek | translate }}</small>
                   }
+                  <small class="auth__hint">{{ 'auth.passwordHint' | translate }}</small>
                 </div>
-                <small class="auth__hint auth__field--full">{{
-                  'auth.passwordHint' | translate
-                }}</small>
               </div>
 
               @if (errorKey(); as err) {
