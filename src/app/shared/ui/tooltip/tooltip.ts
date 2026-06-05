@@ -33,6 +33,7 @@ import { IconComponent } from '../icon/icon';
         class="tip__bubble"
         role="tooltip"
         [class.tip__bubble--visible]="visible()"
+        [class.tip__bubble--above]="above()"
         [style.left.px]="left()"
         [style.top.px]="top()"
       >
@@ -48,10 +49,12 @@ export class InfoTooltipComponent {
   readonly text = input.required<string>();
   readonly ariaLabel = input<string>('');
   readonly size = input(16);
+  readonly placement = input<'auto' | 'above' | 'below'>('auto');
 
   protected readonly visible = signal(false);
   protected readonly left = signal(0);
   protected readonly top = signal(0);
+  protected readonly above = signal(false);
 
   private readonly bubbleWidth = 288;
   private readonly viewportInset = 8;
@@ -71,6 +74,8 @@ export class InfoTooltipComponent {
     const hostRect = host.getBoundingClientRect();
     const rect = trigger.getBoundingClientRect();
     const viewportWidth = globalThis.innerWidth || 1024;
+    const placement = this.placement();
+    const showAbove = placement === 'above';
     const effectiveWidth = Math.min(
       this.bubbleWidth,
       Math.max(0, viewportWidth - this.viewportInset * 2),
@@ -84,7 +89,12 @@ export class InfoTooltipComponent {
         : viewportWidth / 2;
 
     this.left.set(viewportCenter - hostRect.left);
-    this.top.set(rect.bottom - hostRect.top + this.verticalGap);
+    this.top.set(
+      showAbove
+        ? rect.top - hostRect.top - this.verticalGap
+        : rect.bottom - hostRect.top + this.verticalGap,
+    );
+    this.above.set(showAbove);
     this.visible.set(true);
   }
 
