@@ -33,7 +33,6 @@ import { IconComponent } from '../icon/icon';
         class="tip__bubble"
         role="tooltip"
         [class.tip__bubble--visible]="visible()"
-        [class.tip__bubble--below]="below()"
         [style.left.px]="left()"
         [style.top.px]="top()"
       >
@@ -53,32 +52,39 @@ export class InfoTooltipComponent {
   protected readonly visible = signal(false);
   protected readonly left = signal(0);
   protected readonly top = signal(0);
-  protected readonly below = signal(false);
 
   private readonly bubbleWidth = 288;
+  private readonly viewportInset = 8;
+  private readonly verticalGap = 8;
 
   protected label(): string {
     return this.ariaLabel() || this.text();
   }
 
   protected show(): void {
+    const host = this.host.nativeElement;
     const trigger = this.host.nativeElement.querySelector('.tip__trigger');
     if (!trigger) {
       return;
     }
 
+    const hostRect = host.getBoundingClientRect();
     const rect = trigger.getBoundingClientRect();
     const viewportWidth = globalThis.innerWidth || 1024;
-    const left = Math.min(
-      Math.max(rect.left + rect.width / 2, this.bubbleWidth / 2 + 8),
-      viewportWidth - this.bubbleWidth / 2 - 8,
+    const effectiveWidth = Math.min(
+      this.bubbleWidth,
+      Math.max(0, viewportWidth - this.viewportInset * 2),
     );
-    const below = rect.top <= 120;
-    const top = below ? rect.bottom + 12 : rect.top - 12;
+    const minCenter = effectiveWidth / 2 + this.viewportInset;
+    const maxCenter = viewportWidth - effectiveWidth / 2 - this.viewportInset;
+    const triggerCenter = rect.left + rect.width / 2;
+    const viewportCenter =
+      maxCenter >= minCenter
+        ? Math.min(Math.max(triggerCenter, minCenter), maxCenter)
+        : viewportWidth / 2;
 
-    this.left.set(left);
-    this.top.set(top);
-    this.below.set(below);
+    this.left.set(viewportCenter - hostRect.left);
+    this.top.set(rect.bottom - hostRect.top + this.verticalGap);
     this.visible.set(true);
   }
 
