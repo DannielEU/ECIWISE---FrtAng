@@ -140,7 +140,7 @@
           <legend class="dia__checks-title">{{ 'datosIa.labels.activitiesTitle' | translate }}</legend>
           <div class="dia__checks-grid">
             @for (c of checks; track c) {
-              <div class="dia__check-wrap">
+              <div class="dia__check-wrap" [class.dia__check-wrap--full]="c === 'extracurricular'">
                 <label class="dia__check">
                   <input type="checkbox" [formControlName]="c" />
                   <span class="dia__check-label">

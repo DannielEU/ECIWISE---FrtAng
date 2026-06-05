@@ -117,6 +117,10 @@
   position: relative;
 }
 
+.dia__check-wrap--full {
+  grid-column: 1 / -1;
+}
+
 .dia__label {
   display: inline-flex;
   align-items: center;

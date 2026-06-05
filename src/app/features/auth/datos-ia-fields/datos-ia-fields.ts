@@ -87,10 +87,10 @@ export class DatosIaFieldsComponent {
   /** Preguntas sí/no (checkboxes). */
   protected readonly checks = [
     'tutoring',
-    'extracurricular',
+    'volunteering',
     'sports',
     'music',
-    'volunteering',
+    'extracurricular',
   ] as const;
 
   /** Agrupación de las preguntas en pasos cortos y temáticos (compartida). */

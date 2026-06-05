@@ -62,7 +62,7 @@
                     <small class="auth__error" role="alert">{{ ek | translate }}</small>
                   }
                 </label>
-                <label class="auth__field auth__field--full">
+                <label class="auth__field">
                   <span>{{ 'common.email' | translate }}</span>
                   <input type="email" formControlName="email" autocomplete="email" />
                   @if (errorKeyFor('email'); as ek) {
