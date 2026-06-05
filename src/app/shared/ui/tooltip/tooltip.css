@@ -28,13 +28,11 @@
 }
 
 .tip__bubble {
-  position: absolute;
-  bottom: calc(100% + var(--space-2));
-  left: 50%;
-  transform: translateX(-50%) scale(0.96);
-  z-index: 30;
+  position: fixed;
+  transform: translate(-50%, -100%) scale(0.96);
+  z-index: 5000;
   width: max-content;
-  max-width: 16rem;
+  max-width: 18rem;
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
   background: var(--surface-3);
@@ -51,10 +49,17 @@
     transform var(--transition-fast);
 }
 
-.tip:hover .tip__bubble,
-.tip__trigger:focus-visible + .tip__bubble {
+.tip__bubble--visible {
   opacity: 1;
-  transform: translateX(-50%) scale(1);
+  transform: translate(-50%, -100%) scale(1);
+}
+
+.tip__bubble--below {
+  transform: translate(-50%, 0) scale(0.96);
+}
+
+.tip__bubble--below.tip__bubble--visible {
+  transform: translate(-50%, 0) scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
