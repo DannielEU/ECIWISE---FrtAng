@@ -99,6 +99,9 @@ import { AppLanguage, I18nService } from './i18n.service';
         z-index: 120;
         width: max-content;
         min-width: 12rem;
+        max-width: calc(100vw - (2 * var(--space-4)));
+        box-sizing: border-box;
+        overflow-y: auto;
         padding: var(--space-2);
         border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
         border-radius: var(--radius-lg);
@@ -154,6 +157,19 @@ import { AppLanguage, I18nService } from './i18n.service';
         from {
           opacity: 0;
           transform: translateY(-4px);
+        }
+      }
+
+      @media (max-width: 40rem) {
+        .lang-menu__panel {
+          position: fixed;
+          top: calc(4rem + var(--space-2));
+          right: max(var(--space-2), env(safe-area-inset-right));
+          left: max(var(--space-2), env(safe-area-inset-left));
+          width: auto;
+          min-width: 0;
+          max-width: none;
+          max-height: calc(100dvh - 4rem - var(--space-4) - env(safe-area-inset-bottom));
         }
       }
     `,
