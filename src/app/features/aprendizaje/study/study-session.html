@@ -138,7 +138,7 @@
     </div>
   } @else {
     <div class="study-actions">
-      <eci-button variant="primary" (click)="reveal()">
+      <eci-button variant="primary" (buttonClick)="reveal()">
         {{ 'aprendizaje.study.show' | translate }}
       </eci-button>
     </div>
@@ -152,7 +152,7 @@
       <p class="study-done__sub">
         {{ 'aprendizaje.study.reviewedCount' | translate: { count: queue().length } }}
       </p>
-      <eci-button variant="primary" (click)="restart()">
+      <eci-button variant="primary" (buttonClick)="restart()">
         {{ 'aprendizaje.study.another' | translate }}
       </eci-button>
     </div>
@@ -161,7 +161,7 @@
   <eci-card>
     <div class="study-done">
       <p class="study-done__title">{{ 'aprendizaje.study.done' | translate }}</p>
-      <eci-button variant="secondary" (click)="restart()">
+      <eci-button variant="secondary" (buttonClick)="restart()">
         {{ 'aprendizaje.study.another' | translate }}
       </eci-button>
     </div>
