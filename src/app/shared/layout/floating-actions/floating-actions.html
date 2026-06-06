@@ -1,4 +1,6 @@
 @if (active(); as panel) {
+  <!-- Captura clics fuera del panel para cerrarlo, sin oscurecer la pantalla. -->
+  <div class="dock-backdrop" (click)="close()" aria-hidden="true"></div>
   <aside
     class="dock"
     role="complementary"

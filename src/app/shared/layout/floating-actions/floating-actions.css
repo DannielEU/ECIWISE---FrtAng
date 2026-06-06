@@ -76,9 +76,17 @@
   transition-delay: 60ms;
 }
 
-/* Panel lateral derecho de alto completo (IA / chats). No es modal: la app
-   sigue usable detrás y no se oscurece nada. El ancho lo controla el usuario
-   arrastrando el asa izquierda (signal width). */
+/* Capa transparente que cierra el panel al pulsar fuera, SIN oscurecer la
+   pantalla (a diferencia del backdrop modal original). */
+.dock-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: transparent;
+}
+
+/* Panel lateral derecho de alto completo (IA / chats). El ancho lo controla el
+   usuario arrastrando el asa izquierda (signal width). */
 .dock {
   position: fixed;
   top: 0;

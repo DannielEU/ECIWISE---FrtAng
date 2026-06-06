@@ -8,6 +8,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
@@ -28,6 +29,7 @@ import { Message } from '../chat.models';
   selector: 'eci-message-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    NgStyle,
     FormsModule,
     TranslatePipe,
     LucideCheck,
@@ -56,6 +58,8 @@ export class MessageItemComponent {
   protected readonly draft = signal('');
   /** Popover de 3 puntos con reacciones y acciones del mensaje. */
   protected readonly menuOpen = signal(false);
+  /** Posición fija del popover (fuera del scroll, para que no se recorte). */
+  protected readonly menuStyle = signal<Record<string, string>>({});
 
   protected readonly mine = computed(() => this.message().senderId === this.chat.currentUserId());
   /** En conversaciones anónimas se oculta el nombre real salvo al creador. */
@@ -83,6 +87,30 @@ export class MessageItemComponent {
   protected reacted(emoji: string): boolean {
     const me = this.chat.currentUserId();
     return this.message().reactions.some((g) => g.emoji === emoji && g.userIds.includes(me ?? ''));
+  }
+
+  /** Abre/cierra el popover y lo ancla al botón (posición fija en viewport). */
+  protected toggleMenu(event: MouseEvent): void {
+    if (this.menuOpen()) {
+      this.menuOpen.set(false);
+      return;
+    }
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const margin = 8;
+    const menuWidth = 200;
+    const style: Record<string, string> = {};
+    // Horizontal: alineado al botón pero siempre dentro de la pantalla.
+    const preferred = this.mine() ? rect.right - menuWidth : rect.left;
+    const left = Math.max(margin, Math.min(preferred, window.innerWidth - menuWidth - margin));
+    style['left'] = `${left}px`;
+    // Vertical: se abre hacia arriba si está en la mitad inferior; si no, abajo.
+    if (rect.top > window.innerHeight / 2) {
+      style['bottom'] = `${window.innerHeight - rect.top + 4}px`;
+    } else {
+      style['top'] = `${rect.bottom + 4}px`;
+    }
+    this.menuStyle.set(style);
+    this.menuOpen.set(true);
   }
 
   protected react(emoji: string): void {
@@ -118,5 +146,16 @@ export class MessageItemComponent {
   @HostListener('document:keydown.escape')
   protected onEscape(): void {
     this.menuOpen.set(false);
+  }
+
+  // El popover es de posición fija: al desplazar o redimensionar se cierra para
+  // no quedar "flotando" desalineado respecto al mensaje.
+  @HostListener('document:wheel')
+  @HostListener('document:touchmove')
+  @HostListener('window:resize')
+  protected onViewportChange(): void {
+    if (this.menuOpen()) {
+      this.menuOpen.set(false);
+    }
   }
 }
