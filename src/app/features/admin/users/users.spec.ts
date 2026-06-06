@@ -154,7 +154,7 @@ describe('AdminUsersComponent', () => {
     fixture.detectChanges();
 
     expect(bulkUploadCsv).toHaveBeenCalledWith(file);
-    expect(root.querySelector('.admin__import')?.getAttribute('role')).toBe('status');
+    expect(root.querySelector('output.admin__import')?.getAttribute('aria-live')).toBe('polite');
     expect(root.querySelector('.admin__import-link')).not.toBeNull();
     expect(root.querySelector('eci-bulk-result-dialog')).not.toBeNull();
 

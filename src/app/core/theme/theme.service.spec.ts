@@ -19,7 +19,7 @@ function mockMatchMedia(matches: boolean): void {
 describe('ThemeService', () => {
   beforeEach(() => {
     localStorage.clear();
-    document.documentElement.removeAttribute('data-theme');
+    delete document.documentElement.dataset['theme'];
     TestBed.resetTestingModule();
     mockMatchMedia(false);
   });

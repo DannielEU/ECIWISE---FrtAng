@@ -1,8 +1,8 @@
 @if (active(); as panel) {
   <div class="dock-backdrop" (click)="close()" aria-hidden="true"></div>
-  <aside
+  <dialog
     class="dock"
-    role="dialog"
+    open
     [attr.aria-label]="(panel === 'assistant' ? 'floating.assistant' : 'floating.chat') | translate"
   >
     <header class="dock__header">
@@ -25,7 +25,7 @@
         <eci-chat-panel />
       }
     </div>
-  </aside>
+  </dialog>
 } @else {
   <div class="fab-group" [class.fab-group--expanded]="expanded()">
     <button
