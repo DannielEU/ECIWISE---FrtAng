@@ -92,6 +92,8 @@ export const fr = {
     study: "Centre d'étude",
     profile: 'Profil',
     tasks: 'Tâches en attente',
+    achievements: 'Mes réussites',
+    forums: 'Forums',
     controlCenter: 'Centre de contrôle',
     schedule: 'Horaires',
     availability: 'Disponibilité',
@@ -662,6 +664,7 @@ export const fr = {
     empty: 'Aucune ressource disponible.',
   },
   profile: {
+    ...en.profile,
     title: 'Profil',
     save: 'Enregistrer les modifications',
     saved: 'Modifications enregistrées.',

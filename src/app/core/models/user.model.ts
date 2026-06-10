@@ -10,6 +10,7 @@ export interface User {
   readonly avatarUrl?: string;
   /** Programa académico o dependencia. */
   readonly program?: string;
+  readonly secondaryProgram?: string;
   /** Cuenta creada por CSV: debe cambiar la contraseña temporal al ingresar. */
   readonly mustChangePassword?: boolean;
 }
@@ -58,6 +59,8 @@ export interface ApiUser {
   readonly apellido: string;
   readonly rol: string;
   readonly avatarUrl?: string | null;
+  readonly programaPrincipal?: string | null;
+  readonly programaSecundario?: string | null;
   readonly mustChangePassword?: boolean;
 }
 

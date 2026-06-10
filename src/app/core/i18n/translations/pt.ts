@@ -92,6 +92,8 @@ export const pt = {
     study: 'Centro de estudos',
     profile: 'Perfil',
     tasks: 'Tarefas pendentes',
+    achievements: 'Minhas conquistas',
+    forums: 'Fóruns',
     controlCenter: 'Centro de controle',
     schedule: 'Horários',
     availability: 'Disponibilidade',
@@ -662,6 +664,7 @@ export const pt = {
     empty: 'Nenhum recurso disponível.',
   },
   profile: {
+    ...en.profile,
     title: 'Perfil',
     save: 'Salvar alterações',
     saved: 'Alterações salvas.',

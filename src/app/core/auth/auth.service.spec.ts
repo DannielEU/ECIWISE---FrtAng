@@ -26,12 +26,14 @@ const apiResponse: AuthResponse = {
 
 describe('AuthService', () => {
   let post: ReturnType<typeof vi.fn>;
+  let patch: ReturnType<typeof vi.fn>;
 
   function setup(platformId = 'browser'): AuthService {
     post = vi.fn();
+    patch = vi.fn();
     TestBed.configureTestingModule({
       providers: [
-        { provide: HttpClient, useValue: { post } },
+        { provide: HttpClient, useValue: { post, patch } },
         { provide: AUTH_CONFIG, useValue: { apiBaseUrl: `${base}/` } },
         { provide: PLATFORM_ID, useValue: platformId },
       ],
@@ -184,22 +186,71 @@ describe('AuthService', () => {
     expect(localStorage.getItem('eciwise.session')).toBeNull();
   });
 
-  it('actualiza perfil editable solo cuando hay usuario en sesion', () => {
+  it('actualiza perfil editable solo cuando hay usuario en sesion', async () => {
     const service = setup();
 
-    service.updateProfile({ name: 'Sin sesion' });
+    await firstValueFrom(service.updateProfile({ name: 'Sin sesion' }));
     expect(service.user()).toBeNull();
 
     service.completeSession('tok', apiUser);
-    service.updateProfile({ name: 'Ana D.', program: 'Sistemas', avatarUrl: 'avatar.png' });
+    patch.mockReturnValue(
+      of({
+        ...apiUser,
+        programaPrincipal: 'Ingenieria de Sistemas',
+        programaSecundario: 'Matematicas',
+      }),
+    );
+
+    await firstValueFrom(
+      service.updateProfile({
+        name: 'Ana D.',
+        program: 'Ingenieria de Sistemas',
+        secondaryProgram: 'Matematicas',
+        avatarUrl: 'avatar.png',
+      }),
+    );
+
+    expect(patch).toHaveBeenCalledWith(`${base}/gestion-usuarios/me/info-personal`, {
+      programaPrincipal: 'Ingenieria de Sistemas',
+      programaSecundario: 'Matematicas',
+    });
 
     expect(service.user()).toMatchObject({
       name: 'Ana D.',
-      program: 'Sistemas',
+      program: 'Ingenieria de Sistemas',
+      secondaryProgram: 'Matematicas',
       avatarUrl: 'avatar.png',
     });
     expect(JSON.parse(localStorage.getItem('eciwise.session') ?? '{}')).toMatchObject({
-      program: 'Sistemas',
+      program: 'Ingenieria de Sistemas',
+      secondaryProgram: 'Matematicas',
+    });
+  });
+
+  it('omite segunda carrera cuando esta vacia', async () => {
+    const service = setup();
+    service.completeSession('tok', apiUser);
+    patch.mockReturnValue(
+      of({
+        ...apiUser,
+        programaPrincipal: 'Ingenieria Ambiental',
+        programaSecundario: null,
+      }),
+    );
+
+    await firstValueFrom(
+      service.updateProfile({
+        program: 'Ingenieria Ambiental',
+        secondaryProgram: '',
+      }),
+    );
+
+    expect(patch).toHaveBeenCalledWith(`${base}/gestion-usuarios/me/info-personal`, {
+      programaPrincipal: 'Ingenieria Ambiental',
+    });
+    expect(service.user()).toMatchObject({
+      program: 'Ingenieria Ambiental',
+      secondaryProgram: '',
     });
   });
 

@@ -2,7 +2,7 @@ import { Injectable, PLATFORM_ID, computed, inject, signal } from '@angular/core
 import { stripTrailingSlashes } from '../config/url.util';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { AUTH_CONFIG } from './auth.config';
 import { Role, roleFromApi } from '../models/role.enum';
 import {
@@ -101,16 +101,35 @@ export class AuthService {
   }
 
   /** Actualiza los datos editables del usuario en sesión. */
-  updateProfile(changes: Pick<Partial<User>, 'name' | 'program' | 'avatarUrl'>): void {
+  updateProfile(
+    changes: Pick<Partial<User>, 'name' | 'program' | 'secondaryProgram' | 'avatarUrl'>,
+  ): Observable<User | null> {
     const current = this._user();
     if (!current) {
-      return;
+      return of(null);
     }
-    const updated: User = { ...current, ...changes };
-    this._user.set(updated);
-    if (this.isBrowser) {
-      localStorage.setItem(SESSION_KEY, JSON.stringify(updated));
-    }
+    return this.http
+      .patch<ApiUser>(`${this.base}/gestion-usuarios/me/info-personal`, {
+        ...(changes.program !== undefined && { programaPrincipal: changes.program }),
+        ...(changes.secondaryProgram ? { programaSecundario: changes.secondaryProgram } : {}),
+      })
+      .pipe(
+        map((api) => {
+          const updated: User = {
+            ...current,
+            name: changes.name ?? current.name,
+            avatarUrl: changes.avatarUrl ?? current.avatarUrl,
+            program: api.programaPrincipal ?? changes.program ?? current.program,
+            secondaryProgram:
+              api.programaSecundario ?? changes.secondaryProgram ?? current.secondaryProgram,
+          };
+          this._user.set(updated);
+          if (this.isBrowser) {
+            localStorage.setItem(SESSION_KEY, JSON.stringify(updated));
+          }
+          return updated;
+        }),
+      );
   }
 
   private get base(): string {
@@ -135,6 +154,8 @@ export class AuthService {
       role: roleFromApi(api.rol),
       active: true,
       avatarUrl: api.avatarUrl ?? undefined,
+      ...(api.programaPrincipal ? { program: api.programaPrincipal } : {}),
+      ...(api.programaSecundario ? { secondaryProgram: api.programaSecundario } : {}),
       mustChangePassword: api.mustChangePassword ?? false,
     };
   }

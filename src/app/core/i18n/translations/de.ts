@@ -92,6 +92,8 @@ export const de = {
     study: 'Lernzentrum',
     profile: 'Profil',
     tasks: 'Offene Aufgaben',
+    achievements: 'Meine Erfolge',
+    forums: 'Foren',
     controlCenter: 'Kontrollzentrum',
     schedule: 'Zeitplan',
     availability: 'Verfügbarkeit',
@@ -661,6 +663,7 @@ export const de = {
     empty: 'Keine Ressourcen verfügbar.',
   },
   profile: {
+    ...en.profile,
     title: 'Profil',
     save: 'Änderungen speichern',
     saved: 'Änderungen gespeichert.',
