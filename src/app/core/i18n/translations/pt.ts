@@ -279,7 +279,7 @@ export const pt = {
         course: 'A área ou o programa acadêmico ao qual você pertence.',
         previousQualification:
           'O nível de educação mais alto que você tinha imediatamente antes de começar a universidade.',
-        ageAtEnrollment: 'Sua idade ao se matricular (17 a 70).',
+        ageAtEnrollment: 'Sua idade ao se matricular (14 a 70).',
         applicationOrder:
           'Ao se candidatar, este curso era sua 1ª opção, 2ª…? Digite 0 se foi a primeira, 1 se foi a segunda e assim por diante.',
         curricularUnits1stSemEnrolled: 'Quantas disciplinas você matriculou no primeiro semestre.',
@@ -442,15 +442,6 @@ export const pt = {
     title: 'Esforço e ética',
     message:
       'Na ECIWISE+ acreditamos no esforço honesto e na integridade acadêmica. Aprenda, compartilhe e cresça com respeito por você e pelos outros.',
-  },
-  completeProfile: {
-    popupTitle: 'Complete seu perfil',
-    popupDesc: 'Leva só um instante: responda a estas perguntas em alguns passos curtos.',
-    noticeTitle: 'Complete seu perfil',
-    noticeDesc:
-      'Termine de configurar sua conta respondendo a algumas perguntas, organizadas em passos curtos.',
-    start: 'Completar perfil',
-    save: 'Salvar',
   },
   ia: {
     predictions: {

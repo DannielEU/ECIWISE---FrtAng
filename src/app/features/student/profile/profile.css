@@ -323,26 +323,32 @@
 
 .profile__confirm {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-6);
+  min-width: 0;
 }
 
 .profile__confirm-alert {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--space-3);
+  gap: var(--space-4);
   align-items: start;
   padding: var(--space-4);
   border: 1px solid color-mix(in srgb, var(--warning) 34%, var(--border));
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--warning) 9%, var(--surface));
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--warning) 12%, var(--surface)),
+      color-mix(in srgb, var(--surface-2) 78%, transparent)
+    );
 }
 
 .profile__confirm-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--warning) 14%, transparent);
   color: var(--warning);
@@ -352,16 +358,16 @@
   margin: 0;
   color: var(--text);
   font-weight: 700;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .profile__confirm-summary {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-4);
   padding: var(--space-4);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--surface-2) 76%, transparent);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
 }
 
 .profile__confirm-summary-title {
@@ -370,10 +376,24 @@
   font-weight: 800;
 }
 
+.profile__confirm-summary dl {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+.profile__confirm-summary dl > div {
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
 .profile__modal-actions {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
 }
 
 @media (min-width: 40rem) {
@@ -419,6 +439,17 @@
   }
 
   .profile__modal-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 52rem) {
+  .profile__confirm-alert,
+  .profile__confirm-summary {
+    padding: var(--space-6);
+  }
+
+  .profile__confirm-summary dl {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

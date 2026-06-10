@@ -205,15 +205,6 @@ export const en = {
       passwordMismatch: 'Passwords do not match.',
     },
   },
-  completeProfile: {
-    popupTitle: 'Complete your profile',
-    popupDesc: 'It only takes a moment: answer these questions across a few short steps.',
-    noticeTitle: 'Complete your profile',
-    noticeDesc:
-      'Finish setting up your account by answering a few questions, organized into short steps.',
-    start: 'Complete profile',
-    save: 'Save',
-  },
   datosIa: {
     selectPlaceholder: 'Select an option',
     whatIsThis: 'What does this question mean?',
@@ -356,7 +347,7 @@ export const en = {
         course: 'The field or academic program you belong to.',
         previousQualification:
           'The highest level of education you had right before starting university.',
-        ageAtEnrollment: 'How old you were when you enrolled (17 to 70).',
+        ageAtEnrollment: 'How old you were when you enrolled (14 to 70).',
         applicationOrder:
           'When you applied, was this program your 1st choice, your 2nd…? Enter 0 if it was your first choice, 1 if it was your second, and so on.',
         curricularUnits1stSemEnrolled: 'How many courses you enrolled in your first semester.',
@@ -676,10 +667,12 @@ export const en = {
     aiTitle: 'AI profile information',
     aiDesc:
       'These answers help the administrative team review academic context and support AI-assisted analysis.',
-    aiPrompt: 'Complete the remaining questions to finish your academic profile.',
+    aiPrompt:
+      'Complete the additional information for AI-assisted academic analysis. Registration data is not requested again here.',
+    aiAction: 'Complete AI information',
     aiComplete: 'Completed',
     aiUnavailable:
-      'Your initial academic information is not complete yet. Finish the required registration data first.',
+      'Initial academic information is captured during registration.',
     aiThanks:
       'Thank you. Your answers were saved so the administrative team can review your academic profile and support AI-assisted analysis.',
     aiSaveError: 'We could not save your AI profile answers. Try again.',

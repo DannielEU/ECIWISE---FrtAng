@@ -205,15 +205,6 @@ export const es = {
       passwordMismatch: 'Las contraseñas no coinciden.',
     },
   },
-  completeProfile: {
-    popupTitle: 'Completa tu perfil',
-    popupDesc: 'Solo tomará un momento: responde estas preguntas en unos pocos pasos cortos.',
-    noticeTitle: 'Completa tu perfil',
-    noticeDesc:
-      'Termina de configurar tu cuenta respondiendo unas preguntas, organizadas en pasos cortos.',
-    start: 'Completar perfil',
-    save: 'Guardar',
-  },
   datosIa: {
     selectPlaceholder: 'Selecciona una opción',
     whatIsThis: '¿Qué significa esta pregunta?',
@@ -357,7 +348,7 @@ export const es = {
         course: 'El área o programa académico al que perteneces.',
         previousQualification:
           'El nivel de estudios más alto que tenías justo antes de entrar a la universidad.',
-        ageAtEnrollment: 'Edad que tenías al inscribirte (17 a 70).',
+        ageAtEnrollment: 'Edad que tenías al inscribirte (14 a 70).',
         applicationOrder:
           'Cuando te postulaste, ¿esta carrera era tu 1ª opción, tu 2ª…? Escribe 0 si fue tu primera opción, 1 si fue la segunda, y así sucesivamente.',
         curricularUnits1stSemEnrolled: 'Cuántas materias inscribiste en tu primer semestre.',
@@ -678,10 +669,12 @@ export const es = {
     aiTitle: 'Información para perfil de IA',
     aiDesc:
       'Estas respuestas ayudan al equipo administrativo a revisar tu contexto académico y apoyar análisis asistidos por IA.',
-    aiPrompt: 'Completa las preguntas pendientes para terminar tu perfil académico.',
+    aiPrompt:
+      'Completa la información adicional para análisis académico asistido por IA. Los datos del registro no se piden de nuevo aquí.',
+    aiAction: 'Completar información para IA',
     aiComplete: 'Completado',
     aiUnavailable:
-      'Aún falta tu información académica inicial. Completa primero los datos requeridos del registro.',
+      'La información académica inicial se captura durante el registro.',
     aiThanks:
       'Gracias. Tus respuestas quedaron guardadas para que el equipo administrativo pueda revisar tu perfil académico y apoyar análisis de acompañamiento con IA.',
     aiSaveError: 'No pudimos guardar tus respuestas del perfil de IA. Inténtalo de nuevo.',

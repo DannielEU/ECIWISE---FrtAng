@@ -279,7 +279,7 @@ export const de = {
         course: 'Das Fachgebiet oder der Studiengang, zu dem du gehörst.',
         previousQualification:
           'Der höchste Bildungsabschluss, den du direkt vor Studienbeginn hattest.',
-        ageAtEnrollment: 'Wie alt du bei der Einschreibung warst (17 bis 70).',
+        ageAtEnrollment: 'Wie alt du bei der Einschreibung warst (14 bis 70).',
         applicationOrder:
           'War dieser Studiengang bei der Bewerbung deine 1. Wahl, deine 2.…? Gib 0 für die erste Wahl ein, 1 für die zweite usw.',
         curricularUnits1stSemEnrolled: 'Wie viele Fächer du im ersten Semester belegt hast.',
@@ -441,15 +441,6 @@ export const de = {
     title: 'Einsatz und Ethik',
     message:
       'Bei ECIWISE+ glauben wir an ehrlichen Einsatz und akademische Integrität. Lerne, teile und wachse mit Respekt vor dir selbst und anderen.',
-  },
-  completeProfile: {
-    popupTitle: 'Vervollständige dein Profil',
-    popupDesc: 'Es dauert nur einen Moment: Beantworte diese Fragen in wenigen kurzen Schritten.',
-    noticeTitle: 'Vervollständige dein Profil',
-    noticeDesc:
-      'Schließe die Einrichtung deines Kontos ab, indem du einige Fragen in kurzen Schritten beantwortest.',
-    start: 'Profil vervollständigen',
-    save: 'Speichern',
   },
   ia: {
     predictions: {

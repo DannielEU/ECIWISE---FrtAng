@@ -2,31 +2,25 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IaProfileStatusService } from '../../../core/ia/ia-profile-status.service';
-import { CardComponent } from '../../../shared/ui/card/card';
 import { ButtonComponent } from '../../../shared/ui/button/button';
+import { CardComponent } from '../../../shared/ui/card/card';
 
 /**
- * Aviso inicial para terminar el perfil de IA. La tarjeta permanece en Inicio,
- * pero el llenado ocurre en la seccion Perfil para mantener un solo lugar de
- * datos personales.
+ * Entrada en Inicio para completar la informacion adicional de IA.
+ * Los datos iniciales capturados en el registro no se piden de nuevo aqui.
  */
 @Component({
-  selector: 'eci-complete-profile-section',
+  selector: 'eci-ia-profile-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslatePipe, CardComponent, ButtonComponent],
-  templateUrl: './complete-profile-section.html',
-  styleUrl: './complete-profile-section.css',
+  templateUrl: './ia-profile-section.html',
+  styleUrl: './ia-profile-section.css',
 })
-export class CompleteProfileSectionComponent {
+export class IaProfileSectionComponent {
   private readonly router = inject(Router);
   private readonly status = inject(IaProfileStatusService);
 
-  protected readonly show = computed(
-    () =>
-      this.status.loaded() &&
-      this.status.performanceComplete() &&
-      !this.status.dropoutComplete(),
-  );
+  protected readonly show = computed(() => this.status.loaded() && !this.status.dropoutComplete());
 
   constructor() {
     if (!this.status.loaded()) {
@@ -36,7 +30,7 @@ export class CompleteProfileSectionComponent {
 
   start(): void {
     void this.router.navigate(['/student/profile'], {
-      queryParams: { completeProfile: '1' },
+      queryParams: { iaInfo: '1' },
     });
   }
 }

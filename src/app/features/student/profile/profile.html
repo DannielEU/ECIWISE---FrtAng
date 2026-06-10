@@ -184,7 +184,7 @@
                 @if (!aiExpanded()) {
                   <div class="profile__prompt">
                     <p>{{ 'profile.aiPrompt' | translate }}</p>
-                    <eci-button (click)="openIaPanel()">{{ 'completeProfile.start' | translate }}</eci-button>
+                    <eci-button (click)="openIaPanel()">{{ 'profile.aiAction' | translate }}</eci-button>
                   </div>
                 } @else {
                   <eci-dropout-ia-fields
@@ -200,8 +200,6 @@
                     </p>
                   }
                 }
-              } @else if (iaUnavailable()) {
-                <p class="profile__muted">{{ 'profile.aiUnavailable' | translate }}</p>
               }
             </section>
           </eci-card>
@@ -212,6 +210,7 @@
         [open]="confirmCareerLockOpen()"
         (openChange)="confirmCareerLockOpen.set($event)"
         titleKey="profile.careerLockTitle"
+        size="wide"
       >
         <div class="profile__confirm">
           <div class="profile__confirm-alert">

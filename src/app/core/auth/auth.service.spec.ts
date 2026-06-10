@@ -10,6 +10,20 @@ import { ApiUser, AuthResponse, User } from '../models/user.model';
 
 const base = 'http://api.test';
 
+const datosIaRegistro = {
+  gender: 1,
+  ethnicity: 1,
+  parentalEducation: 2,
+  studyTimeWeekly: 8,
+  absences: 1,
+  parentalSupport: 3,
+  tutoring: 1,
+  extracurricular: 0,
+  sports: 1,
+  music: 0,
+  volunteering: 1,
+};
+
 const apiUser: ApiUser = {
   id: 'u1',
   email: 'ana@escuelaing.edu.co',
@@ -111,6 +125,26 @@ describe('AuthService', () => {
     expect(localStorage.getItem('eciwise.session')).toBeNull();
   });
 
+  it('conserva datos IA enviados en el registro aunque el backend no los devuelva', async () => {
+    const service = setup();
+    post.mockReturnValue(of(apiResponse));
+
+    const user = await firstValueFrom(
+      service.register({
+        email: 'ana@escuelaing.edu.co',
+        password: 'Secreto1',
+        nombre: 'Ana',
+        apellido: 'Diaz',
+        datosIa: datosIaRegistro,
+      }),
+    );
+
+    expect(user.datosIa).toEqual(datosIaRegistro);
+    expect(JSON.parse(localStorage.getItem('eciwise.session') ?? '{}')).toMatchObject({
+      datosIa: datosIaRegistro,
+    });
+  });
+
   it('restaura la sesion desde localStorage y descarta JSON invalido', () => {
     const stored: User = {
       id: 'u2',
@@ -143,6 +177,19 @@ describe('AuthService', () => {
     expect(user.avatarUrl).toBe('https://cdn.test/a.png');
     expect(user.mustChangePassword).toBe(true);
     expect(localStorage.getItem('eciwise.token')).toBe('tok');
+  });
+
+  it('mapea datos IA cuando llegan dentro del usuario del backend', () => {
+    const service = setup();
+    const user = service.completeSession('tok', {
+      ...apiUser,
+      datosIa: datosIaRegistro,
+    });
+
+    expect(user.datosIa).toEqual(datosIaRegistro);
+    expect(JSON.parse(localStorage.getItem('eciwise.session') ?? '{}')).toMatchObject({
+      datosIa: datosIaRegistro,
+    });
   });
 
   it('cambia contrasena y limpia mustChangePassword en estado y storage', async () => {

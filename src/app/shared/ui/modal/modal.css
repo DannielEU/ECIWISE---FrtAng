@@ -112,6 +112,11 @@
     border-radius: var(--radius-lg);
   }
 
+  .modal--wide {
+    width: min(46rem, 100%);
+    max-height: min(46rem, 100%);
+  }
+
   .modal__header {
     padding: var(--space-4) var(--space-5);
   }

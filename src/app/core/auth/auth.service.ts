@@ -55,7 +55,14 @@ export class AuthService {
   register(payload: RegisterRequest): Observable<User> {
     return this.http
       .post<AuthResponse>(`${this.base}/auth/register`, payload)
-      .pipe(map((res) => this.persist(res.access_token, res.user)));
+      .pipe(
+        map((res) =>
+          this.persist(res.access_token, {
+            ...res.user,
+            datosIa: res.user.datosIa ?? payload.datosIa,
+          }),
+        ),
+      );
   }
 
   /**
@@ -157,6 +164,7 @@ export class AuthService {
       ...(api.programaPrincipal ? { program: api.programaPrincipal } : {}),
       ...(api.programaSecundario ? { secondaryProgram: api.programaSecundario } : {}),
       mustChangePassword: api.mustChangePassword ?? false,
+      ...(api.datosIa ? { datosIa: api.datosIa } : {}),
     };
   }
 

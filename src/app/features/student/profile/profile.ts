@@ -143,17 +143,7 @@ export class ProfileComponent {
   });
 
   protected readonly showIaForm = computed(
-    () =>
-      this.status.loaded() &&
-      this.status.performanceComplete() &&
-      !this.status.dropoutComplete(),
-  );
-
-  protected readonly iaUnavailable = computed(
-    () =>
-      this.status.loaded() &&
-      !this.status.performanceComplete() &&
-      !this.status.dropoutComplete(),
+    () => this.status.loaded() && !this.status.dropoutComplete(),
   );
 
   protected readonly dropoutSummary = computed<readonly IaSummaryItem[]>(() => {
@@ -213,7 +203,7 @@ export class ProfileComponent {
     }
 
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      if (params.get('completeProfile') === '1') {
+      if (params.get('iaInfo') === '1') {
         this.openIaPanel();
       }
     });
