@@ -15,7 +15,7 @@ const STUDENT_NAV: readonly NavItem[] = [
   { labelKey: 'nav.tutorias', route: '/student/tutorias', icon: 'tutorias' },
   { labelKey: 'nav.materials', route: '/student/materials', icon: 'materials' },
   { labelKey: 'nav.games', route: '/student/games', icon: 'games' },
-  { labelKey: 'nav.study', route: '/student/study', icon: 'study' },
+  { labelKey: 'nav.practica', route: '/student/practica', icon: 'quiz' },
   { labelKey: 'nav.aprendizaje', route: '/student/aprendizaje', icon: 'aprendizaje' },
   { labelKey: 'nav.tasks', route: '/student/tasks', icon: 'tasks' },
   { labelKey: 'nav.achievements', route: '/student/logros', icon: 'trophy' },
@@ -31,6 +31,7 @@ const TUTOR_NAV: readonly NavItem[] = [
   { labelKey: 'nav.requests', route: '/tutor/requests', icon: 'requests' },
   { labelKey: 'nav.history', route: '/tutor/history', icon: 'history' },
   { labelKey: 'nav.aprendizaje', route: '/tutor/aprendizaje', icon: 'aprendizaje' },
+  { labelKey: 'nav.practica', route: '/tutor/practica', icon: 'quiz' },
 ];
 
 const ADMIN_NAV: readonly NavItem[] = [
@@ -40,6 +41,7 @@ const ADMIN_NAV: readonly NavItem[] = [
   { labelKey: 'nav.predictions', route: '/admin/predicciones', icon: 'assistant' },
   { labelKey: 'nav.assignments', route: '/admin/asignaciones', icon: 'add-user' },
   { labelKey: 'nav.aprendizaje', route: '/admin/aprendizaje', icon: 'aprendizaje' },
+  { labelKey: 'nav.practica', route: '/admin/practica', icon: 'quiz' },
 ];
 
 const NAV_BY_ROLE: Record<Role, readonly NavItem[]> = {

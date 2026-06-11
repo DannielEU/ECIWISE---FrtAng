@@ -208,7 +208,12 @@ export class AuthService {
       return null;
     }
     const raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) {
+    const token = localStorage.getItem(TOKEN_KEY);
+    // Sesión rancia (sin token o JWT vencido): se limpia para que los guards
+    // redirijan al login en vez de dejar una UI "logueada" con un token muerto.
+    if (!raw || !token || this.isTokenExpired(token)) {
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(TOKEN_KEY);
       return null;
     }
     try {
@@ -224,5 +229,30 @@ export class AuthService {
       localStorage.removeItem(SESSION_KEY);
       localStorage.removeItem(TOKEN_KEY);
     }
+  }
+  /**
+   * true solo si el JWT trae `exp` y ya pasó (o el token está corrupto). Un token
+   * sin `exp` se considera válido: no se fuerza el cierre de sesión por su ausencia.
+   */
+  private isTokenExpired(token: string): boolean {
+    try {
+      const { exp } = jwtDecode<{ exp?: number }>(token);
+      return exp != null && exp * 1000 <= Date.now();
+    } catch {
+      return true;
+    }
+  }
+
+  /**
+   * ¿La sesión está caduca? (sin token almacenado o JWT vencido). Lo usa el
+   * errorInterceptor para distinguir un 401/403 por sesión muerta —donde sí hay
+   * que sacar al usuario— de un 403 de permiso con un token aún válido.
+   */
+  sessionExpired(): boolean {
+    if (!this.isBrowser) {
+      return false;
+    }
+    const token = localStorage.getItem(TOKEN_KEY);
+    return !token || this.isTokenExpired(token);
   }
 }

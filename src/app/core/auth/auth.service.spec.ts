@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { AppError } from '../errors/app-error';
 import { Role } from '../models/role.enum';
 import { ApiUser, AuthResponse, User } from '../models/user.model';
+import { fakeJwt } from '../testing/fake-jwt';
 
 const base = 'http://api.test';
 const validJwt =
@@ -27,6 +28,8 @@ const datosIaRegistro = {
   music: 0,
   volunteering: 1,
 };
+
+const validToken = fakeJwt({ exp: Math.floor(Date.now() / 1000) + 3600 });
 
 const apiUser: ApiUser = {
   id: 'u1',
@@ -159,11 +162,13 @@ describe('AuthService', () => {
     };
     localStorage.setItem('eciwise.token', validJwt);
     localStorage.setItem('eciwise.session', JSON.stringify(stored));
+    localStorage.setItem('eciwise.token', validToken);
     expect(setup().user()).toEqual(stored);
 
     TestBed.resetTestingModule();
     localStorage.setItem('eciwise.token', validJwt);
     localStorage.setItem('eciwise.session', '{malformed');
+    localStorage.setItem('eciwise.token', validToken);
     expect(setup().user()).toBeNull();
     expect(localStorage.getItem('eciwise.session')).toBeNull();
     expect(localStorage.getItem('eciwise.token')).toBeNull();
@@ -188,6 +193,23 @@ describe('AuthService', () => {
     expect(setup().user()).toBeNull();
     expect(localStorage.getItem('eciwise.session')).toBeNull();
     expect(localStorage.getItem('eciwise.token')).toBeNull();
+  });
+
+  it('descarta la sesion si el token JWT esta vencido', () => {
+    const stored: User = {
+      id: 'u3',
+      name: 'Vie Vencido',
+      email: 'vie@escuelaing.edu.co',
+      role: Role.Student,
+      active: true,
+    };
+    localStorage.setItem('eciwise.session', JSON.stringify(stored));
+    localStorage.setItem('eciwise.token', fakeJwt({ exp: Math.floor(Date.now() / 1000) - 10 }));
+
+    const service = setup();
+    expect(service.user()).toBeNull();
+    expect(localStorage.getItem('eciwise.token')).toBeNull();
+    expect(localStorage.getItem('eciwise.session')).toBeNull();
   });
 
   it('completeSession mapea roles y persiste avatar cuando llega del backend', () => {
