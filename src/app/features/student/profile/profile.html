@@ -104,10 +104,10 @@
 
                 <div class="profile__feedback-stack">
                   @if (careersLocked()) {
-                    <div class="profile__feedback profile__feedback--success" role="status">
+                    <output class="profile__feedback profile__feedback--success" aria-live="polite">
                       <eci-icon name="check" [size]="16" />
                       <span>{{ 'profile.careersLocked' | translate }}</span>
-                    </div>
+                    </output>
                   } @else {
                     <div class="profile__feedback profile__feedback--info">
                       <eci-icon name="info" [size]="16" />

@@ -156,9 +156,11 @@ export class ProfileComponent {
       if (raw === null || raw === undefined) {
         return [];
       }
-      const valueKey = YES_NO_KEYS.has(key)
-        ? `datosIa.yesNo.${Number(raw) === 1 ? 'yes' : 'no'}`
-        : undefined;
+      let valueKey: string | undefined;
+      if (YES_NO_KEYS.has(key)) {
+        const yesNoKey = Number(raw) === 1 ? 'yes' : 'no';
+        valueKey = `datosIa.yesNo.${yesNoKey}`;
+      }
       return [
         {
           key,

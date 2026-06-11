@@ -13,13 +13,16 @@ export class TutoringRequestsService {
       const availability = this.tutoring.availabilityById(reservation.availabilityId);
       const student = this.tutoring.studentById(reservation.studentId);
       const resolvedStatus = this.resolved()[reservation.id];
-      const status: RequestStatus =
-        resolvedStatus ??
-        (reservation.status === 'confirmed'
-          ? 'pending'
-          : reservation.status === 'completed'
-            ? 'accepted'
-            : 'rejected');
+      let status: RequestStatus;
+      if (resolvedStatus) {
+        status = resolvedStatus;
+      } else if (reservation.status === 'confirmed') {
+        status = 'pending';
+      } else if (reservation.status === 'completed') {
+        status = 'accepted';
+      } else {
+        status = 'rejected';
+      }
       return {
         id: reservation.id,
         student: student?.name ?? reservation.studentId,

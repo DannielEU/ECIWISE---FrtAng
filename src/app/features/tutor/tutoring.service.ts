@@ -560,7 +560,7 @@ export class TutoringMockService {
     if (!student?.active) {
       return { ok: false, errorKey: 'tutoring.errors.inactiveStudent' };
     }
-    if (!availability || availability.status !== 'active') {
+    if (availability?.status !== 'active') {
       return { ok: false, errorKey: 'tutoring.errors.notAvailable' };
     }
     if (availability.mode !== payload.mode) {
@@ -624,7 +624,7 @@ export class TutoringMockService {
   rescheduleReservation(reservationId: string, availabilityId: string): TutoringActionResult {
     const reservation = this.reservationById(reservationId);
     const target = this.availabilityById(availabilityId);
-    if (!reservation || !target || target.status !== 'active') {
+    if (!reservation || target?.status !== 'active') {
       return { ok: false, errorKey: 'tutoring.errors.notAvailable' };
     }
     if (reservation.status !== 'confirmed') {
@@ -811,7 +811,7 @@ export class TutoringMockService {
 
   availableSeats(availabilityId: string): number {
     const availability = this.availabilityById(availabilityId);
-    if (!availability || availability.status !== 'active') {
+    if (availability?.status !== 'active') {
       return 0;
     }
     return Math.max(0, availability.capacity - this.activeReservationCount(availabilityId));

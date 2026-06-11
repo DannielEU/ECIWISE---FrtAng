@@ -28,8 +28,8 @@ export class IaProfileSectionComponent {
     }
   }
 
-  start(): void {
-    void this.router.navigate(['/student/profile'], {
+  start(): Promise<boolean> {
+    return this.router.navigate(['/student/profile'], {
       queryParams: { iaInfo: '1' },
     });
   }
