@@ -15,40 +15,38 @@
         <div class="eci-section-enter tutorias-stack">
           <eci-card>
             <form class="filters" [attr.aria-label]="'tutorias.filters.title' | translate">
-              <label class="field">
+              <div class="field">
                 <span>{{ 'fields.subject' | translate }}</span>
-                <select
+                <eci-select
                   [value]="filters().subjectId"
-                  (change)="setFilter('subjectId', eventValue($event))"
-                >
-                  <option value="">{{ 'tutorias.filters.allSubjects' | translate }}</option>
-                  @for (subject of subjects(); track subject.id) {
-                    <option [value]="subject.id">{{ subject.name }}</option>
-                  }
-                </select>
-              </label>
+                  [options]="subjectOptions()"
+                  [placeholder]="'tutorias.filters.allSubjects' | translate"
+                  [ariaLabel]="'fields.subject' | translate"
+                  (valueChange)="setFilterFromSelect('subjectId', $event)"
+                />
+              </div>
 
-              <label class="field">
+              <div class="field">
                 <span>{{ 'fields.tutor' | translate }}</span>
-                <select
+                <eci-select
                   [value]="filters().tutorId"
-                  (change)="setFilter('tutorId', eventValue($event))"
-                >
-                  <option value="">{{ 'tutorias.filters.allTutors' | translate }}</option>
-                  @for (tutor of tutors(); track tutor.id) {
-                    <option [value]="tutor.id">{{ tutor.name }}</option>
-                  }
-                </select>
-              </label>
+                  [options]="tutorOptions()"
+                  [placeholder]="'tutorias.filters.allTutors' | translate"
+                  [ariaLabel]="'fields.tutor' | translate"
+                  (valueChange)="setFilterFromSelect('tutorId', $event)"
+                />
+              </div>
 
-              <label class="field">
+              <div class="field">
                 <span>{{ 'tutorias.fields.mode' | translate }}</span>
-                <select [value]="filters().mode" (change)="setFilter('mode', eventValue($event))">
-                  <option value="">{{ 'tutorias.filters.allModes' | translate }}</option>
-                  <option value="virtual">{{ 'tutoring.modes.virtual' | translate }}</option>
-                  <option value="presential">{{ 'tutoring.modes.presential' | translate }}</option>
-                </select>
-              </label>
+                <eci-select
+                  [value]="filters().mode"
+                  [options]="filterModeOptions"
+                  [placeholder]="'tutorias.filters.allModes' | translate"
+                  [ariaLabel]="'tutorias.fields.mode' | translate"
+                  (valueChange)="setFilterFromSelect('mode', $event)"
+                />
+              </div>
 
               <label class="field">
                 <span>{{ 'tutorias.fields.date' | translate }}</span>
@@ -333,13 +331,16 @@
         }
       </label>
 
-      <label class="field">
+      <div class="field">
         <span>{{ 'tutorias.fields.mode' | translate }}</span>
-        <select [formField]="reserveForm.mode">
-          <option value="virtual">{{ 'tutoring.modes.virtual' | translate }}</option>
-          <option value="presential">{{ 'tutoring.modes.presential' | translate }}</option>
-        </select>
-      </label>
+        <eci-select
+          [value]="reserveModel().mode"
+          [options]="reserveModeOptions()"
+          [placeholder]="'tutorias.fields.mode' | translate"
+          [ariaLabel]="'tutorias.fields.mode' | translate"
+          (valueChange)="setReserveMode($event)"
+        />
+      </div>
 
       <div class="modal-actions">
         <eci-button variant="ghost" type="button" (buttonClick)="reserveOpen.set(false)">

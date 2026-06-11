@@ -7,6 +7,7 @@ import { CardComponent } from '../../../shared/ui/card/card';
 import { ButtonComponent } from '../../../shared/ui/button/button';
 import { IconComponent } from '../../../shared/ui/icon/icon';
 import { ModalComponent } from '../../../shared/ui/modal/modal';
+import { SelectComponent, SelectOption, SelectValue } from '../../../shared/ui/select/select';
 import { SectionTabsComponent, SectionTab } from '../../../shared/ui/section-tabs/section-tabs';
 import {
   ReserveTutoringPayload,
@@ -53,6 +54,7 @@ type RatingField = keyof Omit<TutorRatingFormModel, 'comment'>;
     ButtonComponent,
     IconComponent,
     ModalComponent,
+    SelectComponent,
     SectionTabsComponent,
   ],
   templateUrl: './tutorias.html',
@@ -71,6 +73,28 @@ export class TutoriasComponent {
   protected readonly subjects = this.tutoring.subjects;
   protected readonly tutors = this.tutoring.tutors;
   protected readonly recommendations = this.tutoring.recommendations;
+  protected readonly subjectOptions = computed<readonly SelectOption[]>(() => [
+    { value: '', labelKey: 'tutorias.filters.allSubjects' },
+    ...this.subjects().map((subject) => ({ value: subject.id, label: subject.name })),
+  ]);
+  protected readonly tutorOptions = computed<readonly SelectOption[]>(() => [
+    { value: '', labelKey: 'tutorias.filters.allTutors' },
+    ...this.tutors().map((tutor) => ({ value: tutor.id, label: tutor.name })),
+  ]);
+  protected readonly filterModeOptions: readonly SelectOption[] = [
+    { value: '', labelKey: 'tutorias.filters.allModes' },
+    { value: 'virtual', labelKey: 'tutoring.modes.virtual' },
+    { value: 'presential', labelKey: 'tutoring.modes.presential' },
+  ];
+  protected readonly reserveModeOptions = computed<readonly SelectOption[]>(() => {
+    const mode = this.selectedSlot()?.availability.mode;
+    return mode
+      ? [{ value: mode, labelKey: `tutoring.modes.${mode}` }]
+      : [
+          { value: 'virtual', labelKey: 'tutoring.modes.virtual' },
+          { value: 'presential', labelKey: 'tutoring.modes.presential' },
+        ];
+  });
   protected readonly stars = [1, 2, 3, 4, 5] as const;
   protected readonly ratingFields: readonly RatingField[] = [
     'topicMastery',
@@ -157,6 +181,10 @@ export class TutoriasComponent {
       ...filters,
       [key]: key === 'mode' ? (value as '' | TutoringMode) : value,
     }));
+  }
+
+  setFilterFromSelect(key: keyof TutoringSearchFilters, value: SelectValue): void {
+    this.setFilter(key, value === null ? '' : String(value));
   }
 
   clearFilters(): void {
@@ -256,6 +284,12 @@ export class TutoriasComponent {
 
   setRating(field: RatingField, value: number): void {
     this.ratingModel.update((rating) => ({ ...rating, [field]: value }));
+  }
+
+  setReserveMode(value: SelectValue): void {
+    if (value === 'virtual' || value === 'presential') {
+      this.reserveModel.update((model) => ({ ...model, mode: value }));
+    }
   }
 
   submitRating(event: Event): void {

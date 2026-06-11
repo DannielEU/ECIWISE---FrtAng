@@ -26,14 +26,16 @@
       }
 
       <div class="availability-form__grid">
-        <label class="field">
+        <div class="field">
           <span>{{ 'fields.subject' | translate }}</span>
-          <select [formField]="availabilityForm.subjectId">
-            @for (subject of tutorSubjects(); track subject.id) {
-              <option [value]="subject.id">{{ subject.name }}</option>
-            }
-          </select>
-        </label>
+          <eci-select
+            [value]="model().subjectId"
+            [options]="subjectOptions()"
+            [placeholder]="'fields.subject' | translate"
+            [ariaLabel]="'fields.subject' | translate"
+            (valueChange)="setSubject($event)"
+          />
+        </div>
 
         <label class="field">
           <span>{{ 'tutorias.fields.date' | translate }}</span>
@@ -50,13 +52,16 @@
           <input type="time" [formField]="availabilityForm.endTime" />
         </label>
 
-        <label class="field">
+        <div class="field">
           <span>{{ 'tutorias.fields.mode' | translate }}</span>
-          <select [formField]="availabilityForm.mode">
-            <option value="virtual">{{ 'tutoring.modes.virtual' | translate }}</option>
-            <option value="presential">{{ 'tutoring.modes.presential' | translate }}</option>
-          </select>
-        </label>
+          <eci-select
+            [value]="model().mode"
+            [options]="modeOptions"
+            [placeholder]="'tutorias.fields.mode' | translate"
+            [ariaLabel]="'tutorias.fields.mode' | translate"
+            (valueChange)="setMode($event)"
+          />
+        </div>
 
         <label class="field">
           <span>{{ 'tutor.schedule.seats' | translate }}</span>

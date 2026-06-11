@@ -7,6 +7,7 @@ import { CardComponent } from '../../../shared/ui/card/card';
 import { ButtonComponent } from '../../../shared/ui/button/button';
 import { IconComponent } from '../../../shared/ui/icon/icon';
 import { ModalComponent } from '../../../shared/ui/modal/modal';
+import { SelectComponent, SelectOption, SelectValue } from '../../../shared/ui/select/select';
 import {
   CreateAvailabilityPayload,
   TutoringAvailability,
@@ -41,6 +42,7 @@ interface CancelAvailabilityModel {
     ButtonComponent,
     IconComponent,
     ModalComponent,
+    SelectComponent,
   ],
   templateUrl: './availability.html',
   styleUrl: './availability.css',
@@ -54,6 +56,13 @@ export class TutorAvailabilityComponent {
     const tutor = this.currentTutor();
     return this.tutoring.subjects().filter((subject) => tutor?.subjectIds.includes(subject.id));
   });
+  protected readonly subjectOptions = computed<readonly SelectOption[]>(() =>
+    this.tutorSubjects().map((subject) => ({ value: subject.id, label: subject.name })),
+  );
+  protected readonly modeOptions: readonly SelectOption[] = [
+    { value: 'virtual', labelKey: 'tutoring.modes.virtual' },
+    { value: 'presential', labelKey: 'tutoring.modes.presential' },
+  ];
   protected readonly selected = signal<TutoringAvailability | null>(null);
   protected readonly cancelTarget = signal<TutoringAvailability | null>(null);
   protected readonly cancelOpen = signal(false);
@@ -201,10 +210,14 @@ export class TutorAvailabilityComponent {
     return `tutoring.modes.${mode}`;
   }
 
-  eventValue(event: Event): string {
-    return event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement
-      ? event.target.value
-      : '';
+  setSubject(value: SelectValue): void {
+    this.model.update((model) => ({ ...model, subjectId: value === null ? '' : String(value) }));
+  }
+
+  setMode(value: SelectValue): void {
+    if (value === 'virtual' || value === 'presential') {
+      this.model.update((model) => ({ ...model, mode: value }));
+    }
   }
 
   private payload(): CreateAvailabilityPayload {
