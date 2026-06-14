@@ -44,6 +44,8 @@ export class AppShellComponent {
     () => this.auth.user()?.mustChangePassword === true,
   );
   protected readonly navOpen = signal(false);
+  /** Rutas inmersivas (juego): ocultan el FAB y quitan el padding/scroll del contenido. */
+  protected readonly immersive = signal(this.isImmersive(this.router.url));
 
   constructor() {
     this.router.events
@@ -51,7 +53,10 @@ export class AppShellComponent {
         filter((e) => e instanceof NavigationEnd),
         takeUntilDestroyed(inject(DestroyRef)),
       )
-      .subscribe(() => this.closeNav());
+      .subscribe(() => {
+        this.closeNav();
+        this.immersive.set(this.isImmersive(this.router.url));
+      });
   }
 
   toggleNav(): void {
@@ -60,5 +65,10 @@ export class AppShellComponent {
 
   closeNav(): void {
     this.navOpen.set(false);
+  }
+
+  /** El juego corre a pantalla completa dentro del área de contenido. */
+  private isImmersive(url: string): boolean {
+    return url.includes('/games/asclepio');
   }
 }
